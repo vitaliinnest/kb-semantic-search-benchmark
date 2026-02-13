@@ -23,7 +23,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
 	parser.add_argument("query", help="Query text.")
 	parser.add_argument("--artifacts", default="artifacts")
 	parser.add_argument("--model", default="paraphrase-multilingual-MiniLM-L12-v2")
-	parser.add_argument("--top-k", type=int, default=5)
+	parser.add_argument("--top-k", type=int, default=5, help="Number of most relevant chunks to return")
+	parser.add_argument("--full-text", action="store_true", help="Show full chunk text (not just snippet)")
+	parser.add_argument("--json", action="store_true", help="Output results as JSON")
+	parser.add_argument("--max-snippet", type=int, default=300, help="Max characters in snippet (if not --full-text)")
 	return parser
 
 
@@ -39,17 +42,43 @@ def main() -> None:
 	model = SentenceTransformer(args.model)
 	query_vector = model.encode(
 		[args.query], convert_to_numpy=True, normalize_embeddings=True
-	).astype("float32")
+	)
+	query_vector = np.array(query_vector).astype("float32")
 
 	scores, indices = index.search(query_vector, args.top_k)
+	
+	results = []
 	for rank, (score, idx) in enumerate(zip(scores[0], indices[0]), start=1):
 		if idx < 0 or idx >= len(meta):
 			continue
 		record = meta[idx]
-		snippet = record["text"][:300]
-		print(f"#{rank} score={float(score):.4f} source={record['source']}")
-		print(snippet)
-		print("-")
+		
+		if args.full_text:
+			text = record["text"]
+		else:
+			text = record["text"][:args.max_snippet]
+			if len(record["text"]) > args.max_snippet:
+				text += "..."
+		
+		result = {
+			"rank": rank,
+			"score": float(score),
+			"source": record["source"],
+			"chunk_id": record["chunk_id"],
+			"text": text,
+			"full_length": len(record["text"])
+		}
+		results.append(result)
+	
+	if args.json:
+		print(json.dumps(results, ensure_ascii=False, indent=2))
+	else:
+		print(f"\nЗнайдено {len(results)} найбільш релевантних чанків:\n")
+		for r in results:
+			print(f"#{r['rank']} | Score: {r['score']:.4f} | {r['source']} ({r['chunk_id']})")
+			print(f"Довжина: {r['full_length']} символів")
+			print(f"\n{r['text']}\n")
+			print("-" * 80)
 
 
 if __name__ == "__main__":
