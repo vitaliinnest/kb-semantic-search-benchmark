@@ -1,10 +1,16 @@
 import argparse
 import json
+import logging
 from pathlib import Path
 
 import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
+
+logging.basicConfig(
+	level=logging.INFO,
+	format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 
 def load_meta(path: Path) -> list[dict]:
@@ -36,15 +42,20 @@ def main() -> None:
 	index_path = artifacts_dir / "faiss.index"
 	meta_path = artifacts_dir / "meta.jsonl"
 
+	logging.info("Завантаження індексу FAISS...")
 	index = faiss.read_index(str(index_path))
+	logging.info("Завантаження метаданих чанків...")
 	meta = load_meta(meta_path)
 
+	logging.info("Завантаження моделі для векторизації...")
 	model = SentenceTransformer(args.model)
+	logging.info("Векторизація запиту...")
 	query_vector = model.encode(
 		[args.query], convert_to_numpy=True, normalize_embeddings=True
 	)
 	query_vector = np.array(query_vector).astype("float32")
 
+	logging.info("Пошук найбільш релевантних чанків...")
 	scores, indices = index.search(query_vector, args.top_k)
 	
 	results = []
