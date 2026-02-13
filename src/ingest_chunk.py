@@ -1,9 +1,16 @@
 import argparse
 import json
 import re
+import logging
 import docx
 import PyPDF2
 from pathlib import Path
+from tqdm import tqdm
+
+logging.basicConfig(
+	level=logging.INFO,
+	format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 def read_text_file(path: Path) -> str:
 	for encoding in ("utf-8", "cp1251", "latin-1"):
@@ -16,10 +23,32 @@ def read_text_file(path: Path) -> str:
 
 def read_pdf_file(path: Path) -> str:
 	text_parts = []
-	with path.open("rb") as handle:
-		reader = PyPDF2.PdfReader(handle)
-		for page in reader.pages:
-			text_parts.append(page.extract_text() or "")
+	try:
+		with path.open("rb") as handle:
+			reader = PyPDF2.PdfReader(handle)
+			total_pages = len(reader.pages)
+			
+			# Показуємо прогрес для великих PDF (>50 сторінок)
+			if total_pages > 50:
+				pages_iter = tqdm(
+					reader.pages,
+					desc=f"Reading {path.name}",
+					total=total_pages,
+					leave=False
+				)
+			else:
+				pages_iter = reader.pages
+			
+			for page_num, page in enumerate(pages_iter, 1):
+				try:
+					text_parts.append(page.extract_text() or "")
+				except Exception as e:
+					logging.warning(f"Failed to extract page {page_num} from {path.name}: {e}")
+					continue
+	except Exception as e:
+			logging.error(f"Failed to read PDF {path.name}: {e}")
+			return ""
+			
 	return "\n".join(text_parts)
 
 
@@ -80,27 +109,42 @@ def ingest_chunks(
 	overlap: int,
 ) -> int:
 	records = []
-	for path in sorted(input_dir.rglob("*")):
-		if not path.is_file():
+	processed_files = 0
+	
+	# Збираємо всі файли для обробки
+	files = [p for p in sorted(input_dir.rglob("*")) if p.is_file()]
+	logging.info(f"Found {len(files)} files to process")
+	
+	for path in tqdm(files, desc="Processing files"):
+		logging.info(f"Processing {path.name}")
+		
+		try:
+			text = normalize_text(read_document(path))
+			if not text:
+				logging.warning(f"No text extracted from {path.name}")
+				continue
+
+			words = text.split(" ")
+			chunks = chunk_words(words, min_words, max_words, overlap)
+			source = str(path.relative_to(input_dir))
+			
+			logging.info(f"Created {len(chunks)} chunks from {path.name} ({len(words)} words)")
+
+			for idx, chunk in enumerate(chunks):
+				records.append(
+					{
+						"chunk_id": f"{source}:{idx}",
+						"source": source,
+						"text": chunk,
+					}
+				)
+			processed_files += 1
+		except Exception as e:
+			logging.error(f"Failed to process {path.name}: {e}")
 			continue
 
-		text = normalize_text(read_document(path))
-		if not text:
-			continue
-
-		words = text.split(" ")
-		chunks = chunk_words(words, min_words, max_words, overlap)
-		source = str(path.relative_to(input_dir))
-
-		for idx, chunk in enumerate(chunks):
-			records.append(
-				{
-					"chunk_id": f"{source}:{idx}",
-					"source": source,
-					"text": chunk,
-				}
-			)
-
+	logging.info(f"Successfully processed {processed_files}/{len(files)} files, created {len(records)} chunks")
+	
 	output_file.parent.mkdir(parents=True, exist_ok=True)
 	with output_file.open("w", encoding="utf-8") as handle:
 		for record in records:
