@@ -23,7 +23,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 	parser = argparse.ArgumentParser(description="Build FAISS index from chunks.")
 	parser.add_argument("--chunks", default="data/chunks.jsonl")
 	parser.add_argument("--artifacts", default="artifacts")
-	parser.add_argument("--model", default="all-MiniLM-L6-v2")
+	parser.add_argument("--model", default="paraphrase-multilingual-MiniLM-L12-v2")
 	parser.add_argument("--batch-size", type=int, default=64)
 	return parser
 

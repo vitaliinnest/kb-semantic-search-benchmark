@@ -22,7 +22,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 	parser = argparse.ArgumentParser(description="Query FAISS index.")
 	parser.add_argument("query", help="Query text.")
 	parser.add_argument("--artifacts", default="artifacts")
-	parser.add_argument("--model", default="all-MiniLM-L6-v2")
+	parser.add_argument("--model", default="paraphrase-multilingual-MiniLM-L12-v2")
 	parser.add_argument("--top-k", type=int, default=5)
 	return parser
 
