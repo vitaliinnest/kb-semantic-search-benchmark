@@ -53,8 +53,22 @@ python src/build_index.py --chunks data/chunks.jsonl --artifacts artifacts
 ```
 
 **Опції:**
-- `--model` - назва моделі SentenceTransformer (за замовчуванням: paraphrase-multilingual-MiniLM-L12-v2)
+- `--model-type` - тип моделі: `sbert`, `tfidf`, `word2vec`, `fasttext`, `glove`, `bert`
+- `--model` - назва моделі SBERT (за замовчуванням: paraphrase-multilingual-MiniLM-L12-v2)
+- `--bert-model` - назва моделі BERT (за замовчуванням: bert-base-multilingual-cased)
+- `--bert-batch-size` - розмір батчу для BERT
+- `--bert-max-length` - макс. довжина послідовності BERT
+- `--glove-path` - шлях до GloVe/word2vec векторів
+- `--glove-binary` - формат binary word2vec
+- `--glove-has-header` - файл має заголовок (word2vec формат)
 - `--batch-size` - розмір батчу для embeddings (за замовчуванням: 64)
+- `--tfidf-max-features` - кількість ознак TF-IDF (за замовчуванням: 50000)
+- `--tfidf-ngram-min` / `--tfidf-ngram-max` - діапазон n-грам для TF-IDF
+- `--gensim-vector-size` - розмірність векторів Word2Vec/FastText
+- `--gensim-window` - контекстне вікно Word2Vec/FastText
+- `--gensim-min-count` - мін. частота токенів
+- `--gensim-epochs` - кількість епох навчання
+- `--gensim-workers` - кількість потоків навчання
 
 ### 4. Пошук
 
@@ -82,6 +96,28 @@ python src/query.py "що таке машинне навчання" --top-k 10
 
 # Вивести в JSON для подальшої обробки
 python src/query.py "що таке машинне навчання" --json
+```
+
+### Вибір моделі
+
+```bash
+# SBERT (контекстні ембеддінги)
+python src/build_index.py --model-type sbert --model paraphrase-multilingual-MiniLM-L12-v2
+
+# TF-IDF
+python src/build_index.py --model-type tfidf --tfidf-max-features 60000 --tfidf-ngram-min 1 --tfidf-ngram-max 2
+
+# Word2Vec
+python src/build_index.py --model-type word2vec --gensim-vector-size 300 --gensim-window 5
+
+# FastText
+python src/build_index.py --model-type fasttext --gensim-vector-size 300 --gensim-window 5
+
+# GloVe (текстовий формат без заголовка)
+python src/build_index.py --model-type glove --glove-path data/glove.6B.300d.txt
+
+# BERT (контекстні ембеддінги)
+python src/build_index.py --model-type bert --bert-model bert-base-multilingual-cased
 ```
 
 ## Рекомендації для великих PDF

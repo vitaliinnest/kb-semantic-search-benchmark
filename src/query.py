@@ -5,7 +5,8 @@ from pathlib import Path
 
 import faiss
 import numpy as np
-from sentence_transformers import SentenceTransformer
+
+from embedding_models import load_model_from_artifacts
 
 logging.basicConfig(
 	level=logging.INFO,
@@ -28,7 +29,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 	parser = argparse.ArgumentParser(description="Пошук у FAISS індексі.")
 	parser.add_argument("query", help="Текст запиту")
 	parser.add_argument("--artifacts", default="artifacts", help="Папка з індексом")
-	parser.add_argument("--model", default="paraphrase-multilingual-MiniLM-L12-v2", help="Назва моделі")
+	parser.add_argument("--model", default="paraphrase-multilingual-MiniLM-L12-v2", help="Назва моделі SBERT")
 	parser.add_argument("--top-k", type=int, default=5, help="Кількість найрелевантніших чанків")
 	parser.add_argument("--full-text", action="store_true", help="Показати повний текст чанку")
 	parser.add_argument("--json", action="store_true", help="Вивести результати у форматі JSON")
@@ -48,12 +49,13 @@ def main() -> None:
 	meta = load_meta(meta_path)
 
 	logging.info("Завантаження моделі для векторизації...")
-	model = SentenceTransformer(args.model)
-	logging.info("Векторизація запиту...")
-	query_vector = model.encode(
-		[args.query], convert_to_numpy=True, normalize_embeddings=True
+	model, model_config = load_model_from_artifacts(
+		artifacts_dir=artifacts_dir,
+		fallback_model_name=args.model,
 	)
-	query_vector = np.array(query_vector).astype("float32")
+	logging.info(f"Використовується модель: {model_config.model_type}")
+	logging.info("Векторизація запиту...")
+	query_vector = model.encode_queries([args.query]).astype("float32")
 
 	logging.info("Пошук найбільш релевантних чанків...")
 	scores, indices = index.search(query_vector, args.top_k)
