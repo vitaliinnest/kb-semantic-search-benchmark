@@ -1,0 +1,10 @@
+{"query_id":"q1","query":"What is the purpose of the knowledge base?","lang":"en","intent":"definition"}
+{"query_id":"q2","query":"How to reset a user password?","lang":"en","intent":"procedure"}
+{"query_id":"q3","query":"Політика зберігання даних (data retention policy)","lang":"uk","intent":"policy"}
+{"query_id":"q4","query":"API authentication methods used internally","lang":"en","intent":"technical"}
+{"query_id":"q5","query":"Відрядження: порядок погодження витрат","lang":"uk","intent":"procedure"}
+{"query_id":"q6","query":"Incident response steps for security events","lang":"en","intent":"procedure"}
+{"query_id":"q7","query":"Guidelines for writing project documentation","lang":"en","intent":"guidelines"}
+{"query_id":"q8","query":"Як оформити відпустку у системі","lang":"uk","intent":"procedure"}
+{"query_id":"q9","query":"Backup schedule for production databases","lang":"en","intent":"technical"}
+{"query_id":"q10","query":"Політика доступу до конфіденційних даних","lang":"uk","intent":"policy"}
