@@ -19,14 +19,14 @@ def load_meta(path: Path) -> list[dict]:
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
-	parser = argparse.ArgumentParser(description="Query FAISS index.")
-	parser.add_argument("query", help="Query text.")
-	parser.add_argument("--artifacts", default="artifacts")
-	parser.add_argument("--model", default="paraphrase-multilingual-MiniLM-L12-v2")
-	parser.add_argument("--top-k", type=int, default=5, help="Number of most relevant chunks to return")
-	parser.add_argument("--full-text", action="store_true", help="Show full chunk text (not just snippet)")
-	parser.add_argument("--json", action="store_true", help="Output results as JSON")
-	parser.add_argument("--max-snippet", type=int, default=300, help="Max characters in snippet (if not --full-text)")
+	parser = argparse.ArgumentParser(description="Пошук у FAISS індексі.")
+	parser.add_argument("query", help="Текст запиту")
+	parser.add_argument("--artifacts", default="artifacts", help="Папка з індексом")
+	parser.add_argument("--model", default="paraphrase-multilingual-MiniLM-L12-v2", help="Назва моделі")
+	parser.add_argument("--top-k", type=int, default=5, help="Кількість найрелевантніших чанків")
+	parser.add_argument("--full-text", action="store_true", help="Показати повний текст чанку")
+	parser.add_argument("--json", action="store_true", help="Вивести результати у форматі JSON")
+	parser.add_argument("--max-snippet", type=int, default=300, help="Макс. символів у фрагменті")
 	return parser
 
 

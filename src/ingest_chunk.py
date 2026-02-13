@@ -32,7 +32,7 @@ def read_pdf_file(path: Path) -> str:
 			if total_pages > 50:
 				pages_iter = tqdm(
 					reader.pages,
-					desc=f"Reading {path.name}",
+					desc=f"Читання {path.name}",
 					total=total_pages,
 					leave=False
 				)
@@ -43,10 +43,10 @@ def read_pdf_file(path: Path) -> str:
 				try:
 					text_parts.append(page.extract_text() or "")
 				except Exception as e:
-					logging.warning(f"Failed to extract page {page_num} from {path.name}: {e}")
+					logging.warning(f"Помилка витягування сторінки {page_num} з {path.name}: {e}")
 					continue
 	except Exception as e:
-			logging.error(f"Failed to read PDF {path.name}: {e}")
+			logging.error(f"Помилка читання PDF {path.name}: {e}")
 			return ""
 			
 	return "\n".join(text_parts)
@@ -113,22 +113,22 @@ def ingest_chunks(
 	
 	# Збираємо всі файли для обробки
 	files = [p for p in sorted(input_dir.rglob("*")) if p.is_file()]
-	logging.info(f"Found {len(files)} files to process")
+	logging.info(f"Знайдено {len(files)} файлів для обробки")
 	
-	for path in tqdm(files, desc="Processing files"):
-		logging.info(f"Processing {path.name}")
+	for path in tqdm(files, desc="Обробка файлів"):
+		logging.info(f"Обробка {path.name}")
 		
 		try:
 			text = normalize_text(read_document(path))
 			if not text:
-				logging.warning(f"No text extracted from {path.name}")
+				logging.warning(f"Текст не витягнуто з {path.name}")
 				continue
 
 			words = text.split(" ")
 			chunks = chunk_words(words, min_words, max_words, overlap)
 			source = str(path.relative_to(input_dir))
 			
-			logging.info(f"Created {len(chunks)} chunks from {path.name} ({len(words)} words)")
+			logging.info(f"Створено {len(chunks)} чанків з {path.name} ({len(words)} слів)")
 
 			for idx, chunk in enumerate(chunks):
 				records.append(
@@ -140,10 +140,10 @@ def ingest_chunks(
 				)
 			processed_files += 1
 		except Exception as e:
-			logging.error(f"Failed to process {path.name}: {e}")
+			logging.error(f"Помилка обробки {path.name}: {e}")
 			continue
 
-	logging.info(f"Successfully processed {processed_files}/{len(files)} files, created {len(records)} chunks")
+	logging.info(f"Успішно оброблено {processed_files}/{len(files)} файлів, створено {len(records)} чанків")
 	
 	output_file.parent.mkdir(parents=True, exist_ok=True)
 	with output_file.open("w", encoding="utf-8") as handle:
@@ -154,12 +154,12 @@ def ingest_chunks(
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
-	parser = argparse.ArgumentParser(description="Ingest and chunk raw documents.")
-	parser.add_argument("--input", default="data/raw", help="Path to raw documents.")
-	parser.add_argument("--output", default="data/chunks.jsonl", help="Output JSONL path.")
-	parser.add_argument("--min-words", type=int, default=300)
-	parser.add_argument("--max-words", type=int, default=800)
-	parser.add_argument("--overlap", type=int, default=80)
+	parser = argparse.ArgumentParser(description="Обробка та чанкінг документів.")
+	parser.add_argument("--input", default="data/raw", help="Шлях до вихідних документів")
+	parser.add_argument("--output", default="data/chunks.jsonl", help="Шлях для збереження результату")
+	parser.add_argument("--min-words", type=int, default=300, help="Мінімальна кількість слів у чанку")
+	parser.add_argument("--max-words", type=int, default=800, help="Максимальна кількість слів у чанку")
+	parser.add_argument("--overlap", type=int, default=80, help="Перекриття між чанками (слова)")
 	return parser
 
 
@@ -175,7 +175,7 @@ def main() -> None:
 		max_words=args.max_words,
 		overlap=args.overlap,
 	)
-	print(f"Wrote {count} chunks to {output_file}")
+	print(f"Збережено {count} чанків у файл {output_file}")
 
 
 if __name__ == "__main__":
