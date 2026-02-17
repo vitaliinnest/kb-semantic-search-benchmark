@@ -128,6 +128,20 @@ python src/build_index.py --model-type bert --bert-model bert-base-multilingual-
 python src/test_all_models.py --artifacts-root artifacts
 ```
 
+За замовчуванням результати тесту зберігаються у папку `results` з timestamp у назві файлів:
+
+```
+results/
+  test_results_YYYY-MM-DD_HH-MM-SS.txt
+  test_results_YYYY-MM-DD_HH-MM-SS.json
+```
+
+Можна змінити базову папку через `--output`, наприклад:
+
+```bash
+python src/test_all_models.py --artifacts-root artifacts --output results
+```
+
 ## Рекомендації для великих PDF
 
 ### ❓ Чанки vs Батчі - в чому різниця?

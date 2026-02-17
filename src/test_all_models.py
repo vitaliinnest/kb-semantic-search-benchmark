@@ -118,7 +118,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
 		choices=["sbert", "tfidf", "word2vec", "fasttext", "bert"],
 		help="Список моделей для тестування (за замовчуванням: всі)",
 	)
-	parser.add_argument("--output", default="results/test_results.txt", help="Файл для збереження результатів")
+	parser.add_argument(
+		"--output",
+		default="results",
+		help="Папка результатів (буде створено test_results_YYYY-MM-DD_HH-MM-SS.txt/.json) або конкретний .txt файл",
+	)
 	return parser
 
 
@@ -163,9 +167,26 @@ def run_command(cmd: list[str], description: str, logger: Logger) -> tuple[bool,
 
 def main():
 	args = build_arg_parser().parse_args()
+	run_started_at = datetime.now()
+
+	output_arg = Path(args.output)
+	if output_arg.suffix.lower() == ".txt":
+		output_file = output_arg
+		json_file = output_file.with_suffix(".json")
+	else:
+		timestamp = run_started_at.strftime("%Y-%m-%d_%H-%M-%S")
+		base_results_dir = output_arg
+		output_file = base_results_dir / f"test_results_{timestamp}.txt"
+		json_file = base_results_dir / f"test_results_{timestamp}.json"
+		counter = 2
+		while output_file.exists() or json_file.exists():
+			output_file = base_results_dir / f"test_results_{timestamp}-{counter}.txt"
+			json_file = base_results_dir / f"test_results_{timestamp}-{counter}.json"
+			counter += 1
+
+	run_dir = output_file.parent
 
 	# Створюємо логер
-	output_file = Path(args.output)
 	logger = Logger(output_file)
 
 	chunks_path = Path(args.chunks)
@@ -183,6 +204,7 @@ def main():
 
 	logger.log(f"\n📊 Тестування {len(models_to_test)} модел(і/ей)\n")
 	logger.log(f"📝 Результати зберігаються у: {output_file.absolute()}\n")
+	logger.log(f"📂 Папка результатів: {run_dir.absolute()}\n")
 	logger.log(f"📦 Артефакти моделей: {artifacts_root.absolute()} / <model-type>\n")
 
 	results = []
@@ -280,11 +302,10 @@ def main():
 	logger.log(f"\n📁 Повні результати збережено у: {output_file.absolute()}")
 
 	# Зберігаємо результати у JSON
-	json_file = output_file.parent / (output_file.stem + ".json")
 	with open(json_file, "w", encoding="utf-8") as f:
 		json.dump(
 			{
-				"timestamp": datetime.now().isoformat(),
+				"timestamp": run_started_at.isoformat(),
 				"results": results,
 			},
 			f,
