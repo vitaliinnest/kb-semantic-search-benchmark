@@ -2,10 +2,17 @@ import argparse
 import json
 import re
 import logging
+import sys
 import docx
 import PyPDF2
 from pathlib import Path
 from tqdm import tqdm
+
+# Fix Windows console encoding
+if sys.platform == "win32":
+	import codecs
+	sys.stdout = codecs.getwriter("utf-8")(sys.stdout.buffer, "strict")
+	sys.stderr = codecs.getwriter("utf-8")(sys.stderr.buffer, "strict")
 
 logging.basicConfig(
 	level=logging.INFO,

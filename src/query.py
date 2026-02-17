@@ -1,10 +1,17 @@
 import argparse
 import json
 import logging
+import sys
 from pathlib import Path
 
 import faiss
 import numpy as np
+
+# Fix Windows console encoding
+if sys.platform == "win32":
+	import codecs
+	sys.stdout = codecs.getwriter("utf-8")(sys.stdout.buffer, "strict")
+	sys.stderr = codecs.getwriter("utf-8")(sys.stderr.buffer, "strict")
 
 from embedding_models import load_model_from_artifacts
 

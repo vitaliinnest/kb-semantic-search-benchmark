@@ -9,6 +9,12 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+# Fix Windows console encoding
+if sys.platform == "win32":
+	import codecs
+	sys.stdout = codecs.getwriter("utf-8")(sys.stdout.buffer, "strict")
+	sys.stderr = codecs.getwriter("utf-8")(sys.stderr.buffer, "strict")
+
 
 MODELS = [
 	{
@@ -119,8 +125,16 @@ def run_command(cmd: list[str], description: str, logger: Logger) -> tuple[bool,
 	logger.log(f"Команда: {' '.join(cmd)}\n")
 
 	start_time = time.time()
+	
+	# Встановлюємо UTF-8 кодування для subprocess на Windows
+	env = None
+	if sys.platform == "win32":
+		import os
+		env = os.environ.copy()
+		env["PYTHONIOENCODING"] = "utf-8"
+	
 	try:
-		result = subprocess.run(cmd, check=True, text=True, capture_output=True)
+		result = subprocess.run(cmd, check=True, text=True, capture_output=True, env=env, encoding="utf-8")
 		elapsed = time.time() - start_time
 		logger.log(f"\n✅ Завершено за {elapsed:.2f} сек")
 		
