@@ -25,6 +25,7 @@ indexes/
 *.faiss
 *.index
 *.npy
+*.joblib
 
 # Logs
 *.log

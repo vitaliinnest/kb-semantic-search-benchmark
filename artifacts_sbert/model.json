@@ -1,5 +1,0 @@
-{
-  "model_type": "sbert",
-  "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
-  "params": {}
-}

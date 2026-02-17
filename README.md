@@ -52,6 +52,8 @@ python src/ingest_chunk.py --input data/raw --output data/chunks.jsonl
 python src/build_index.py --chunks data/chunks.jsonl --artifacts artifacts
 ```
 
+Для кількох моделей зручно зберігати індекси в `artifacts/<model-type>/` (наприклад, `artifacts/sbert`, `artifacts/tfidf`).
+
 **Опції:**
 - `--model-type` - тип моделі: `sbert`, `tfidf`, `word2vec`, `fasttext`, `glove`, `bert`
 - `--model` - назва моделі SBERT (за замовчуванням: paraphrase-multilingual-MiniLM-L12-v2)
@@ -102,22 +104,28 @@ python src/query.py "що таке машинне навчання" --json
 
 ```bash
 # SBERT (контекстні ембеддінги)
-python src/build_index.py --model-type sbert --model paraphrase-multilingual-MiniLM-L12-v2
+python src/build_index.py --model-type sbert --model paraphrase-multilingual-MiniLM-L12-v2 --artifacts artifacts/sbert
 
 # TF-IDF
-python src/build_index.py --model-type tfidf --tfidf-max-features 60000 --tfidf-ngram-min 1 --tfidf-ngram-max 2
+python src/build_index.py --model-type tfidf --tfidf-max-features 60000 --tfidf-ngram-min 1 --tfidf-ngram-max 2 --artifacts artifacts/tfidf
 
 # Word2Vec
-python src/build_index.py --model-type word2vec --gensim-vector-size 300 --gensim-window 5
+python src/build_index.py --model-type word2vec --gensim-vector-size 300 --gensim-window 5 --artifacts artifacts/word2vec
 
 # FastText
-python src/build_index.py --model-type fasttext --gensim-vector-size 300 --gensim-window 5
+python src/build_index.py --model-type fasttext --gensim-vector-size 300 --gensim-window 5 --artifacts artifacts/fasttext
 
 # GloVe (текстовий формат без заголовка)
 python src/build_index.py --model-type glove --glove-path data/glove.6B.300d.txt
 
 # BERT (контекстні ембеддінги)
-python src/build_index.py --model-type bert --bert-model bert-base-multilingual-cased
+python src/build_index.py --model-type bert --bert-model bert-base-multilingual-cased --artifacts artifacts/bert
+```
+
+Для автоматичного прогону всіх моделей:
+
+```bash
+python src/test_all_models.py --artifacts-root artifacts
 ```
 
 ## Рекомендації для великих PDF
@@ -177,14 +185,17 @@ python src/build_index.py --batch-size 128
 │   ├── raw/              # Оригінальні документи
 │   └── chunks.jsonl      # Обробленні чанки
 ├── artifacts/
-│   ├── faiss.index       # FAISS індекс
-│   ├── vectors.npy       # Векторні представлення
-│   └── meta.jsonl        # Метадані чанків
+│   ├── sbert/
+│   ├── tfidf/
+│   ├── word2vec/
+│   └── ...               # По одній папці на модель
 └── src/
     ├── ingest_chunk.py   # Обробка та чанкінг
     ├── build_index.py    # Побудова індексу
     └── query.py          # Пошук
 ```
+
+У кожній папці моделі (`artifacts/<model>/`) зберігаються `faiss.index`, `vectors.npy`, `meta.jsonl`, `model.json` і, за потреби, файли моделі (`tfidf.joblib`, `gensim.model`).
 
 ## Troubleshooting
 

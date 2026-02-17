@@ -1,8 +1,0 @@
-{
-  "model_type": "bert",
-  "model_name": "bert-base-multilingual-cased",
-  "params": {
-    "batch_size": 16,
-    "max_length": 256
-  }
-}

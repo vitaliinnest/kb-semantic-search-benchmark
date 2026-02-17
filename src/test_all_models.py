@@ -108,6 +108,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
 	parser.add_argument("--chunks", default="data/chunks.jsonl", help="Шлях до чанків")
 	parser.add_argument("--skip-build", action="store_true", help="Пропустити побудову індексів")
 	parser.add_argument(
+		"--artifacts-root",
+		default="artifacts",
+		help="Коренева папка артефактів (кожна модель буде збережена в <root>/<model-type>)",
+	)
+	parser.add_argument(
 		"--models",
 		nargs="*",
 		choices=["sbert", "tfidf", "word2vec", "fasttext", "bert"],
@@ -164,6 +169,7 @@ def main():
 	logger = Logger(output_file)
 
 	chunks_path = Path(args.chunks)
+	artifacts_root = Path(args.artifacts_root)
 	if not chunks_path.exists():
 		logger.log(f"❌ Файл чанків не знайдено: {chunks_path}")
 		logger.log("Спочатку запустіть:")
@@ -177,13 +183,14 @@ def main():
 
 	logger.log(f"\n📊 Тестування {len(models_to_test)} модел(і/ей)\n")
 	logger.log(f"📝 Результати зберігаються у: {output_file.absolute()}\n")
+	logger.log(f"📦 Артефакти моделей: {artifacts_root.absolute()} / <model-type>\n")
 
 	results = []
 
 	for model_config in models_to_test:
 		model_name = model_config["name"]
 		model_type = model_config["type"]
-		artifacts_dir = Path(f"artifacts_{model_type}")
+		artifacts_dir = artifacts_root / model_type
 
 		logger.log(f"\n{'#'*80}")
 		logger.log(f"# Модель: {model_name}")

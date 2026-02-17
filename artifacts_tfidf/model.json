@@ -1,9 +1,0 @@
-{
-  "model_type": "tfidf",
-  "model_name": null,
-  "params": {
-    "max_features": 50000,
-    "ngram_min": 1,
-    "ngram_max": 2
-  }
-}
