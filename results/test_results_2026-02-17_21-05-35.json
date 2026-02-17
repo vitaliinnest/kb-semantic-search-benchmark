@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-02-17T21:05:35.530792",
+  "results": [
+    {
+      "model": "Sentence-BERT",
+      "type": "sbert",
+      "build_time": 11.718331813812256,
+      "build_status": "OK",
+      "query_status": "OK",
+      "avg_query_time": 9.02599287033081,
+      "queries_tested": 5
+    },
+    {
+      "model": "TF-IDF",
+      "type": "tfidf",
+      "build_time": 2.288226842880249,
+      "build_status": "OK",
+      "query_status": "OK",
+      "avg_query_time": 1.7143597602844238,
+      "queries_tested": 5
+    },
+    {
+      "model": "Word2Vec",
+      "type": "word2vec",
+      "build_time": 1.9217529296875,
+      "build_status": "OK",
+      "query_status": "OK",
+      "avg_query_time": 1.251478910446167,
+      "queries_tested": 5
+    },
+    {
+      "model": "FastText",
+      "type": "fasttext",
+      "build_time": 10.257856369018555,
+      "build_status": "OK",
+      "query_status": "OK",
+      "avg_query_time": 2.28169960975647,
+      "queries_tested": 5
+    },
+    {
+      "model": "BERT",
+      "type": "bert",
+      "build_time": 27.835781812667847,
+      "build_status": "OK",
+      "query_status": "OK",
+      "avg_query_time": 7.741994428634643,
+      "queries_tested": 5
+    }
+  ]
+}
