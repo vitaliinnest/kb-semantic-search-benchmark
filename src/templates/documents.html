@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block title %}Документи — KB Search{% endblock %}
+
+{% block head %}
+<style>
+  .page-heading {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .filter-bar label {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .filter-bar select, .filter-bar input[type="number"] {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s;
+  }
+  .filter-bar select:focus, .filter-bar input[type="number"]:focus { border-color: var(--primary); }
+  .filter-bar input[type="number"] { width: 72px; }
+  .filter-bar button {
+    padding: 7px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+  }
+
+  /* ── CHUNK CARDS ── */
+  .chunk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .chunk-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    transition: box-shadow .18s;
+  }
+  .chunk-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+
+  .chunk-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .chunk-source {
+    font-size: 13px;
+    color: var(--primary);
+    font-weight: 600;
+  }
+  .chunk-id-badge {
+    font-size: 11px;
+    font-family: monospace;
+    background: #f1f3f4;
+    color: var(--text-muted);
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .chunk-text {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text);
+    word-break: break-word;
+  }
+  .chunk-footer {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  details summary {
+    cursor: pointer;
+    color: var(--primary);
+    font-size: 13px;
+    margin-top: 6px;
+    user-select: none;
+    list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details[open] summary::before { content: "▲ "; }
+  details:not([open]) summary::before { content: "▼ "; }
+  .full-text {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .pagination a, .pagination span {
+    display: inline-block;
+    padding: 6px 13px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-decoration: none;
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    background: var(--surface);
+    transition: background .15s, border-color .15s;
+  }
+  .pagination a:hover { background: #f1f3f4; border-color: var(--primary); }
+  .pagination .current { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+  .pagination .disabled { color: var(--text-muted); opacity: .5; pointer-events: none; }
+  .pagination-info {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-heading">📚 Документи</div>
+<div class="page-sub">Усі чанки бази знань, серед яких виконується пошук</div>
+
+<!-- FILTER FORM -->
+<form method="GET" action="/documents" class="filter-bar">
+  <label>Джерело:
+    <select name="source" onchange="this.form.submit()">
+      <option value="">— всі —</option>
+      {% for s in all_sources %}
+        <option value="{{ s }}" {% if s == source_filter %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>На сторінці:
+    <input type="number" name="per_page" min="5" max="100" value="{{ per_page }}" />
+  </label>
+  <input type="hidden" name="page" value="1" />
+  <button type="submit" class="btn btn-primary">Оновити</button>
+  {% if source_filter %}
+    <a href="/documents" class="btn" style="background:#f1f3f4; color:var(--text);">✕ Скинути фільтр</a>
+  {% endif %}
+</form>
+
+<div class="pagination-info">
+  Показано {{ (page - 1) * per_page + 1 }}–{{ [(page - 1) * per_page + chunks|length, total]|min }}
+  із {{ total }} чанків
+  {% if source_filter %}(фільтр: <strong>{{ source_filter }}</strong>){% endif %}
+</div>
+
+<!-- CHUNKS -->
+<div class="chunk-list" style="margin-top: 16px;">
+  {% for c in chunks %}
+  <div class="chunk-card">
+    <div class="chunk-meta">
+      <span class="chunk-source">📄 {{ c.source }}</span>
+      <span class="chunk-id-badge">{{ c.chunk_id }}</span>
+      <span class="badge" style="background:#f0fdf4; color:#166534;">{{ c.text|length }} символів</span>
+    </div>
+    <div class="chunk-text">{{ c.text[:350] }}{% if c.text|length > 350 %}…{% endif %}</div>
+    {% if c.text|length > 350 %}
+    <details>
+      <summary>Показати повний текст</summary>
+      <div class="full-text">{{ c.text }}</div>
+    </details>
+    {% endif %}
+  </div>
+  {% else %}
+  <div class="alert alert-info">Чанки не знайдені.</div>
+  {% endfor %}
+</div>
+
+<!-- PAGINATION -->
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}
+    <a href="?page={{ page - 1 }}&per_page={{ per_page }}&source={{ source_filter }}">‹ Назад</a>
+  {% else %}
+    <span class="disabled">‹ Назад</span>
+  {% endif %}
+
+  {% set window = 3 %}
+  {% for p in range([1, page - window]|max, [total_pages + 1, page + window + 1]|min) %}
+    {% if p == page %}
+      <span class="current">{{ p }}</span>
+    {% else %}
+      <a href="?page={{ p }}&per_page={{ per_page }}&source={{ source_filter }}">{{ p }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if page < total_pages %}
+    <a href="?page={{ page + 1 }}&per_page={{ per_page }}&source={{ source_filter }}">Вперед ›</a>
+  {% else %}
+    <span class="disabled">Вперед ›</span>
+  {% endif %}
+</div>
+<div class="pagination-info">Сторінка {{ page }} з {{ total_pages }}</div>
+{% endif %}
+{% endblock %}
