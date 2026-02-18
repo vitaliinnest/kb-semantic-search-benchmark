@@ -6,3 +6,29 @@
 {"query_id":"q6","query":"прогноз відтоку клієнтів (churn prediction)","lang":"uk","intent":"technical"}
 {"query_id":"q7","query":"когортний аналіз для сегментації клієнтів","lang":"uk","intent":"method"}
 {"query_id":"q8","query":"етичні питання використання персональних даних у аналітиці","lang":"uk","intent":"policy"}
+
+{"query_id":"q9","query":"аналіз виробничих збитків у промисловості: методи та підходи","lang":"uk","intent":"topic"}
+{"query_id":"q10","query":"ABC-аналіз для класифікації виробничих збитків","lang":"uk","intent":"method"}
+{"query_id":"q11","query":"метод Парето у виявленні найзначущіших типів збитків","lang":"uk","intent":"method"}
+{"query_id":"q12","query":"інформаційна система аналізу збитків при виробництві нержавіючої сталі","lang":"uk","intent":"technical"}
+
+{"query_id":"q13","query":"формування промптів та запитів до великих мовних моделей","lang":"uk","intent":"technical"}
+{"query_id":"q14","query":"технологія RAG (Retrieval-Augmented Generation) у системах з LLM","lang":"uk","intent":"technical"}
+{"query_id":"q15","query":"косинусна схожість векторів у семантичному пошуку","lang":"uk","intent":"method"}
+{"query_id":"q16","query":"трансформерна архітектура та механізм самоуваги в мовних моделях","lang":"uk","intent":"technical"}
+
+{"query_id":"q17","query":"рекомендаційна система для агентства нерухомості","lang":"uk","intent":"topic"}
+{"query_id":"q18","query":"контентна фільтрація та профіль користувача у рекомендаційній системі нерухомості","lang":"uk","intent":"method"}
+{"query_id":"q19","query":"застосування BERT для векторного представлення тексту у рекомендаціях","lang":"uk","intent":"technical"}
+{"query_id":"q20","query":"метод Bag-of-Words для векторизації тексту","lang":"uk","intent":"method"}
+
+{"query_id":"q21","query":"рекомендаційна система вакансій для фріланс-платформи","lang":"uk","intent":"topic"}
+{"query_id":"q22","query":"колаборативна фільтрація для рекомендацій вакансій","lang":"uk","intent":"method"}
+{"query_id":"q23","query":"гібридна система рекомендацій: колаборативний, контентний та семантичний підходи","lang":"uk","intent":"technical"}
+{"query_id":"q24","query":"оцінка якості рекомендаційної системи за метрикою MAP@K","lang":"uk","intent":"method"}
+
+{"query_id":"q25","query":"поведінкові характеристики клієнта у транзакційному аналізі","lang":"uk","intent":"technical"}
+{"query_id":"q26","query":"контекстуальні ознаки аномалій: час доби, IP-адреса, зміна пристрою","lang":"uk","intent":"technical"}
+
+{"query_id":"q27","query":"комбінований метод аналізу поведінки клієнтів для підтримки планування","lang":"uk","intent":"method"}
+{"query_id":"q28","query":"логістична регресія для прогнозування відтоку клієнтів","lang":"uk","intent":"technical"}
