@@ -19,7 +19,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
   }
   .filter-bar label {
@@ -28,7 +28,7 @@
     font-weight: 500;
     white-space: nowrap;
   }
-  .filter-bar select, .filter-bar input[type="number"] {
+  .filter-bar select {
     border: 1.5px solid var(--border);
     border-radius: 8px;
     padding: 6px 10px;
@@ -38,41 +38,114 @@
     outline: none;
     transition: border-color .15s;
   }
-  .filter-bar select:focus, .filter-bar input[type="number"]:focus { border-color: var(--primary); }
-  .filter-bar input[type="number"] { width: 72px; }
+  .filter-bar select:focus { border-color: var(--primary); }
   .filter-bar button {
     padding: 7px 18px;
     border-radius: 20px;
     font-size: 13px;
   }
 
-  /* ── CHUNK CARDS ── */
-  .chunk-list {
+  .docs-summary-bar {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+  }
+  .docs-summary-bar strong { color: var(--text); }
+
+  /* ── ACCORDION GROUP ── */
+  .source-accordion {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
-  .chunk-card {
+
+  .source-group {
     background: var(--surface);
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
     border-radius: var(--radius);
-    padding: 16px 20px;
     box-shadow: var(--shadow);
+    overflow: hidden;
     transition: box-shadow .18s;
   }
-  .chunk-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+  .source-group[open] {
+    box-shadow: 0 4px 18px rgba(0,0,0,.1);
+  }
+
+  .source-group > summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    background: var(--surface);
+    border-bottom: 1.5px solid transparent;
+    transition: background .15s, border-color .15s;
+  }
+  .source-group > summary::-webkit-details-marker { display: none; }
+  .source-group[open] > summary {
+    border-bottom-color: var(--border);
+    background: #f8f9fa;
+  }
+  .source-group > summary:hover { background: #f1f3f4; }
+
+  .summary-arrow {
+    font-size: 11px;
+    color: var(--text-muted);
+    transition: transform .2s;
+    flex-shrink: 0;
+  }
+  .source-group[open] > summary .summary-arrow {
+    transform: rotate(90deg);
+  }
+
+  .summary-icon { font-size: 16px; flex-shrink: 0; }
+
+  .summary-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .summary-badge {
+    flex-shrink: 0;
+    font-size: 11.5px;
+    font-weight: 600;
+    background: #e8f0fe;
+    color: var(--primary);
+    border-radius: 20px;
+    padding: 2px 10px;
+  }
+
+  /* ── CHUNKS INSIDE ACCORDION ── */
+  .chunks-body {
+    padding: 12px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .chunk-card {
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    transition: box-shadow .15s;
+  }
+  .chunk-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,.08); }
 
   .chunk-meta {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
+    gap: 8px;
+    margin-bottom: 6px;
     flex-wrap: wrap;
-  }
-  .chunk-source {
-    font-size: 13px;
-    color: var(--primary);
-    font-weight: 600;
   }
   .chunk-id-badge {
     font-size: 11px;
@@ -82,31 +155,39 @@
     padding: 2px 8px;
     border-radius: 20px;
   }
+  .chunk-len-badge {
+    font-size: 11px;
+    background: #f0fdf4;
+    color: #166534;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
   .chunk-text {
     font-size: 13.5px;
     line-height: 1.65;
     color: var(--text);
     word-break: break-word;
   }
-  .chunk-footer {
-    margin-top: 8px;
-    font-size: 11px;
-    color: var(--text-muted);
-  }
 
-  details summary {
+  .chunk-expand {
+    margin-top: 6px;
+  }
+  .chunk-expand summary {
     cursor: pointer;
     color: var(--primary);
-    font-size: 13px;
-    margin-top: 6px;
+    font-size: 12.5px;
     user-select: none;
     list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
   }
-  details summary::-webkit-details-marker { display: none; }
-  details[open] summary::before { content: "▲ "; }
-  details:not([open]) summary::before { content: "▼ "; }
+  .chunk-expand summary::-webkit-details-marker { display: none; }
+  .chunk-expand[open] summary .exp-icon::before { content: "▲"; }
+  .chunk-expand:not([open]) summary .exp-icon::before { content: "▼"; }
   .full-text {
-    margin-top: 8px;
+    margin-top: 6px;
     font-size: 13px;
     color: var(--text-muted);
     line-height: 1.7;
@@ -116,39 +197,29 @@
     padding-top: 8px;
   }
 
-  /* ── PAGINATION ── */
-  .pagination {
+  /* ── EXPAND / COLLAPSE ALL ── */
+  .bulk-actions {
     display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 28px;
-    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
   }
-  .pagination a, .pagination span {
-    display: inline-block;
-    padding: 6px 13px;
-    border-radius: 8px;
-    font-size: 14px;
-    text-decoration: none;
+  .bulk-actions button {
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 20px;
     border: 1.5px solid var(--border);
-    color: var(--text);
     background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
     transition: background .15s, border-color .15s;
   }
-  .pagination a:hover { background: #f1f3f4; border-color: var(--primary); }
-  .pagination .current { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
-  .pagination .disabled { color: var(--text-muted); opacity: .5; pointer-events: none; }
-  .pagination-info {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 10px;
-  }
+  .bulk-actions button:hover { background: #f1f3f4; border-color: var(--primary); }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="page-heading">📚 Документи</div>
-<div class="page-sub">Усі чанки бази знань, серед яких виконується пошук</div>
+<div class="page-sub">Усі чанки бази знань, згруповані за джерелом</div>
 
 <!-- FILTER FORM -->
 <form method="GET" action="/documents" class="filter-bar">
@@ -160,68 +231,69 @@
       {% endfor %}
     </select>
   </label>
-  <label>На сторінці:
-    <input type="number" name="per_page" min="5" max="100" value="{{ per_page }}" />
-  </label>
-  <input type="hidden" name="page" value="1" />
-  <button type="submit" class="btn btn-primary">Оновити</button>
   {% if source_filter %}
     <a href="/documents" class="btn" style="background:#f1f3f4; color:var(--text);">✕ Скинути фільтр</a>
   {% endif %}
 </form>
 
-<div class="pagination-info">
-  Показано {{ (page - 1) * per_page + 1 }}–{{ [(page - 1) * per_page + chunks|length, total]|min }}
-  із {{ total }} чанків
-  {% if source_filter %}(фільтр: <strong>{{ source_filter }}</strong>){% endif %}
+<div class="docs-summary-bar">
+  <strong>{{ total_sources }}</strong> {% if total_sources == 1 %}документ{% elif total_sources < 5 %}документи{% else %}документів{% endif %},&nbsp;
+  <strong>{{ total_chunks }}</strong> {% if total_chunks == 1 %}чанк{% elif total_chunks < 5 %}чанки{% else %}чанків{% endif %}
+  {% if source_filter %} — фільтр: <strong>{{ source_filter }}</strong>{% endif %}
 </div>
 
-<!-- CHUNKS -->
-<div class="chunk-list" style="margin-top: 16px;">
-  {% for c in chunks %}
-  <div class="chunk-card">
-    <div class="chunk-meta">
-      <span class="chunk-source">📄 {{ c.source }}</span>
-      <span class="chunk-id-badge">{{ c.chunk_id }}</span>
-      <span class="badge" style="background:#f0fdf4; color:#166534;">{{ c.text|length }} символів</span>
-    </div>
-    <div class="chunk-text">{{ c.text[:350] }}{% if c.text|length > 350 %}…{% endif %}</div>
-    {% if c.text|length > 350 %}
-    <details>
-      <summary>Показати повний текст</summary>
-      <div class="full-text">{{ c.text }}</div>
-    </details>
-    {% endif %}
-  </div>
-  {% else %}
-  <div class="alert alert-info">Чанки не знайдені.</div>
-  {% endfor %}
+{% if source_groups %}
+
+{% if source_groups|length > 1 %}
+<div class="bulk-actions">
+  <button type="button" onclick="expandAll()">▼ Розгорнути всі</button>
+  <button type="button" onclick="collapseAll()">▲ Згорнути всі</button>
 </div>
-
-<!-- PAGINATION -->
-{% if total_pages > 1 %}
-<div class="pagination">
-  {% if page > 1 %}
-    <a href="?page={{ page - 1 }}&per_page={{ per_page }}&source={{ source_filter }}">‹ Назад</a>
-  {% else %}
-    <span class="disabled">‹ Назад</span>
-  {% endif %}
-
-  {% set window = 3 %}
-  {% for p in range([1, page - window]|max, [total_pages + 1, page + window + 1]|min) %}
-    {% if p == page %}
-      <span class="current">{{ p }}</span>
-    {% else %}
-      <a href="?page={{ p }}&per_page={{ per_page }}&source={{ source_filter }}">{{ p }}</a>
-    {% endif %}
-  {% endfor %}
-
-  {% if page < total_pages %}
-    <a href="?page={{ page + 1 }}&per_page={{ per_page }}&source={{ source_filter }}">Вперед ›</a>
-  {% else %}
-    <span class="disabled">Вперед ›</span>
-  {% endif %}
-</div>
-<div class="pagination-info">Сторінка {{ page }} з {{ total_pages }}</div>
 {% endif %}
+
+<!-- ACCORDION -->
+<div class="source-accordion" id="accordion">
+  {% for group in source_groups %}
+  <details class="source-group" {% if source_filter or source_groups|length == 1 %}open{% endif %}>
+    <summary>
+      <span class="summary-arrow">▶</span>
+      <span class="summary-icon">📄</span>
+      <span class="summary-name" title="{{ group.source }}">{{ group.source }}</span>
+      <span class="summary-badge">{{ group.count }} чанків</span>
+    </summary>
+
+    <div class="chunks-body">
+      {% for c in group.chunks %}
+      <div class="chunk-card">
+        <div class="chunk-meta">
+          <span class="chunk-id-badge">{{ c.chunk_id }}</span>
+          <span class="chunk-len-badge">{{ c.text|length }} симв.</span>
+        </div>
+        <div class="chunk-text">{{ c.text[:350] }}{% if c.text|length > 350 %}…{% endif %}</div>
+        {% if c.text|length > 350 %}
+        <details class="chunk-expand">
+          <summary><span class="exp-icon"></span>&nbsp;Показати повний текст</summary>
+          <div class="full-text">{{ c.text }}</div>
+        </details>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </details>
+  {% endfor %}
+</div>
+
+{% else %}
+<div class="alert alert-info">Чанки не знайдені.</div>
+{% endif %}
+
+<script>
+function expandAll() {
+  document.querySelectorAll('#accordion details.source-group').forEach(d => d.open = true);
+}
+function collapseAll() {
+  document.querySelectorAll('#accordion details.source-group').forEach(d => d.open = false);
+}
+</script>
 {% endblock %}
+

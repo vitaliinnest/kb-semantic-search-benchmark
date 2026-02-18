@@ -162,30 +162,33 @@ def index():
 
 @app.route("/documents")
 def documents():
+    from collections import defaultdict
+
     chunks = load_all_chunks()
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 20))
     source_filter = request.args.get("source", "").strip()
 
     # Унікальні джерела
     all_sources = sorted({c["source"] for c in chunks})
 
-    if source_filter:
-        chunks = [c for c in chunks if c["source"] == source_filter]
+    working = [c for c in chunks if c["source"] == source_filter] if source_filter else chunks
 
-    total = len(chunks)
-    total_pages = max(1, (total + per_page - 1) // per_page)
-    page = max(1, min(page, total_pages))
-    start = (page - 1) * per_page
-    page_chunks = chunks[start : start + per_page]
+    # Групуємо по джерелу
+    groups_dict: dict[str, list] = defaultdict(list)
+    for c in working:
+        groups_dict[c["source"]].append(c)
+
+    source_groups = [
+        {"source": s, "chunks": groups_dict[s], "count": len(groups_dict[s])}
+        for s in sorted(groups_dict)
+    ]
+
+    total_chunks = sum(g["count"] for g in source_groups)
 
     return render_template(
         "documents.html",
-        chunks=page_chunks,
-        page=page,
-        per_page=per_page,
-        total=total,
-        total_pages=total_pages,
+        source_groups=source_groups,
+        total_sources=len(source_groups),
+        total_chunks=total_chunks,
         all_sources=all_sources,
         source_filter=source_filter,
     )
