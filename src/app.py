@@ -17,6 +17,7 @@ from embedding_models import load_model_from_artifacts
 ROOT = Path(__file__).parent.parent
 ARTIFACTS_ROOT = ROOT / "artifacts"
 CHUNKS_PATH = ROOT / "data" / "chunks.jsonl"
+BENCHMARK_RESULTS_DIR = ROOT / "results" / "benchmark"
 
 app = Flask(__name__, template_folder="templates")
 
@@ -45,6 +46,19 @@ def discover_models() -> list[dict]:
                     pass
             models.append({"id": model_dir.name, "label": label})
     return models
+
+
+def load_latest_benchmark() -> dict | None:
+    """Завантажує найновіший файл benchmark_results_*.json або None."""
+    if not BENCHMARK_RESULTS_DIR.exists():
+        return None
+    files = sorted(BENCHMARK_RESULTS_DIR.glob("benchmark_results_*.json"))
+    if not files:
+        return None
+    try:
+        return json.loads(files[-1].read_text(encoding="utf-8"))
+    except Exception:
+        return None
 
 
 def load_meta(path: Path) -> list[dict]:
@@ -108,6 +122,20 @@ def do_search(query: str, model_id: str, top_k: int) -> list[dict]:
 @app.route("/")
 def index():
     models = discover_models()
+    benchmark = load_latest_benchmark()
+
+    # Сортуємо моделі за nDCG з бенчмарку (від найкращої до найгіршої)
+    if benchmark and benchmark.get("models"):
+        ndcg_map = {
+            m["artifacts_dir"].split("\\")[-1].split("/")[-1]: m["ndcg_at_k"]
+            for m in benchmark["models"]
+        }
+        models = sorted(models, key=lambda m: ndcg_map.get(m["id"], -1), reverse=True)
+        # Додаємо nDCG до кожної моделі для відображення в дропдауні
+        for m in models:
+            ndcg = ndcg_map.get(m["id"])
+            if ndcg is not None:
+                m["ndcg"] = ndcg
     query = request.args.get("q", "").strip()
     model_id = request.args.get("model", models[0]["id"] if models else "")
     top_k = int(request.args.get("top_k", 5))
@@ -128,6 +156,7 @@ def index():
         top_k=top_k,
         results=results,
         error=error,
+        benchmark=benchmark,
     )
 
 
