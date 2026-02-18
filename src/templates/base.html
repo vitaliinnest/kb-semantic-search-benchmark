@@ -126,6 +126,9 @@
     <a class="logo" href="/">🔍 KB Search</a>
     <a href="/" {% if request.path == '/' %}class="active"{% endif %}>Пошук</a>
     <a href="/documents" {% if request.path == '/documents' %}class="active"{% endif %}>Документи</a>
+    <a href="/raw" {% if request.path == '/raw' %}class="active"{% endif %}>Файли</a>
+    <a href="/build" {% if request.path == '/build' %}class="active"{% endif %}>Індекси</a>
+    <a href="/benchmark" {% if request.path == '/benchmark' %}class="active"{% endif %}>Benchmark</a>
   </nav>
   <main>
     {% block content %}{% endblock %}

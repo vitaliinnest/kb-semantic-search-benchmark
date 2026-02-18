@@ -1,0 +1,516 @@
+{% extends "base.html" %}
+{% block title %}Побудова індексів — KB Search{% endblock %}
+
+{% block head %}
+<style>
+  .page-heading { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .page-sub     { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+
+  /* ── WARNING BANNER ── */
+  .chunks-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+  .chunks-banner.ok    { background:#e6f4ea; color:#1e6e3a; border:1px solid #b6dfc5; }
+  .chunks-banner.warn  { background:#fff3cd; color:#856404; border:1px solid #ffe082; }
+  .chunks-banner .cb-icon { font-size: 20px; }
+
+  /* ── MODEL GRID ── */
+  .models-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .model-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: border-color .18s;
+  }
+  .model-card.selected { border-color: var(--primary); }
+
+  .model-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface);
+    transition: background .15s;
+  }
+  .model-card-header:hover { background: #f8f9fa; }
+
+  .mc-checkbox {
+    width: 18px; height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .mc-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    flex-shrink: 0;
+    min-width: 90px;
+  }
+  .mc-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    flex: 1;
+  }
+
+  /* status badges on the card */
+  .mc-status {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .mc-status.built    { background: #e6f4ea; color: #1e6e3a; }
+  .mc-status.notbuilt { background: #f1f3f4; color: var(--text-muted); }
+  .mc-status.running  { background: #fff3cd; color: #856404; }
+  .mc-status.done-ok  { background: #e6f4ea; color: #1e6e3a; }
+  .mc-status.done-err { background: #fce8e6; color: #c5221f; }
+
+  .mc-expand-btn {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background .15s, border-color .15s;
+  }
+  .mc-expand-btn:hover { background: #f1f3f4; border-color: var(--primary); }
+
+  /* params panel */
+  .model-params {
+    display: none;
+    padding: 14px 20px 16px 48px;
+    border-top: 1px solid var(--border);
+    background: #f8f9fa;
+  }
+  .model-params.open { display: block; }
+  .params-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .param-item label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+  .param-item input {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13.5px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    width: 220px;
+    transition: border-color .15s;
+  }
+  .param-item input[type=number] { width: 120px; }
+  .param-item input:focus { border-color: var(--primary); }
+
+  /* ── BUILD BUTTON ── */
+  .build-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .selected-count {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .selected-count strong { color: var(--text); }
+
+  #build-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+  /* ── LOG PANEL ── */
+  .log-panel {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .log-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    background: #f8f9fa;
+  }
+  .log-panel-header .title { font-size: 14px; font-weight: 700; }
+  .log-clear-btn {
+    font-size: 12px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: background .15s;
+  }
+  .log-clear-btn:hover { background: #f1f3f4; color: var(--text); }
+
+  .log-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    background: #f8f9fa;
+    padding: 0 12px;
+  }
+  .log-tab {
+    padding: 8px 16px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    white-space: nowrap;
+    color: var(--text-muted);
+    transition: color .15s, border-color .15s;
+    user-select: none;
+  }
+  .log-tab:hover   { color: var(--text); }
+  .log-tab.active  { color: var(--primary); border-bottom-color: var(--primary); }
+  .log-tab .tab-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    margin-right: 5px;
+    background: #ccc;
+  }
+  .log-tab .tab-dot.running { background: #f59e0b; animation: pulse .9s infinite; }
+  .log-tab .tab-dot.ok      { background: #22c55e; }
+  .log-tab .tab-dot.err     { background: #ef4444; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  .log-pane {
+    display: none;
+    height: 320px;
+    overflow-y: auto;
+    padding: 14px 16px;
+    font-family: "Consolas", "Fira Code", monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #334155;
+    background: #fafafa;
+  }
+  .log-pane.active { display: block; }
+  .log-line { white-space: pre-wrap; word-break: break-all; }
+  .log-line.err  { color: #c5221f; }
+  .log-line.warn { color: #856404; }
+  .log-line.ok   { color: #1e6e3a; }
+  .log-empty { color: var(--text-muted); font-style: italic; font-size: 12px; text-align: center; padding-top: 60px; }
+
+  /* spinner inline */
+  .spin {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border: 2px solid #856404;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-heading">🔨 Побудова індексів</div>
+<div class="page-sub">Оберіть моделі, налаштуйте параметри та запустіть векторизацію чанків</div>
+
+<!-- CHUNKS STATUS -->
+{% if chunks_exist %}
+<div class="chunks-banner ok">
+  <span class="cb-icon">✅</span>
+  <span>Знайдено <strong>{{ chunk_count }}</strong> чанків у <code>data/chunks.jsonl</code> — готово до побудови індексів.</span>
+</div>
+{% else %}
+<div class="chunks-banner warn">
+  <span class="cb-icon">⚠️</span>
+  <span><strong>chunks.jsonl не знайдено.</strong> Спочатку <a href="/raw">завантажте файли та запустіть чанкінг</a>.</span>
+</div>
+{% endif %}
+
+<!-- MODEL CARDS -->
+<div class="models-grid" id="models-grid">
+  {% for m in models %}
+  <div class="model-card" id="card-{{ m.id }}">
+    <div class="model-card-header" onclick="toggleCard('{{ m.id }}', event)">
+      <input class="mc-checkbox" type="checkbox" id="chk-{{ m.id }}"
+             data-model="{{ m.id }}"
+             onclick="event.stopPropagation(); updateSelected()"
+             {% if not chunks_exist %}disabled{% endif %}>
+      <span class="mc-label">{{ m.label }}</span>
+      <span class="mc-desc">{{ m.desc }}</span>
+
+      <!-- per-session job status (динамічно оновлюється JS) -->
+      <span class="mc-status {{ 'running' if m.job.get('running') else ('done-ok' if m.job.get('done') and m.job.get('exit_code') == 0 else ('done-err' if m.job.get('done') else ('built' if m.artifact.exists else 'notbuilt'))) }}"
+            id="jbadge-{{ m.id }}">
+        {% if m.job.get('running') %}<span class="spin"></span>Будується…
+        {% elif m.job.get('done') and m.job.get('exit_code') == 0 %}✓ Готово
+        {% elif m.job.get('done') %}✗ Помилка
+        {% elif m.artifact.exists %}✓ {{ m.artifact.mtime_fmt }}
+        {% else %}Не побудовано{% endif %}
+      </span>
+
+      {% if m.params %}
+      <button class="mc-expand-btn" id="exp-{{ m.id }}"
+              onclick="event.stopPropagation(); toggleParams('{{ m.id }}')">⚙ Параметри</button>
+      {% endif %}
+    </div>
+
+    <!-- PARAMS -->
+    {% if m.params %}
+    <div class="model-params" id="params-{{ m.id }}">
+      <div class="params-row">
+        {% for p in m.params %}
+        <div class="param-item">
+          <label>{{ p.label }}</label>
+          <input type="{{ p.type }}" id="param-{{ m.id }}-{{ p.name }}"
+                 data-model="{{ m.id }}" data-param="{{ p.name }}"
+                 value="{{ p.default }}">
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<!-- BUILD BUTTON -->
+<div class="build-bar">
+  <button class="btn btn-primary" id="build-btn" onclick="startBuild()" disabled>
+    ▶ Побудувати індекси
+  </button>
+  <span class="selected-count" id="sel-count">Не вибрано жодної моделі</span>
+</div>
+
+<!-- LOG PANEL -->
+<div class="log-panel" id="log-panel" style="display:none;">
+  <div class="log-panel-header">
+    <span class="title">📋 Лог побудови</span>
+    <button class="log-clear-btn" onclick="clearLogs()">Очистити</button>
+  </div>
+  <div class="log-tabs" id="log-tabs"></div>
+  <div id="log-panes"></div>
+</div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let _activeModels = new Set();
+let _pollTimer    = null;
+let _activeTab    = null;
+let _logCursors   = {};   // model_id -> how many lines we've already rendered
+
+// ── Card / Checkbox ──────────────────────────────────────────────────────────
+function toggleCard(id, e) {
+  const chk = document.getElementById('chk-' + id);
+  if (chk.disabled) return;
+  chk.checked = !chk.checked;
+  updateSelected();
+}
+function toggleParams(id) {
+  const p   = document.getElementById('params-' + id);
+  const btn = document.getElementById('exp-' + id);
+  const open = p.classList.toggle('open');
+  btn.textContent = open ? '⚙ Сховати' : '⚙ Параметри';
+}
+
+function updateSelected() {
+  const checked = [...document.querySelectorAll('.mc-checkbox:checked')].map(c => c.dataset.model);
+  const btn  = document.getElementById('build-btn');
+  const info = document.getElementById('sel-count');
+  if (checked.length === 0) {
+    btn.disabled = true;
+    info.innerHTML = 'Не вибрано жодної моделі';
+  } else {
+    btn.disabled = false;
+    info.innerHTML = `Вибрано: <strong>${checked.length}</strong> модел${checked.length === 1 ? 'ь' : 'і'}`;
+  }
+  checked.forEach(id => document.getElementById('card-' + id).classList.add('selected'));
+  document.querySelectorAll('.model-card').forEach(c => {
+    if (!checked.includes(c.id.replace('card-', ''))) c.classList.remove('selected');
+  });
+}
+
+// ── Build ────────────────────────────────────────────────────────────────────
+function collectModels() {
+  const checked = [...document.querySelectorAll('.mc-checkbox:checked')].map(c => c.dataset.model);
+  return checked.map(id => {
+    const params = {};
+    document.querySelectorAll(`[data-model="${id}"][data-param]`).forEach(inp => {
+      params[inp.dataset.param] = inp.value;
+    });
+    return { id, params };
+  });
+}
+
+function startBuild() {
+  const models = collectModels();
+  if (!models.length) return;
+
+  document.getElementById('build-btn').disabled = true;
+
+  // init log panel for selected models
+  const panel = document.getElementById('log-panel');
+  panel.style.display = '';
+  models.forEach(m => initLogTab(m.id));
+  if (!_activeTab && models.length) switchTab(models[0].id);
+
+  fetch('/build/run', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ models })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (!data.ok) { alert('Помилка: ' + data.error); document.getElementById('build-btn').disabled = false; return; }
+    data.started.forEach(id => _activeModels.add(id));
+    if (!_pollTimer) _pollTimer = setInterval(pollStatus, 1500);
+  })
+  .catch(() => { alert('Мережева помилка'); document.getElementById('build-btn').disabled = false; });
+}
+
+// ── Log tabs ─────────────────────────────────────────────────────────────────
+function initLogTab(id) {
+  if (document.getElementById('tab-' + id)) return;
+  _logCursors[id] = 0;
+
+  const tabs  = document.getElementById('log-tabs');
+  const panes = document.getElementById('log-panes');
+
+  const tab = document.createElement('div');
+  tab.className  = 'log-tab';
+  tab.id         = 'tab-' + id;
+  tab.innerHTML  = `<span class="tab-dot" id="dot-${id}"></span>${id}`;
+  tab.onclick    = () => switchTab(id);
+  tabs.appendChild(tab);
+
+  const pane = document.createElement('div');
+  pane.className = 'log-pane';
+  pane.id        = 'pane-' + id;
+  pane.innerHTML = '<div class="log-empty">Очікування…</div>';
+  panes.appendChild(pane);
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.log-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.log-pane').forEach(p => p.classList.remove('active'));
+  const tab  = document.getElementById('tab-'  + id);
+  const pane = document.getElementById('pane-' + id);
+  if (tab)  tab.classList.add('active');
+  if (pane) pane.classList.add('active');
+  _activeTab = id;
+}
+
+function clearLogs() {
+  document.getElementById('log-tabs').innerHTML = '';
+  document.getElementById('log-panes').innerHTML = '';
+  _logCursors   = {};
+  _activeTab    = null;
+  _activeModels.clear();
+  clearInterval(_pollTimer);
+  _pollTimer = null;
+  document.getElementById('log-panel').style.display = 'none';
+  document.getElementById('build-btn').disabled = false;
+  updateSelected();
+}
+
+// ── Poll ──────────────────────────────────────────────────────────────────────
+function pollStatus() {
+  fetch('/build/status')
+    .then(r => r.json())
+    .then(jobs => {
+      let anyRunning = false;
+      for (const [id, job] of Object.entries(jobs)) {
+        if (!_activeModels.has(id)) continue;
+        renderLog(id, job);
+        updateBadge(id, job);
+        if (job.running) anyRunning = true;
+      }
+      if (!anyRunning) {
+        clearInterval(_pollTimer);
+        _pollTimer = null;
+        document.getElementById('build-btn').disabled = false;
+        updateSelected();
+        // invalidate cached models in the search page
+        _activeModels.clear();
+      }
+    })
+    .catch(() => {});
+}
+
+function renderLog(id, job) {
+  const pane = document.getElementById('pane-' + id);
+  if (!pane) return;
+  const lines = job.log || [];
+  const cursor = _logCursors[id] || 0;
+  if (lines.length === 0 && cursor === 0) return;
+
+  // first render — clear placeholder
+  if (cursor === 0) pane.innerHTML = '';
+
+  const newLines = lines.slice(cursor);
+  _logCursors[id] = lines.length;
+  newLines.forEach(line => {
+    const div = document.createElement('div');
+    div.className = 'log-line' + (line.includes('ERROR') || line.includes('Помилка') ? ' err' : line.includes('WARNING') ? ' warn' : line.includes('Збережено') || line.includes('векторів') ? ' ok' : '');
+    div.textContent = line;
+    pane.appendChild(div);
+  });
+  // auto-scroll if this tab is active
+  if (_activeTab === id) pane.scrollTop = pane.scrollHeight;
+}
+
+function updateBadge(id, job) {
+  const badge = document.getElementById('jbadge-' + id);
+  const dot   = document.getElementById('dot-' + id);
+  if (!badge) return;
+  if (job.running) {
+    badge.className = 'mc-status running';
+    badge.innerHTML = '<span class="spin"></span>Будується…';
+    if (dot) { dot.className = 'tab-dot running'; }
+  } else if (job.done && job.exit_code === 0) {
+    badge.className = 'mc-status done-ok';
+    badge.textContent = '✓ Готово';
+    if (dot) { dot.className = 'tab-dot ok'; }
+  } else if (job.done) {
+    badge.className = 'mc-status done-err';
+    badge.textContent = '✗ Помилка';
+    if (dot) { dot.className = 'tab-dot err'; }
+  }
+}
+</script>
+{% endblock %}

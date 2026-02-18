@@ -1,0 +1,441 @@
+{% extends "base.html" %}
+{% block title %}Benchmark — KB Search{% endblock %}
+
+{% block head %}
+<style>
+  .page-heading { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .page-sub     { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+
+  /* ── STATUS BANNERS ── */
+  .banner {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 18px; border-radius: var(--radius);
+    margin-bottom: 16px; font-size: 14px;
+  }
+  .banner.ok   { background:#e6f4ea; color:#1e6e3a; border:1px solid #b6dfc5; }
+  .banner.warn { background:#fff3cd; color:#856404; border:1px solid #ffe082; }
+  .banner.err  { background:#fce8e6; color:#c5221f; border:1px solid #f5c6c4; }
+  .banner .bi  { font-size: 20px; }
+
+  /* ── RUN PANEL ── */
+  .run-panel {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+  .run-panel h2 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+  .run-bar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .run-bar label {
+    font-size: 11.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .4px; color: var(--text-muted);
+    margin-right: 6px;
+  }
+  .run-bar input[type=number] {
+    border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 7px 12px; font-size: 14px;
+    background: var(--surface); color: var(--text);
+    outline: none; width: 90px;
+    transition: border-color .15s;
+  }
+  .run-bar input[type=number]:focus { border-color: var(--primary); }
+  #run-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+  /* ── LOG PANEL ── */
+  .log-wrap {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 28px;
+    display: none;
+  }
+  .log-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px; border-bottom: 1px solid var(--border);
+    background: #f8f9fa;
+  }
+  .log-header .lh-title { font-size: 14px; font-weight: 700; }
+  .log-body {
+    height: 280px; overflow-y: auto;
+    padding: 12px 16px;
+    font-family: "Consolas","Fira Code",monospace;
+    font-size: 12.5px; line-height: 1.7;
+    color: #334155; background: #fafafa;
+  }
+  .log-line { white-space: pre-wrap; word-break: break-all; }
+  .log-line.e { color: #c5221f; }
+  .log-line.w { color: #856404; }
+  .log-line.s { color: #1e6e3a; }
+  .spin {
+    display: inline-block; width: 13px; height: 13px;
+    border: 2px solid #856404; border-top-color: transparent;
+    border-radius: 50%; animation: sp .7s linear infinite;
+    vertical-align: middle; margin-right: 5px;
+  }
+  @keyframes sp { to { transform: rotate(360deg); } }
+
+  /* ── RESULTS TABLE ── */
+  .results-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .results-meta { font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px; }
+
+  .metrics-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+  }
+  .metrics-table th {
+    background: #f8f9fa;
+    font-size: 11.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .5px;
+    color: var(--text-muted);
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .metrics-table th.metric { text-align: center; min-width: 130px; }
+  .metrics-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+    font-size: 13.5px;
+  }
+  .metrics-table tr:last-child td { border-bottom: none; }
+  .metrics-table tr:hover td { background: #f8f9fa; }
+  .metrics-table tr.best td { background: #f0fdf4; }
+
+  .model-name-cell { font-weight: 700; white-space: nowrap; }
+  .rank-badge {
+    display: inline-block;
+    font-size: 11px; font-weight: 800;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    text-align: center; line-height: 22px;
+    margin-right: 6px; flex-shrink: 0;
+  }
+  .rank-1 { background: #fde68a; color: #78350f; }
+  .rank-2 { background: #e5e7eb; color: #374151; }
+  .rank-3 { background: #fed7aa; color: #7c2d12; }
+  .rank-n { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+
+  /* metric cell with bar */
+  .metric-cell { text-align: center; }
+  .metric-val { font-size: 13.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .metric-bar-wrap { height: 4px; background: #e5e7eb; border-radius: 2px; margin-top: 4px; }
+  .metric-bar { height: 4px; border-radius: 2px; background: var(--primary); transition: width .4s; }
+
+  .latency-cell { text-align: center; font-size: 13px; color: var(--text-muted); }
+  .latency-good { color: #1e6e3a; font-weight: 600; }
+  .latency-slow { color: #856404; }
+
+  .queries-cell { text-align: center; font-size: 12.5px; color: var(--text-muted); }
+
+  /* ── HISTORY ── */
+  .history-section h2 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .history-list {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .history-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .history-row:last-child { border-bottom: none; }
+  .history-row:hover { background: #f8f9fa; }
+  .history-row.active { background: #e8f0fe; }
+  .hr-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
+  .hr-name { font-family: monospace; font-size: 12.5px; color: var(--text-muted); flex: 1; }
+  .hr-date { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .hr-models { font-size: 11.5px; color: var(--text-muted); }
+
+  /* empty */
+  .empty { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 14px; }
+  .empty-icon { font-size: 36px; margin-bottom: 10px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-heading">📊 Benchmark</div>
+<div class="page-sub">Порівняння якості retrieval між моделями за Recall, MRR, nDCG, Precision</div>
+
+<!-- STATUS BANNERS -->
+{% if not queries_exist %}
+<div class="banner warn">
+  <span class="bi">⚠️</span>
+  <span><strong>queries.jsonl або qrels.jsonl не знайдено</strong> у <code>data/benchmark/</code>.
+  Benchmark запустити неможливо.</span>
+</div>
+{% endif %}
+{% if not artifacts_exist %}
+<div class="banner warn">
+  <span class="bi">⚠️</span>
+  <span><strong>Жодного індексу не побудовано.</strong>
+  Спочатку <a href="/build">побудуйте індекси</a>.</span>
+</div>
+{% endif %}
+
+<!-- RUN PANEL -->
+<div class="run-panel">
+  <h2>▶ Запустити benchmark</h2>
+  <div class="run-bar">
+    <label for="top-k-inp">Top-K</label>
+    <input type="number" id="top-k-inp" value="10" min="1" max="100">
+    <button class="btn btn-primary" id="run-btn"
+            onclick="runBenchmark()"
+            {% if not queries_exist or not artifacts_exist %}disabled{% endif %}>
+      ▶ Запустити
+    </button>
+    <span id="run-status" style="font-size:13.5px;color:var(--text-muted);"></span>
+  </div>
+</div>
+
+<!-- LOG -->
+<div class="log-wrap" id="log-wrap">
+  <div class="log-header">
+    <span class="lh-title">📋 Лог виконання</span>
+  </div>
+  <div class="log-body" id="log-body"></div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-section" id="results-section">
+{% if latest %}
+  {% set ts = latest.timestamp[:16].replace('T',' ') %}
+  <h2>Результати <span style="font-size:13px;font-weight:400;color:var(--text-muted);">— {{ ts }}, top_k={{ latest.top_k }}, {{ latest.queries_count }} запитів</span></h2>
+  <div class="results-meta">Сортування за <strong>nDCG@k</strong> (від найкращого)</div>
+
+  {% set sorted_models = latest.models | sort(attribute='ndcg_at_k', reverse=True) %}
+  {% set max_ndcg    = sorted_models | map(attribute='ndcg_at_k')    | max %}
+  {% set max_mrr     = sorted_models | map(attribute='mrr_at_k')     | max %}
+  {% set max_recall  = sorted_models | map(attribute='recall_at_k')  | max %}
+  {% set max_prec    = sorted_models | map(attribute='precision_at_k')| max %}
+
+  <table class="metrics-table" id="results-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Модель</th>
+        <th class="metric">nDCG@{{ latest.top_k }}</th>
+        <th class="metric">MRR@{{ latest.top_k }}</th>
+        <th class="metric">Recall@{{ latest.top_k }}</th>
+        <th class="metric">P@{{ latest.top_k }}</th>
+        <th class="metric">мс/запит</th>
+        <th class="metric">Запитів</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for m in sorted_models %}
+    {% set loop_rank = loop.index %}
+    <tr {% if loop_rank == 1 %}class="best"{% endif %}>
+      <td>
+        <span class="rank-badge {% if loop_rank == 1 %}rank-1{% elif loop_rank == 2 %}rank-2{% elif loop_rank == 3 %}rank-3{% else %}rank-n{% endif %}">
+          {{ loop_rank }}
+        </span>
+      </td>
+      <td class="model-name-cell">{{ m.model_name }}</td>
+
+      {% macro bar_cell(val, maxv) %}
+      <td class="metric-cell">
+        <div class="metric-val">{{ "%.4f"|format(val) }}</div>
+        <div class="metric-bar-wrap">
+          <div class="metric-bar" style="width:{{ ((val / maxv * 100) if maxv > 0 else 0)|round(1) }}%"></div>
+        </div>
+      </td>
+      {% endmacro %}
+
+      {{ bar_cell(m.ndcg_at_k,    max_ndcg)   }}
+      {{ bar_cell(m.mrr_at_k,     max_mrr)    }}
+      {{ bar_cell(m.recall_at_k,  max_recall) }}
+      {{ bar_cell(m.precision_at_k, max_prec) }}
+
+      <td class="latency-cell {% if m.avg_latency_ms < 20 %}latency-good{% elif m.avg_latency_ms > 100 %}latency-slow{% endif %}">
+        {{ "%.1f"|format(m.avg_latency_ms) }}
+      </td>
+      <td class="queries-cell">{{ m.queries_evaluated }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <div class="empty"><div class="empty-icon">📭</div>Результатів ще немає. Запустіть benchmark.</div>
+{% endif %}
+</div>
+
+<!-- HISTORY -->
+{% if all_results | length > 1 %}
+<div class="history-section">
+  <h2>📁 Попередні запуски</h2>
+  <div class="history-list">
+    {% for r in all_results %}
+    <div class="history-row {% if loop.first %}active{% endif %}"
+         onclick="loadResult('{{ r._filename }}', this)">
+      <span class="hr-dot"></span>
+      <span class="hr-name">{{ r._filename }}</span>
+      <span class="hr-models">{{ r.models | length }} моделей</span>
+      <span class="hr-date">top_k={{ r.top_k }}, {{ r.queries_count }} запитів</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<script>
+// ── Run benchmark ─────────────────────────────────────────────────────────────
+let _pollTimer  = null;
+let _logCursor  = 0;
+
+function runBenchmark() {
+  const topK = document.getElementById('top-k-inp').value;
+  const btn  = document.getElementById('run-btn');
+  btn.disabled = true;
+  setRunStatus('<span class="spin"></span>Запускається…', '#856404');
+
+  const fd = new FormData();
+  fd.append('top_k', topK);
+
+  fetch('/benchmark/run', { method: 'POST', body: fd })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.ok) {
+        setRunStatus('❌ ' + data.error, '#c5221f');
+        btn.disabled = false;
+        return;
+      }
+      _logCursor = 0;
+      document.getElementById('log-body').innerHTML = '';
+      document.getElementById('log-wrap').style.display = '';
+      _pollTimer = setInterval(pollBenchmark, 1500);
+    })
+    .catch(() => { setRunStatus('❌ Мережева помилка', '#c5221f'); btn.disabled = false; });
+}
+
+function setRunStatus(html, color) {
+  const el = document.getElementById('run-status');
+  el.innerHTML = html;
+  el.style.color = color || 'var(--text-muted)';
+}
+
+function pollBenchmark() {
+  fetch('/benchmark/status')
+    .then(r => r.json())
+    .then(job => {
+      renderLog(job.log || []);
+      if (!job.running) {
+        clearInterval(_pollTimer);
+        _pollTimer = null;
+        document.getElementById('run-btn').disabled = false;
+        if (job.exit_code === 0) {
+          setRunStatus('✅ Готово! Оновлення результатів…', '#1e6e3a');
+          // reload results table from server
+          fetch('/benchmark/result')
+            .then(r => r.json())
+            .then(data => { if (data) refreshTable(data); setRunStatus('✅ Готово!', '#1e6e3a'); })
+            .catch(() => { location.reload(); });
+        } else {
+          setRunStatus('❌ Benchmark завершився з помилкою (код ' + job.exit_code + ')', '#c5221f');
+        }
+      }
+    })
+    .catch(() => {});
+}
+
+function renderLog(lines) {
+  const body = document.getElementById('log-body');
+  const newLines = lines.slice(_logCursor);
+  _logCursor = lines.length;
+  if (!newLines.length) return;
+  newLines.forEach(line => {
+    const d = document.createElement('div');
+    d.className = 'log-line' +
+      (line.includes('ERROR')   || line.includes('Помилка') ? ' e' :
+       line.includes('WARNING') ? ' w' :
+       line.includes('✅') || line.includes('completed') ? ' s' : '');
+    d.textContent = line;
+    body.appendChild(d);
+  });
+  body.scrollTop = body.scrollHeight;
+}
+
+// ── Refresh results table without page reload ─────────────────────────────
+function refreshTable(data) {
+  const section = document.getElementById('results-section');
+  if (!section) return;
+
+  const sorted = [...data.models].sort((a,b) => b.ndcg_at_k - a.ndcg_at_k);
+  const maxNdcg   = Math.max(...sorted.map(m => m.ndcg_at_k),   0.0001);
+  const maxMrr    = Math.max(...sorted.map(m => m.mrr_at_k),    0.0001);
+  const maxRecall = Math.max(...sorted.map(m => m.recall_at_k), 0.0001);
+  const maxPrec   = Math.max(...sorted.map(m => m.precision_at_k), 0.0001);
+  const ts        = data.timestamp.slice(0,16).replace('T',' ');
+
+  const rankClasses = ['rank-1','rank-2','rank-3'];
+
+  function barCell(val, mx) {
+    const pct = mx > 0 ? (val / mx * 100).toFixed(1) : 0;
+    return `<td class="metric-cell">
+      <div class="metric-val">${val.toFixed(4)}</div>
+      <div class="metric-bar-wrap"><div class="metric-bar" style="width:${pct}%"></div></div>
+    </td>`;
+  }
+
+  const rows = sorted.map((m, i) => {
+    const rank = i + 1;
+    const rankCls = rankClasses[i] || 'rank-n';
+    const latCls  = m.avg_latency_ms < 20 ? 'latency-good' : m.avg_latency_ms > 100 ? 'latency-slow' : '';
+    return `<tr ${rank===1?'class="best"':''}>
+      <td><span class="rank-badge ${rankCls}">${rank}</span></td>
+      <td class="model-name-cell">${m.model_name}</td>
+      ${barCell(m.ndcg_at_k,    maxNdcg)}
+      ${barCell(m.mrr_at_k,     maxMrr)}
+      ${barCell(m.recall_at_k,  maxRecall)}
+      ${barCell(m.precision_at_k, maxPrec)}
+      <td class="latency-cell ${latCls}">${m.avg_latency_ms.toFixed(1)}</td>
+      <td class="queries-cell">${m.queries_evaluated}</td>
+    </tr>`;
+  }).join('');
+
+  section.innerHTML = `
+    <h2>Результати <span style="font-size:13px;font-weight:400;color:var(--text-muted);">— ${ts}, top_k=${data.top_k}, ${data.queries_count} запитів</span></h2>
+    <div class="results-meta">Сортування за <strong>nDCG@k</strong> (від найкращого)</div>
+    <table class="metrics-table" id="results-table">
+      <thead><tr>
+        <th>#</th><th>Модель</th>
+        <th class="metric">nDCG@${data.top_k}</th>
+        <th class="metric">MRR@${data.top_k}</th>
+        <th class="metric">Recall@${data.top_k}</th>
+        <th class="metric">P@${data.top_k}</th>
+        <th class="metric">мс/запит</th>
+        <th class="metric">Запитів</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// ── Load historical result ─────────────────────────────────────────────────
+function loadResult(filename, rowEl) {
+  document.querySelectorAll('.history-row').forEach(r => r.classList.remove('active'));
+  rowEl.classList.add('active');
+
+  fetch(`/results/benchmark/${filename}`)
+    .then(r => r.json())
+    .then(data => { if (data) refreshTable(data); })
+    .catch(() => {});
+}
+</script>
+{% endblock %}
