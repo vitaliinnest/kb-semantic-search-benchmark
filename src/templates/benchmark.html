@@ -160,9 +160,8 @@
   .history-row:hover { background: #f8f9fa; }
   .history-row.active { background: #e8f0fe; }
   .hr-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
-  .hr-name { font-family: monospace; font-size: 12.5px; color: var(--text-muted); flex: 1; }
-  .hr-date { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
-  .hr-models { font-size: 11.5px; color: var(--text-muted); }
+  .hr-date { font-size: 13.5px; font-weight: 600; color: var(--text); flex: 1; }
+  .hr-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
 
   /* empty */
   .empty { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 14px; }
@@ -285,17 +284,17 @@
 </div>
 
 <!-- HISTORY -->
-{% if all_results | length > 1 %}
+{% if all_results %}
 <div class="history-section">
-  <h2>📁 Попередні запуски</h2>
+  <h2>📁 Історія benchmark</h2>
   <div class="history-list">
     {% for r in all_results %}
+    {% set dt = r.timestamp[:16].replace('T', ' ') %}
     <div class="history-row {% if loop.first %}active{% endif %}"
          onclick="loadResult('{{ r._filename }}', this)">
       <span class="hr-dot"></span>
-      <span class="hr-name">{{ r._filename }}</span>
-      <span class="hr-models">{{ r.models | length }} моделей</span>
-      <span class="hr-date">top_k={{ r.top_k }}, {{ r.queries_count }} запитів</span>
+      <span class="hr-date">{{ dt }}</span>
+      <span class="hr-meta">{{ r.models | length }} моделей &nbsp;·&nbsp; top_k={{ r.top_k }} &nbsp;·&nbsp; {{ r.queries_count }} запитів</span>
     </div>
     {% endfor %}
   </div>
@@ -449,7 +448,12 @@ function loadResult(filename, rowEl) {
 
   fetch(`/results/benchmark/${filename}`)
     .then(r => r.json())
-    .then(data => { if (data) refreshTable(data); })
+    .then(data => {
+      if (data) {
+        refreshTable(data);
+        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    })
     .catch(() => {});
 }
 </script>
