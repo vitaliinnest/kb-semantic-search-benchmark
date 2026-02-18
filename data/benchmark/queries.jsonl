@@ -32,3 +32,29 @@
 
 {"query_id":"q27","query":"комбінований метод аналізу поведінки клієнтів для підтримки планування","lang":"uk","intent":"method"}
 {"query_id":"q28","query":"логістична регресія для прогнозування відтоку клієнтів","lang":"uk","intent":"technical"}
+
+{"query_id":"q29","query":"One-Class SVM для виявлення аномальних транзакцій","lang":"uk","intent":"technical"}
+{"query_id":"q30","query":"налаштування гіперпараметрів Isolation Forest: n_estimators, contamination","lang":"uk","intent":"technical"}
+{"query_id":"q31","query":"багаторівневий ансамблевий підхід HASBT для виявлення шахрайства","lang":"uk","intent":"method"}
+
+{"query_id":"q32","query":"методи аналізу поведінки клієнтів в електронній комерції","lang":"uk","intent":"topic"}
+{"query_id":"q33","query":"переваги та обмеження методів обчислення customer lifetime value","lang":"uk","intent":"method"}
+{"query_id":"q34","query":"коефіцієнт утримання клієнтів та формула Rc(t) у когортному аналізі","lang":"uk","intent":"technical"}
+
+{"query_id":"q35","query":"роль аналітика при формуванні висновків про виробничі збитки","lang":"uk","intent":"topic"}
+{"query_id":"q36","query":"збитки при виробництві нержавіючої сталі: типи та причини","lang":"uk","intent":"topic"}
+{"query_id":"q37","query":"когортний аналіз виробничих збитків з урахуванням сезонності","lang":"uk","intent":"method"}
+
+{"query_id":"q38","query":"chain-of-thought prompting і role prompting у великих мовних моделях","lang":"uk","intent":"technical"}
+{"query_id":"q39","query":"алгоритм BM25 для ранжування документів за релевантністю","lang":"uk","intent":"method"}
+{"query_id":"q40","query":"розширення запиту та точність ранжування у RAG-системах","lang":"uk","intent":"technical"}
+{"query_id":"q41","query":"формування контексту з історії діалогу для запитів до LLM","lang":"uk","intent":"technical"}
+
+{"query_id":"q42","query":"проблема холодного старту у рекомендаційних системах","lang":"uk","intent":"method"}
+{"query_id":"q43","query":"формула косинусної подібності для порівняння об'єктів нерухомості","lang":"uk","intent":"technical"}
+{"query_id":"q44","query":"евклідова відстань для ранжування пропозицій нерухомості","lang":"uk","intent":"technical"}
+
+{"query_id":"q45","query":"гібридний підхід в рекомендаційних системах проти окремих методів","lang":"uk","intent":"method"}
+{"query_id":"q46","query":"TF-IDF вектор для представлення опису вакансій","lang":"uk","intent":"method"}
+{"query_id":"q47","query":"аналіз поведінкових та текстових характеристик користувача у рекомендаційній системі","lang":"uk","intent":"technical"}
+{"query_id":"q48","query":"оцінка якості рекомендацій вакансій: точність на великих значеннях K","lang":"uk","intent":"method"}
