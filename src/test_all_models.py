@@ -175,7 +175,7 @@ def main():
 		json_file = output_file.with_suffix(".json")
 	else:
 		timestamp = run_started_at.strftime("%Y-%m-%d_%H-%M-%S")
-		base_results_dir = output_arg
+		base_results_dir = output_arg / "tests"
 		output_file = base_results_dir / f"test_results_{timestamp}.txt"
 		json_file = base_results_dir / f"test_results_{timestamp}.json"
 		counter = 2

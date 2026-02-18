@@ -177,7 +177,7 @@ def build_output_paths(output_arg: Path) -> tuple[Path, Path]:
 		json_path = output_arg.with_suffix(".json")
 		return text_path, json_path
 
-	output_dir = output_arg
+	output_dir = output_arg / "benchmark"
 	text_path = output_dir / f"benchmark_results_{timestamp}.txt"
 	json_path = output_dir / f"benchmark_results_{timestamp}.json"
 	counter = 2
