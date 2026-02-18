@@ -1,0 +1,2659 @@
+{
+  "timestamp": "2026-02-18T21:14:09.136526",
+  "top_k": 10,
+  "queries_count": 65,
+  "queries_file": "data\\benchmark\\queries.jsonl",
+  "qrels_file": "data\\benchmark\\qrels.jsonl",
+  "models": [
+    {
+      "model_name": "bert-base-multilingual-cased",
+      "artifacts_dir": "artifacts\\bert",
+      "queries_evaluated": 65,
+      "recall_at_k": 0.4179487179487179,
+      "mrr_at_k": 0.3081746031746032,
+      "ndcg_at_k": 0.2894302571949426,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 0.3333333333333333,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.2781491965442198,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.14285714285714285,
+          "ndcg_at_k": 0.09180385079206221,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.1111111111111111,
+          "ndcg_at_k": 0.3010299956639812,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.3562071871080222,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q9",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q10",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q11",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.5614446911015039,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q12",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.07961179255356228,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q13",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q14",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q15",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.41311732856427996,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q16",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q17",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q18",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q19",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q20",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q21",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q22",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.26064801430716,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q23",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.10654373218155079,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q24",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q25",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8262346571285599,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q26",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.6885288809404666,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q27",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.27541155237618664,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q28",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q29",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.13770577618809332,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q30",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q31",
+          "recall_at_k": 0.3333333333333333,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.1608062983790299,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q32",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.9639404333166532,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q33",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.7967075809905066,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q34",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q35",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q36",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.14285714285714285,
+          "ndcg_at_k": 0.27541155237618664,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q37",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.91311732856428,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q38",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.14285714285714285,
+          "ndcg_at_k": 0.3333333333333333,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q39",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q40",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q41",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q42",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q43",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.2388353776606868,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q44",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q45",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q46",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.13770577618809332,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q47",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8262346571285599,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q48",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q49",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.35583989829307827,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q50",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q51",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.52129602861432,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q52",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q53",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q54",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.09810357436897517,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q55",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.38685280723454163,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q56",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.9639404333166532,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q57",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q58",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q59",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8262346571285599,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q60",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q61",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.09810357436897517,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q62",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8262346571285599,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q63",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.52129602861432,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q64",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q65",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        }
+      ]
+    },
+    {
+      "model_name": "fasttext",
+      "artifacts_dir": "artifacts\\fasttext",
+      "queries_evaluated": 65,
+      "recall_at_k": 0.18717948717948718,
+      "mrr_at_k": 0.0996947496947497,
+      "ndcg_at_k": 0.0971790409926278,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q9",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q10",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q11",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.4437016069115603,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q12",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.3196311965446524,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q13",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q14",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q15",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.17376534287144002,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q16",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q17",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q18",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q19",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q20",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q21",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q22",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q23",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.09810357436897517,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q24",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q25",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q26",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q27",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q28",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q29",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q30",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q31",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q32",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q33",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q34",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q35",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q36",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.2388353776606868,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q37",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.5697222754831122,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q38",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q39",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q40",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q41",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.14285714285714285,
+          "ndcg_at_k": 0.27541155237618664,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q42",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q43",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q44",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q45",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q46",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.52129602861432,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q47",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q48",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q49",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.1111111111111111,
+          "ndcg_at_k": 0.0829071384176138,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q50",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q51",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q52",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q53",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.14285714285714285,
+          "ndcg_at_k": 0.3333333333333333,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q54",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q55",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.38685280723454163,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q56",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.17376534287144002,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q57",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q58",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q59",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.13770577618809332,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q60",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q61",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q62",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q63",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q64",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q65",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        }
+      ]
+    },
+    {
+      "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+      "artifacts_dir": "artifacts\\sbert",
+      "queries_evaluated": 65,
+      "recall_at_k": 0.6948717948717948,
+      "mrr_at_k": 0.4765995115995116,
+      "ndcg_at_k": 0.49416980520788506,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 0.3333333333333333,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.18543279769614657,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.52129602861432,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.11861329943102608,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q9",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.2737031297035753,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q10",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q11",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q12",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.34355515272477377,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q13",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q14",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.2924876733862392,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q15",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.4008544552884763,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q16",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q17",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q18",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.09810357436897517,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q19",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q20",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q21",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q22",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q23",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.17376534287144002,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q24",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.38685280723454163,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q25",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.9091417955461737,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q26",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q27",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.35583989829307827,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q28",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q29",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6590018048024133,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q30",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q31",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q32",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.9180385079206221,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q33",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.2943107231069255,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q34",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q35",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q36",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5196610607458307,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q37",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.91311732856428,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q38",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q39",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8262346571285599,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q40",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.13770577618809332,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q41",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.5296052411645183,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q42",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q43",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6590018048024133,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q44",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.3562071871080222,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q45",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q46",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q47",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8262346571285599,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q48",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.41311732856427996,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q49",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.13770577618809332,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q50",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.14285714285714285,
+          "ndcg_at_k": 0.35245186509922216,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q51",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.5296052411645183,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q52",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q53",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q54",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q55",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q56",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q57",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.2943107231069255,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q58",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q59",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q60",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.1111111111111111,
+          "ndcg_at_k": 0.3010299956639812,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q61",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.41311732856427996,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q62",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.639909328045346,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q63",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.58688267143572,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q64",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q65",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        }
+      ]
+    },
+    {
+      "model_name": "tfidf",
+      "artifacts_dir": "artifacts\\tfidf",
+      "queries_evaluated": 65,
+      "recall_at_k": 0.7692307692307693,
+      "mrr_at_k": 0.46141025641025635,
+      "ndcg_at_k": 0.46942717311693083,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.4826150580085343,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.35875158867613516,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.3154648767857287,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.2890648263178878,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.9639404333166532,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q9",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.33175129600389647,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q10",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q11",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.7031666714374551,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q12",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.4126007205321268,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q13",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.27541155237618664,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q14",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4547902722234161,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q15",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.3739225156604878,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q16",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.3562071871080222,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q17",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.4573369727327457,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q18",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.13770577618809332,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q19",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.3562071871080222,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q20",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q21",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.5142469300368734,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q22",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.13770577618809332,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q23",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.58688267143572,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q24",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q25",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4539434726620534,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q26",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6590018048024133,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q27",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8262346571285599,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q28",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q29",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8262346571285599,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q30",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q31",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8344475896326595,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q32",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q33",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.4935456744811716,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q34",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q35",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q36",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.11861329943102608,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q37",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.9180385079206221,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q38",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.38685280723454163,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q39",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.9639404333166532,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q40",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.13770577618809332,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q41",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.07961179255356228,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q42",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q43",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q44",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q45",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.41311732856427996,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q46",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.3735151267451618,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q47",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.8262346571285599,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q48",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.10654373218155079,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q49",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.27541155237618664,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q50",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q51",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.2943107231069255,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q52",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q53",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q54",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.52129602861432,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q55",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q56",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.6885288809404666,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q57",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.43201649929501884,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q58",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q59",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.4114350473367146,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q60",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q61",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.41311732856427996,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q62",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4623836304746291,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q63",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.37926131373818606,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q64",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.38685280723454163,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q65",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.10654373218155079,
+          "retrieved": 10,
+          "relevant_total": 2
+        }
+      ]
+    },
+    {
+      "model_name": "word2vec",
+      "artifacts_dir": "artifacts\\word2vec",
+      "queries_evaluated": 65,
+      "recall_at_k": 0.11025641025641025,
+      "mrr_at_k": 0.07192307692307692,
+      "ndcg_at_k": 0.06268947816654953,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.08688267143572001,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q9",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q10",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q11",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.649014791936513,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q12",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.3196311965446524,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q13",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q14",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q15",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q16",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q17",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q18",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q19",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q20",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q21",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q22",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q23",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q24",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q25",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q26",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q27",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q28",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q29",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.11861329943102608,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q30",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q31",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q32",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q33",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q34",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q35",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q36",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.2388353776606868,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q37",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 0.5241329676290281,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q38",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q39",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q40",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q41",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q42",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q43",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q44",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q45",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q46",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q47",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q48",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q49",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q50",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q51",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q52",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q53",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q54",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q55",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q56",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q57",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q58",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q59",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.13770577618809332,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q60",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q61",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q62",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q63",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q64",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q65",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        }
+      ]
+    }
+  ]
+}

@@ -58,3 +58,24 @@
 {"query_id":"q46","query":"TF-IDF вектор для представлення опису вакансій","lang":"uk","intent":"method"}
 {"query_id":"q47","query":"аналіз поведінкових та текстових характеристик користувача у рекомендаційній системі","lang":"uk","intent":"technical"}
 {"query_id":"q48","query":"оцінка якості рекомендацій вакансій: точність на великих значеннях K","lang":"uk","intent":"method"}
+
+{"query_id":"q49","query":"метеорологічний лідар для дистанційного зондування атмосфери","lang":"uk","intent":"topic"}
+{"query_id":"q50","query":"лазерна локація LIDAR: принцип роботи та структура системи","lang":"uk","intent":"technical"}
+{"query_id":"q51","query":"вимірювання параметрів атмосфери: вологість, температура, аерозоль","lang":"uk","intent":"method"}
+{"query_id":"q52","query":"комбінаційний лідар (Autoencoder + Isolation Forest) для зондування","lang":"uk","intent":"technical"}
+{"query_id":"q53","query":"одноелектронні характеристики фотоелектронного помножувача (ФЕП)","lang":"uk","intent":"technical"}
+
+{"query_id":"q54","query":"багатохвильовий лідар для моніторингу аерозолю","lang":"uk","intent":"technical"}
+{"query_id":"q55","query":"механічне сканування променя лідара та активна фазована антенна решетка","lang":"uk","intent":"method"}
+{"query_id":"q56","query":"спектри метеорних потоків та вимірювання на висотах 80-130 км","lang":"uk","intent":"technical"}
+
+{"query_id":"q57","query":"3D-принтер з кількома екструдерами: конструкція і перемикання матеріалу","lang":"uk","intent":"technical"}
+{"query_id":"q58","query":"кінематика COREXY у системах FDM-друку","lang":"uk","intent":"technical"}
+{"query_id":"q59","query":"шарико-гвинтова передача та лінійні направляючі при 3D-друці","lang":"uk","intent":"method"}
+{"query_id":"q60","query":"подача пластику через систему Bowden у 3D-принтері","lang":"uk","intent":"technical"}
+
+{"query_id":"q61","query":"контроль якості 3D-друку за допомогою нейронної мережі","lang":"uk","intent":"topic"}
+{"query_id":"q62","query":"дефекти FDM-друку: відрив деталі, перший шар, зазор сопла","lang":"uk","intent":"technical"}
+{"query_id":"q63","query":"виявлення дефектів 3D-друку в реальному часі: методи потенціал машинного навчання","lang":"uk","intent":"method"}
+{"query_id":"q64","query":"температура екструдера та столу при друку з PLA-пластику","lang":"uk","intent":"technical"}
+{"query_id":"q65","query":"автоматичне виявлення дефектів при виробництві FDM-деталей з використанням CV","lang":"uk","intent":"method"}
