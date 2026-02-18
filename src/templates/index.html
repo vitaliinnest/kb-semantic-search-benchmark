@@ -337,6 +337,8 @@
           <th class="num">Recall@{{ benchmark.top_k }}</th>
           <th class="num">MRR@{{ benchmark.top_k }}</th>
           <th class="num">nDCG@{{ benchmark.top_k }}</th>
+          <th class="num">P@{{ benchmark.top_k }}</th>
+          <th class="num">ms/query</th>
           <th class="num">Запитів</th>
         </tr>
       </thead>
@@ -351,6 +353,8 @@
           <td class="num">{{ "%.3f" | format(m.recall_at_k) }}</td>
           <td class="num">{{ "%.3f" | format(m.mrr_at_k) }}</td>
           <td class="num">{{ "%.3f" | format(m.ndcg_at_k) }}</td>
+          <td class="num">{% if m.precision_at_k is defined %}{{ "%.3f" | format(m.precision_at_k) }}{% else %}—{% endif %}</td>
+          <td class="num">{% if m.avg_latency_ms is defined %}{{ "%.1f" | format(m.avg_latency_ms) }}{% else %}—{% endif %}</td>
           <td class="num">{{ m.queries_evaluated }}</td>
         </tr>
         {% endfor %}

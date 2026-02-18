@@ -3,6 +3,7 @@ import json
 import math
 import logging
 import sys
+import time
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
@@ -45,6 +46,8 @@ class QueryEvalResult:
 	recall_at_k: float
 	mrr_at_k: float
 	ndcg_at_k: float
+	precision_at_k: float
+	latency_ms: float
 	retrieved: int
 	relevant_total: int
 
@@ -57,6 +60,8 @@ class ModelEvalResult:
 	recall_at_k: float
 	mrr_at_k: float
 	ndcg_at_k: float
+	precision_at_k: float
+	avg_latency_ms: float
 	query_results: list[QueryEvalResult]
 
 
@@ -231,8 +236,10 @@ def evaluate_model(
 		if not qrels:
 			continue
 
+		t0 = time.perf_counter()
 		query_vector = model.encode_queries([query_item.query]).astype("float32")
 		scores, indices = index.search(query_vector, top_k)
+		latency_ms = (time.perf_counter() - t0) * 1000
 
 		retrieved_meta: list[dict] = []
 		retrieved_rels: list[int] = []
@@ -260,12 +267,17 @@ def evaluate_model(
 		idcg = dcg_at_k(ideal_rels, top_k)
 		ndcg_at_k = (dcg / idcg) if idcg > 0 else 0.0
 
+		relevant_in_top_k = sum(1 for rel in retrieved_rels[:top_k] if rel > 0)
+		precision_at_k = relevant_in_top_k / top_k
+
 		query_results.append(
 			QueryEvalResult(
 				query_id=query_item.query_id,
 				recall_at_k=recall_at_k,
 				mrr_at_k=mrr_at_k,
 				ndcg_at_k=ndcg_at_k,
+				precision_at_k=precision_at_k,
+				latency_ms=latency_ms,
 				retrieved=len(retrieved_meta),
 				relevant_total=relevant_total,
 			)
@@ -280,6 +292,8 @@ def evaluate_model(
 			recall_at_k=0.0,
 			mrr_at_k=0.0,
 			ndcg_at_k=0.0,
+			precision_at_k=0.0,
+			avg_latency_ms=0.0,
 			query_results=[],
 		)
 
@@ -290,6 +304,8 @@ def evaluate_model(
 		recall_at_k=float(np.mean([x.recall_at_k for x in query_results])),
 		mrr_at_k=float(np.mean([x.mrr_at_k for x in query_results])),
 		ndcg_at_k=float(np.mean([x.ndcg_at_k for x in query_results])),
+		precision_at_k=float(np.mean([x.precision_at_k for x in query_results])),
+		avg_latency_ms=float(np.mean([x.latency_ms for x in query_results])),
 		query_results=query_results,
 	)
 
@@ -370,14 +386,15 @@ def main() -> None:
 	artifacts_col = max(20, max((len(r.artifacts_dir) for r in model_results), default=20))
 	num_col = 12
 	queries_col = 8
-	total_width = model_col + 1 + queries_col + 1 + num_col + 1 + num_col + 1 + num_col + 1 + artifacts_col
+	latency_col = 12
+	total_width = model_col + 1 + queries_col + 1 + num_col + 1 + num_col + 1 + num_col + 1 + num_col + 1 + latency_col + 1 + artifacts_col
 	text_lines.append("=" * total_width)
-	header_fmt = f"{{:<{model_col}}} {{:<{queries_col}}} {{:<{num_col}}} {{:<{num_col}}} {{:<{num_col}}} {{:<{artifacts_col}}}"
-	text_lines.append(header_fmt.format("Model", "Queries", "Recall@k", "MRR@k", "nDCG@k", "Artifacts"))
+	header_fmt = f"{{:<{model_col}}} {{:<{queries_col}}} {{:<{num_col}}} {{:<{num_col}}} {{:<{num_col}}} {{:<{num_col}}} {{:<{latency_col}}} {{:<{artifacts_col}}}"
+	text_lines.append(header_fmt.format("Model", "Queries", "Recall@k", "MRR@k", "nDCG@k", "P@k", "ms/query", "Artifacts"))
 	text_lines.append("-" * total_width)
-	row_fmt = f"{{:<{model_col}}} {{:<{queries_col}}} {{:<{num_col}.4f}} {{:<{num_col}.4f}} {{:<{num_col}.4f}} {{:<{artifacts_col}}}"
+	row_fmt = f"{{:<{model_col}}} {{:<{queries_col}}} {{:<{num_col}.4f}} {{:<{num_col}.4f}} {{:<{num_col}.4f}} {{:<{num_col}.4f}} {{:<{latency_col}.1f}} {{:<{artifacts_col}}}"
 	for row in model_results:
-		text_lines.append(row_fmt.format(row.model_name, row.queries_evaluated, row.recall_at_k, row.mrr_at_k, row.ndcg_at_k, row.artifacts_dir))
+		text_lines.append(row_fmt.format(row.model_name, row.queries_evaluated, row.recall_at_k, row.mrr_at_k, row.ndcg_at_k, row.precision_at_k, row.avg_latency_ms, row.artifacts_dir))
 
 	text_path.write_text("\n".join(text_lines) + "\n", encoding="utf-8")
 
@@ -395,12 +412,16 @@ def main() -> None:
 				"recall_at_k": row.recall_at_k,
 				"mrr_at_k": row.mrr_at_k,
 				"ndcg_at_k": row.ndcg_at_k,
+				"precision_at_k": row.precision_at_k,
+				"avg_latency_ms": row.avg_latency_ms,
 				"query_results": [
 					{
 						"query_id": q.query_id,
 						"recall_at_k": q.recall_at_k,
 						"mrr_at_k": q.mrr_at_k,
 						"ndcg_at_k": q.ndcg_at_k,
+						"precision_at_k": q.precision_at_k,
+						"latency_ms": q.latency_ms,
 						"retrieved": q.retrieved,
 						"relevant_total": q.relevant_total,
 					}
