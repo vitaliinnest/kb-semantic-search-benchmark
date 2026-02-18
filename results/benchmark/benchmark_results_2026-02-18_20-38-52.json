@@ -1,0 +1,379 @@
+{
+  "timestamp": "2026-02-18T20:38:52.182049",
+  "top_k": 10,
+  "queries_count": 8,
+  "queries_file": "data\\benchmark\\queries.jsonl",
+  "qrels_file": "data\\benchmark\\qrels.jsonl",
+  "models": [
+    {
+      "model_name": "bert-base-multilingual-cased",
+      "artifacts_dir": "artifacts\\bert",
+      "queries_evaluated": 8,
+      "recall_at_k": 1.4583333333333333,
+      "mrr_at_k": 0.875,
+      "ndcg_at_k": 2.291507958081579,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.400638392722474,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 2.246402722395725,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 1.3332474375917278,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 2.1309297535714573,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 2.4402547418066027,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 3.3863221553163427,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 3.091666643783096,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 2.302601817465208,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    },
+    {
+      "model_name": "fasttext",
+      "artifacts_dir": "artifacts\\fasttext",
+      "queries_evaluated": 8,
+      "recall_at_k": 0.7708333333333333,
+      "mrr_at_k": 0.4670138888888889,
+      "ndcg_at_k": 0.9488670876933334,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0019100924919522,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.3562071871080221,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 1.4642630869047908,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 0.5,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.26064801430716,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.1111111111111111,
+          "ndcg_at_k": 0.3010299956639812,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 3.206878325070761,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    },
+    {
+      "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+      "artifacts_dir": "artifacts\\sbert",
+      "queries_evaluated": 8,
+      "recall_at_k": 1.3958333333333333,
+      "mrr_at_k": 1.0,
+      "ndcg_at_k": 3.0613576593557514,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 0.6666666666666666,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.75960217689625,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 1.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 2.696767123452051,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 3.637999639320748,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 3.5972573289984546,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 3.5152108141880047,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 4.242529342424365,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 2.936965146462523,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 2.104529703103617,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    },
+    {
+      "model_name": "tfidf",
+      "artifacts_dir": "artifacts\\tfidf",
+      "queries_evaluated": 8,
+      "recall_at_k": 1.7916666666666665,
+      "mrr_at_k": 1.0,
+      "ndcg_at_k": 3.8229867803306634,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 1.3333333333333333,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 2.5275747586805215,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 1.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 3.7540461918486914,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 4.543559338088346,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 4.543559338088346,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 1.5,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 3.7540461918486914,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 4.543559338088346,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 4.543559338088346,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 2.3739897479140213,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    },
+    {
+      "model_name": "word2vec",
+      "artifacts_dir": "artifacts\\word2vec",
+      "queries_evaluated": 8,
+      "recall_at_k": 0.75,
+      "mrr_at_k": 0.3125,
+      "ndcg_at_k": 0.8504433483556618,
+      "query_results": [
+        {
+          "query_id": "q1",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 3
+        },
+        {
+          "query_id": "q2",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q3",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 2.455645597242949,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q4",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q5",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 1.5290886331323652,
+          "retrieved": 10,
+          "relevant_total": 2
+        },
+        {
+          "query_id": "q6",
+          "recall_at_k": 2.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.3010299956639813,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q7",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "q8",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 1.5177825608059992,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    }
+  ]
+}

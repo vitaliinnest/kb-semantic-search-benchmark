@@ -356,15 +356,20 @@ def main() -> None:
 	text_lines.append("Оцінка benchmark retrieval")
 	text_lines.append(f"Дата: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 	text_lines.append(f"Queries: {len(queries)} | top_k={args.top_k}")
-	text_lines.append("=" * 90)
-	text_lines.append(
-		f"{'Model':<24} {'Queries':<8} {'Recall@k':<12} {'MRR@k':<12} {'nDCG@k':<12} {'Artifacts':<20}"
-	)
-	text_lines.append("-" * 90)
+
+	# Determine column widths dynamically to avoid broken alignment for long names
+	model_col = max(24, max((len(r.model_name) for r in model_results), default=24))
+	artifacts_col = max(20, max((len(r.artifacts_dir) for r in model_results), default=20))
+	num_col = 12
+	queries_col = 8
+	total_width = model_col + 1 + queries_col + 1 + num_col + 1 + num_col + 1 + num_col + 1 + artifacts_col
+	text_lines.append("=" * total_width)
+	header_fmt = f"{{:<{model_col}}} {{:<{queries_col}}} {{:<{num_col}}} {{:<{num_col}}} {{:<{num_col}}} {{:<{artifacts_col}}}"
+	text_lines.append(header_fmt.format("Model", "Queries", "Recall@k", "MRR@k", "nDCG@k", "Artifacts"))
+	text_lines.append("-" * total_width)
+	row_fmt = f"{{:<{model_col}}} {{:<{queries_col}}} {{:<{num_col}.4f}} {{:<{num_col}.4f}} {{:<{num_col}.4f}} {{:<{artifacts_col}}}"
 	for row in model_results:
-		text_lines.append(
-			f"{row.model_name:<24} {row.queries_evaluated:<8} {row.recall_at_k:<12.4f} {row.mrr_at_k:<12.4f} {row.ndcg_at_k:<12.4f} {row.artifacts_dir}"
-		)
+		text_lines.append(row_fmt.format(row.model_name, row.queries_evaluated, row.recall_at_k, row.mrr_at_k, row.ndcg_at_k, row.artifacts_dir))
 
 	text_path.write_text("\n".join(text_lines) + "\n", encoding="utf-8")
 
