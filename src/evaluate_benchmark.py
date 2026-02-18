@@ -132,9 +132,14 @@ def match_relevance(qrels: list[QrelItem], chunk_id: str, doc_id: str) -> int:
 	for item in qrels:
 		if item.relevance <= 0:
 			continue
-		if item.chunk_id and item.chunk_id == chunk_id:
-			best = max(best, item.relevance)
-		elif item.doc_id and item.doc_id == doc_id:
+		# If qrel specifies a chunk_id, treat it as chunk-level relevance only.
+		# Do NOT fall back to matching doc_id for the same qrel entry.
+		if item.chunk_id:
+			if item.chunk_id == chunk_id:
+				best = max(best, item.relevance)
+			# skip doc-level match for this qrel entry
+			continue
+		if item.doc_id and item.doc_id == doc_id:
 			best = max(best, item.relevance)
 	return best
 
@@ -163,8 +168,11 @@ def count_matched_targets(
 		for item in qrels:
 			if item.relevance <= 0:
 				continue
-			if item.chunk_id and item.chunk_id == chunk_id:
-				matched.add(("chunk", item.chunk_id))
+			# If qrel specifies a chunk_id, count only chunk-level matches for that qrel.
+			if item.chunk_id:
+				if item.chunk_id == chunk_id:
+					matched.add(("chunk", item.chunk_id))
+				# do not count doc match for this qrel entry
 			elif item.doc_id and item.doc_id == doc_id:
 				matched.add(("doc", item.doc_id))
 	return len(matched)
