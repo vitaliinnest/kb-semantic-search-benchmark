@@ -85,6 +85,7 @@
   .metrics-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     background: var(--surface);
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
@@ -101,8 +102,9 @@
     text-align: left;
     border-bottom: 1px solid var(--border);
     white-space: nowrap;
+    overflow: hidden;
   }
-  .metrics-table th.metric { text-align: center; min-width: 130px; }
+  .metrics-table th.metric { text-align: center; }
   .metrics-table td {
     padding: 11px 16px;
     border-bottom: 1px solid #f0f0f0;
@@ -113,7 +115,7 @@
   .metrics-table tr:hover td { background: #f8f9fa; }
   .metrics-table tr.best td { background: #f0fdf4; }
 
-  .model-name-cell { font-weight: 700; white-space: nowrap; }
+  .model-name-cell { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .rank-badge {
     display: inline-block;
     font-size: 11px; font-weight: 800;
@@ -130,8 +132,6 @@
   /* metric cell with bar */
   .metric-cell { text-align: center; }
   .metric-val { font-size: 13.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .metric-bar-wrap { height: 4px; background: #e5e7eb; border-radius: 2px; margin-top: 4px; }
-  .metric-bar { height: 4px; border-radius: 2px; background: var(--primary); transition: width .4s; }
 
   .latency-cell { text-align: center; font-size: 13px; color: var(--text-muted); }
   .latency-good { color: #1e6e3a; font-weight: 600; }
@@ -227,6 +227,16 @@
   {% set max_prec    = sorted_models | map(attribute='precision_at_k')| max %}
 
   <table class="metrics-table" id="results-table">
+    <colgroup>
+      <col style="width:44px">
+      <col><!-- model name — takes remaining space -->
+      <col style="width:110px">
+      <col style="width:110px">
+      <col style="width:110px">
+      <col style="width:110px">
+      <col style="width:100px">
+      <col style="width:80px">
+    </colgroup>
     <thead>
       <tr>
         <th>#</th>
@@ -253,9 +263,6 @@
       {% macro bar_cell(val, maxv) %}
       <td class="metric-cell">
         <div class="metric-val">{{ "%.4f"|format(val) }}</div>
-        <div class="metric-bar-wrap">
-          <div class="metric-bar" style="width:{{ ((val / maxv * 100) if maxv > 0 else 0)|round(1) }}%"></div>
-        </div>
       </td>
       {% endmacro %}
 
@@ -387,11 +394,7 @@ function refreshTable(data) {
   const rankClasses = ['rank-1','rank-2','rank-3'];
 
   function barCell(val, mx) {
-    const pct = mx > 0 ? (val / mx * 100).toFixed(1) : 0;
-    return `<td class="metric-cell">
-      <div class="metric-val">${val.toFixed(4)}</div>
-      <div class="metric-bar-wrap"><div class="metric-bar" style="width:${pct}%"></div></div>
-    </td>`;
+    return `<td class="metric-cell"><div class="metric-val">${val.toFixed(4)}</div></td>`;
   }
 
   const rows = sorted.map((m, i) => {
@@ -410,10 +413,22 @@ function refreshTable(data) {
     </tr>`;
   }).join('');
 
+  const colgroup = `<colgroup>
+      <col style="width:44px">
+      <col>
+      <col style="width:110px">
+      <col style="width:110px">
+      <col style="width:110px">
+      <col style="width:110px">
+      <col style="width:100px">
+      <col style="width:80px">
+    </colgroup>`;
+
   section.innerHTML = `
     <h2>Результати <span style="font-size:13px;font-weight:400;color:var(--text-muted);">— ${ts}, top_k=${data.top_k}, ${data.queries_count} запитів</span></h2>
     <div class="results-meta">Сортування за <strong>nDCG@k</strong> (від найкращого)</div>
     <table class="metrics-table" id="results-table">
+      ${colgroup}
       <thead><tr>
         <th>#</th><th>Модель</th>
         <th class="metric">nDCG@${data.top_k}</th>
