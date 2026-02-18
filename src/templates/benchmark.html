@@ -384,31 +384,27 @@ function refreshTable(data) {
   if (!section) return;
 
   const sorted = [...data.models].sort((a,b) => b.ndcg_at_k - a.ndcg_at_k);
-  const maxNdcg   = Math.max(...sorted.map(m => m.ndcg_at_k),   0.0001);
-  const maxMrr    = Math.max(...sorted.map(m => m.mrr_at_k),    0.0001);
-  const maxRecall = Math.max(...sorted.map(m => m.recall_at_k), 0.0001);
-  const maxPrec   = Math.max(...sorted.map(m => m.precision_at_k), 0.0001);
-  const ts        = data.timestamp.slice(0,16).replace('T',' ');
-
+  const ts = data.timestamp.slice(0,16).replace('T',' ');
   const rankClasses = ['rank-1','rank-2','rank-3'];
 
-  function barCell(val, mx) {
-    return `<td class="metric-cell"><div class="metric-val">${val.toFixed(4)}</div></td>`;
+  function barCell(val) {
+    return `<td class="metric-cell"><div class="metric-val">${val != null ? val.toFixed(4) : '—'}</div></td>`;
   }
 
   const rows = sorted.map((m, i) => {
     const rank = i + 1;
     const rankCls = rankClasses[i] || 'rank-n';
-    const latCls  = m.avg_latency_ms < 20 ? 'latency-good' : m.avg_latency_ms > 100 ? 'latency-slow' : '';
+    const lat = m.avg_latency_ms;
+    const latCls  = lat != null ? (lat < 20 ? 'latency-good' : lat > 100 ? 'latency-slow' : '') : '';
     return `<tr ${rank===1?'class="best"':''}>
       <td><span class="rank-badge ${rankCls}">${rank}</span></td>
-      <td class="model-name-cell">${m.model_name}</td>
-      ${barCell(m.ndcg_at_k,    maxNdcg)}
-      ${barCell(m.mrr_at_k,     maxMrr)}
-      ${barCell(m.recall_at_k,  maxRecall)}
-      ${barCell(m.precision_at_k, maxPrec)}
-      <td class="latency-cell ${latCls}">${m.avg_latency_ms.toFixed(1)}</td>
-      <td class="queries-cell">${m.queries_evaluated}</td>
+      <td class="model-name-cell">${m.model_name ?? '—'}</td>
+      ${barCell(m.ndcg_at_k)}
+      ${barCell(m.mrr_at_k)}
+      ${barCell(m.recall_at_k)}
+      ${barCell(m.precision_at_k)}
+      <td class="latency-cell ${latCls}">${lat != null ? lat.toFixed(1) : '—'}</td>
+      <td class="queries-cell">${m.queries_evaluated ?? '—'}</td>
     </tr>`;
   }).join('');
 
@@ -446,15 +442,28 @@ function loadResult(filename, rowEl) {
   document.querySelectorAll('.history-row').forEach(r => r.classList.remove('active'));
   rowEl.classList.add('active');
 
+  const section = document.getElementById('results-section');
+  section.style.opacity = '0.4';
+
   fetch(`/results/benchmark/${filename}`)
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    })
     .then(data => {
-      if (data) {
+      section.style.opacity = '1';
+      if (data && data.models) {
         refreshTable(data);
-        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        section.style.opacity = '1';
+        console.error('Unexpected response:', data);
       }
     })
-    .catch(() => {});
+    .catch(err => {
+      section.style.opacity = '1';
+      alert('Помилка завантаження результату: ' + err.message);
+    });
 }
 </script>
 {% endblock %}
