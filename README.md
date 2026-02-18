@@ -128,6 +128,14 @@ python src/build_index.py --model-type bert --bert-model bert-base-multilingual-
 python src/test_all_models.py --artifacts-root artifacts
 ```
 
+Для оцінки якості пошуку на benchmark (метрики `Recall@k`, `MRR@k`, `nDCG@k`):
+
+```bash
+python src/evaluate_benchmark.py --artifacts-root artifacts --top-k 10
+```
+
+> Увага: файли в `data/benchmark/` є шаблоном. Перед оцінкою потрібно замінити `queries.jsonl` і `qrels.jsonl` на ваші реальні дані (`chunk_id`/`doc_id` мають відповідати `data/chunks.jsonl`).
+
 За замовчуванням результати тесту зберігаються у папку `results` з timestamp у назві файлів:
 
 ```
