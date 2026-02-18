@@ -60,12 +60,12 @@
   .search-options {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 16px;
     margin-top: 14px;
-    flex-wrap: wrap;
   }
   .search-options label {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--text-muted);
     font-weight: 500;
     white-space: nowrap;
@@ -74,8 +74,8 @@
   .search-options input[type="number"] {
     border: 1.5px solid var(--border);
     border-radius: 8px;
-    padding: 5px 10px;
-    font-size: 13px;
+    padding: 7px 13px;
+    font-size: 15px;
     background: var(--surface);
     color: var(--text);
     outline: none;
@@ -85,11 +85,11 @@
   .search-options input[type="number"]:focus {
     border-color: var(--primary);
   }
-  .search-options input[type="number"] { width: 64px; }
+  .search-options input[type="number"] { width: 74px; }
 
   /* ── RESULTS ── */
   .results-header {
-    font-size: 13px;
+    font-size: 15px;
     color: var(--text-muted);
     margin: 28px 0 16px;
   }
@@ -122,7 +122,7 @@
     min-width: 24px;
   }
   .source {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--primary);
     font-weight: 500;
     word-break: break-all;
@@ -133,8 +133,8 @@
     font-family: monospace;
   }
   .result-snippet {
-    font-size: 14px;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.65;
     color: var(--text);
     margin-top: 8px;
     word-break: break-word;
@@ -238,21 +238,21 @@
     margin: 48px auto 0;
   }
   .benchmark-section h2 {
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 700;
     color: var(--text);
     margin-bottom: 4px;
     letter-spacing: -.3px;
   }
   .benchmark-meta {
-    font-size: 12px;
+    font-size: 15px;
     color: var(--text-muted);
     margin-bottom: 14px;
   }
   .benchmark-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: 15px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -264,13 +264,13 @@
     color: var(--text-muted);
     font-weight: 600;
     text-align: left;
-    padding: 10px 14px;
+    padding: 12px 18px;
     border-bottom: 1.5px solid var(--border);
     white-space: nowrap;
   }
   .benchmark-table tbody tr:hover { background: #f8f9fa; }
   .benchmark-table tbody td {
-    padding: 9px 14px;
+    padding: 11px 18px;
     border-bottom: 1px solid var(--border);
     color: var(--text);
     vertical-align: middle;
@@ -296,7 +296,7 @@
   <div class="hero">
     <div class="hero-title">KB Search</div>
     <div class="hero-sub">Семантичний пошук по базі знань</div>
-    <div class="search-form" style="max-width: 620px; width: 100%;">
+    <div class="search-form" style="max-width: 860px; width: 100%;">
       <form method="GET" action="/">
         <div class="search-bar">
           <input type="text" name="q" placeholder="Введіть запит…" autofocus autocomplete="off" />
