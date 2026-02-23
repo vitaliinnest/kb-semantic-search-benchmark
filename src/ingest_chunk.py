@@ -4,7 +4,7 @@ import re
 import logging
 import sys
 import docx
-import PyPDF2
+import fitz  # pymupdf
 from pathlib import Path
 from tqdm import tqdm
 
@@ -31,27 +31,15 @@ def read_text_file(path: Path) -> str:
 def read_pdf_file(path: Path) -> str:
 	text_parts = []
 	try:
-		with path.open("rb") as handle:
-			reader = PyPDF2.PdfReader(handle)
-			total_pages = len(reader.pages)
+		with fitz.open(str(path)) as doc:
+			total_pages = len(doc)
 			
 			# Показуємо прогрес для великих PDF (>50 сторінок)
-			if total_pages > 50:
-				pages_iter = tqdm(
-					reader.pages,
-					desc=f"Читання {path.name}",
-					total=total_pages,
-					leave=False
-				)
-			else:
-				pages_iter = reader.pages
+			pages_iter = tqdm(doc, desc=f"Читання {path.name}", total=total_pages, leave=False) if total_pages > 50 else doc
 			
 			for page_num, page in enumerate(pages_iter, 1):
 				try:
-					text_parts.append(page.extract_text() or "")
-				except Exception as e:
-					logging.warning(f"Помилка витягування сторінки {page_num} з {path.name}: {e}")
-					continue
+					text_parts.append(page.get_text() or "")
 	except Exception as e:
 			logging.error(f"Помилка читання PDF {path.name}: {e}")
 			return ""
@@ -76,7 +64,20 @@ def read_document(path: Path) -> str:
 	return ""
 
 
+# Символи, характерні для некоректно декодованих math-гліфів із PDF:
+# - Unicode Private Use Area (U+E000–U+F8FF)
+# - Combining marks, що летять окремо
+# - Послідовності з 3+ символів поза Cyrillic/Latin/ASCII/цифри/пунктуація
+_GARBLED_RE = re.compile(
+	r"[\ue000-\uf8ff]"  # Private Use Area
+	r"|[\u0300-\u036f]{2,}"  # надмірні combining marks
+	r"|(?:[^\x00-\x7f\u0400-\u04ff\u2014\u2013\u00ab\u00bb\u2018\u2019\u201c\u201d\u00a0\u2212\u00d7\u00f7]){4,}"
+)
+
+
 def normalize_text(text: str) -> str:
+	# Видаляємо нечитабельні послідовності (залишки math-гліфів із PDF)
+	text = _GARBLED_RE.sub(" ", text)
 	text = re.sub(r"\s+", " ", text)
 	return text.strip()
 

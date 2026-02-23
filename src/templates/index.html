@@ -287,7 +287,77 @@
     margin-left: 6px;
     vertical-align: middle;
   }
+
+  .garbled-placeholder {
+    font-size: 0.82em;
+    color: var(--text-muted);
+    background: #f1f3f4;
+    border-radius: 3px;
+    padding: 0 4px;
+    font-family: monospace;
+    font-style: italic;
+    letter-spacing: 0;
+  }
 </style>
+
+<script>
+/**
+ * Cleans garbled text that comes from mis-decoded PDF math/symbol fonts.
+ * Mirrors the server-side _GARBLED_RE regex in ingest_chunk.py.
+ *
+ * Rules (applied in order):
+ *  1. Unicode Private Use Area (U+E000–U+F8FF) — always garbage from font encoding
+ *  2. Runs of 2+ combining diacritical marks — leftover from broken glyph mapping
+ *  3. Runs of 4+ characters outside Cyrillic, Latin, ASCII printable,
+ *     common punctuation and a small set of math/Unicode symbols we want to keep
+ *
+ * Matched runs are replaced with an inline <span>[формула]</span>.
+ */
+(function () {
+  // Characters we consider "clean" (negated in the 3rd regex below):
+  //   \x20-\x7E   — ASCII printable (space … ~)
+  //   \u0400-\u04FF — Cyrillic
+  //   \u00A0\u2013\u2014\u00AB\u00BB\u2018-\u201D — common punctuation
+  //   \u2212\u00D7\u00F7\u00B1\u2264\u2265\u2260\u221E\u03B1-\u03C9\u0391-\u03A9 — useful math/Greek
+  const PUA_RE      = /[\uE000-\uF8FF]+/g;
+  const COMBINING_RE = /[\u0300-\u036F]{2,}/g;
+  const FOREIGN_RE  = /(?:[^\x20-\x7E\u0400-\u04FF\u00A0\u2013\u2014\u00AB\u00BB\u2018\u2019\u201C\u201D\u2212\u00D7\u00F7\u00B1\u2264\u2265\u2260\u221E\u03B1-\u03C9\u0391-\u03A9\n\r]){4,}/g;
+
+  const PLACEHOLDER = '<span class="garbled-placeholder">[формула]</span>';
+
+  function cleanNode(el) {
+    // Walk text nodes and replace garbled spans with styled placeholders
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    const nodes = [];
+    let n;
+    while ((n = walker.nextNode())) nodes.push(n);
+
+    nodes.forEach(function (node) {
+      let val = node.nodeValue;
+      // Quick bail-out if none of the patterns can match
+      if (!PUA_RE.test(val) && !COMBINING_RE.test(val) && !FOREIGN_RE.test(val)) return;
+
+      // Reset lastIndex after .test() calls
+      PUA_RE.lastIndex = COMBINING_RE.lastIndex = FOREIGN_RE.lastIndex = 0;
+
+      let html = val
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') // escape first
+        .replace(PUA_RE, '')
+        .replace(COMBINING_RE, '')
+        .replace(FOREIGN_RE, PLACEHOLDER);
+
+      // Replace text node with a span containing the cleaned HTML
+      const span = document.createElement('span');
+      span.innerHTML = html;
+      node.parentNode.replaceChild(span, node);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.result-snippet, .full-text').forEach(cleanNode);
+  });
+}());
+</script>
 {% endblock %}
 
 {% block content %}
