@@ -35,7 +35,7 @@
 Отже, у роботі запропоновано практичний підхід до підвищення якості семантичного пошуку в базах знань шляхом інтеграції підготовки даних, векторної індексації, бенчмарк-оцінювання та веб-візуалізації результатів. Запропонований контур дозволяє системно порівнювати моделі ембедингів у відтворюваному середовищі й оперативно оцінювати наслідки змін у пайплайні. Отримані результати узгоджуються з висновками попередніх тез і можуть бути використані як основа для подальшого розвитку систем семантичного та гібридного пошуку, а також для задач контролю якості в RAG-сценаріях.
 
 Список використаних джерел
-1. Нестеренко О. В. Попередні тези за тематикою семантичного пошуку (у фінальній версії вказати повну бібліографію прикріплених тез).
-2. Manning C. D., Raghavan P., Schütze H. Introduction to Information Retrieval. Cambridge University Press, 2008.
-3. Reimers N., Gurevych I. Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. EMNLP-IJCNLP, 2019.
-4. Johnson J., Douze M., Jégou H. Billion-scale similarity search with GPUs. IEEE Transactions on Big Data, 2019.
+1. Нестеренко В. В., Русакова Н. Є. Порівняльний аналіз ефективності моделей векторних ембеддінгів для задач семантичного пошуку в корпоративних базах знань // Innovative Research in Science and Economy : матеріали ІІ Міжнар. наук.-практ. конф. С. 127.
+2. Manning C. D., Raghavan P., Schütze H. Introduction to Information Retrieval. Cambridge : Cambridge University Press, 2008. 482 p.
+3. Reimers N., Gurevych I. Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks // Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing (EMNLP-IJCNLP). 2019. P. 3982–3992.
+4. Johnson J., Douze M., Jégou H. Billion-scale similarity search with GPUs // IEEE Transactions on Big Data. 2019. Vol. 7, No. 3. P. 535–547.
