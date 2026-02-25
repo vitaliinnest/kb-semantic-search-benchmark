@@ -1,6 +1,6 @@
 # ПІДВИЩЕННЯ ЯКОСТІ СЕМАНТИЧНОГО ПОШУКУ В БАЗАХ ЗНАНЬ ІЗ ВИКОРИСТАННЯМ ВЕКТОРНИХ ПОДАНЬ
 
-Evaluation is conducted on a benchmark of 87 queries with top_k=10 using nDCG@10, MRR@10, Recall@10, and Precision@10. The system’s performance was evaluated using a specially prepared set of queries and widely used metrics for assessing search effectiveness.
+This paper presents an applied evaluation of semantic search quality in a knowledge-base retrieval system. The study uses a reproducible pipeline that combines preprocessing, chunking, vector indexing, querying, and benchmark-based assessment across two domains. The system’s performance was evaluated using a specially prepared set of queries and widely used metrics for assessing search effectiveness. The proposed approach supports iterative quality control and further development of semantic and hybrid retrieval systems.
 
 Для сучасних інформаційних систем швидкий доступ до релевантних знань є критичним; у роботі [1] обґрунтовано проблему «лексичного розриву» в корпоративному пошуку та виконано теоретичне порівняння підходів до векторних подань (fastText, BERT, SBERT, OpenAI Embeddings). Лексичний пошук часто втрачає ефективність через синонімію та варіативність формулювань [2]. Мета роботи — підвищити якість семантичного пошуку шляхом порівняння моделей векторних подань у єдиному середовищі з однаковими умовами оцінювання.
 
