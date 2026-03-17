@@ -129,6 +129,7 @@
     <a href="/raw" {% if request.path == '/raw' %}class="active"{% endif %}>Файли</a>
     <a href="/build" {% if request.path == '/build' %}class="active"{% endif %}>Індекси</a>
     <a href="/benchmark" {% if request.path == '/benchmark' %}class="active"{% endif %}>Benchmark</a>
+    <a href="/benchmark/selection" {% if request.path == '/benchmark/selection' %}class="active"{% endif %}>Вибір моделі</a>
   </nav>
   <main>
     {% block content %}{% endblock %}

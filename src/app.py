@@ -16,6 +16,7 @@ from werkzeug.utils import secure_filename
 # Додаємо src/ до sys.path, щоб імпортувати сусідні модулі
 sys.path.insert(0, str(Path(__file__).parent))
 from embedding_models import load_model_from_artifacts
+from multi_criteria import run_selection, DEFAULT_WEIGHTS, CRITERIA
 
 # ── Шляхи ────────────────────────────────────────────────────────────────────
 ROOT = Path(__file__).parent.parent
@@ -650,6 +651,40 @@ def benchmark_result_file(filename: str):
     if not path.exists() or path.suffix != ".json":
         return jsonify({"error": "not found"}), 404
     return jsonify(json.loads(path.read_text(encoding="utf-8")))
+
+
+# ── Multi-criteria model selection ──────────────────────────────────────────
+
+@app.route("/benchmark/selection")
+def benchmark_selection():
+    data = load_latest_benchmark()
+    selection = None
+    if data and data.get("models"):
+        selection = run_selection(data["models"])
+    return render_template(
+        "selection.html",
+        selection=selection,
+        benchmark_meta=data,
+    )
+
+
+@app.route("/benchmark/selection/compute", methods=["POST"])
+def benchmark_selection_compute():
+    """Recompute model ranking with custom weights (received as JSON)."""
+    weights_raw = request.get_json(force=True) or {}
+    valid_keys = {c["key"] for c in CRITERIA}
+    weights: dict[str, float] = {}
+    for k, v in weights_raw.items():
+        if k in valid_keys:
+            try:
+                weights[k] = max(0.0, min(1.0, float(v)))
+            except (TypeError, ValueError):
+                pass
+    data = load_latest_benchmark()
+    if not data or not data.get("models"):
+        return jsonify({"error": "No benchmark data available"}), 404
+    result = run_selection(data["models"], weights)
+    return jsonify(result)
 
 
 if __name__ == "__main__":

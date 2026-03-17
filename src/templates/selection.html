@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+{% block title %}Вибір моделі — KB Search{% endblock %}
+
+{% block head %}
+<style>
+  .page-heading { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .page-sub     { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+
+  /* ── BANNERS ── */
+  .banner {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 18px; border-radius: var(--radius);
+    margin-bottom: 16px; font-size: 14px;
+  }
+  .banner.warn { background:#fff3cd; color:#856404; border:1px solid #ffe082; }
+
+  /* ── BEST MODEL ── */
+  .best-card {
+    display: flex; align-items: center; gap: 20px;
+    background: linear-gradient(135deg, #e8f5e9 0%, #f0fdf4 100%);
+    border: 2px solid #81c784;
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .best-icon  { font-size: 36px; flex-shrink: 0; }
+  .best-label { font-size: 12px; font-weight: 700; color: #2e7d32;
+                text-transform: uppercase; letter-spacing: .6px; }
+  .best-name  { font-size: 20px; font-weight: 800; color: #1b5e20; margin-top: 3px; }
+  .best-score { font-size: 13px; color: #388e3c; margin-top: 2px; }
+
+  /* ── PARETO SET ── */
+  .pareto-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 12px 20px;
+    margin-bottom: 20px; box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .pareto-label { font-size: 13px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+  .pareto-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pareto-badge {
+    display: inline-flex; align-items: center;
+    background: #e8f0fe; color: #1a73e8;
+    border: 1px solid #c5d8fc;
+    border-radius: 20px; padding: 3px 12px;
+    font-size: 12.5px; font-weight: 600;
+  }
+  .pareto-badge.is-best { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+
+  /* ── WEIGHTS PANEL ── */
+  .weights-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 18px 24px; margin-bottom: 24px;
+  }
+  .weights-card h2 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+  .weight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px 28px;
+  }
+  .weight-row { display: flex; flex-direction: column; gap: 5px; }
+  .weight-header { display: flex; justify-content: space-between; align-items: center; }
+  .weight-name  { font-size: 13px; font-weight: 600; color: var(--text); }
+  .weight-dir   { font-size: 11px; color: var(--text-muted);
+                  background: #f1f3f4; padding: 1px 7px; border-radius: 4px;
+                  margin-left: 6px; vertical-align: middle; }
+  .weight-val   { font-size: 12.5px; font-weight: 700; color: var(--primary); min-width: 30px; text-align: right; }
+  input[type=range] { width: 100%; accent-color: var(--primary); cursor: pointer; margin: 0; }
+  .weight-status { font-size: 12.5px; color: var(--text-muted); margin-top: 8px; min-height: 18px; }
+  .meta-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+
+  /* ── TABLE ── */
+  .section-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .section-sub   { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+
+  .metrics-table {
+    width: 100%; border-collapse: collapse;
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow); margin-bottom: 28px;
+  }
+  .metrics-table th {
+    background: #f8f9fa; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .5px;
+    color: var(--text-muted); padding: 9px 12px;
+    text-align: left; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .metrics-table th.c { text-align: center; }
+  .metrics-table td {
+    padding: 10px 12px; border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle; font-size: 13px;
+  }
+  .metrics-table tr:last-child td { border-bottom: none; }
+  .metrics-table tr:hover td { background: #f8f9fa; }
+  .metrics-table tr.best-row td { background: #f0fdf4; }
+
+  .rank-badge {
+    display: inline-block; font-size: 11px; font-weight: 800;
+    width: 22px; height: 22px; border-radius: 50%;
+    text-align: center; line-height: 22px;
+  }
+  .rank-1 { background: #fde68a; color: #78350f; }
+  .rank-2 { background: #e5e7eb; color: #374151; }
+  .rank-3 { background: #fed7aa; color: #7c2d12; }
+  .rank-n { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+
+  .model-cell  { font-weight: 700; }
+  .tc          { text-align: center; }
+  .mono        { font-variant-numeric: tabular-nums; }
+  .score-cell  { text-align: center; font-size: 14px; font-weight: 800;
+                 color: var(--primary); font-variant-numeric: tabular-nums; }
+  .pareto-mark {
+    display: inline-block;
+    background: #e8f0fe; color: #1a73e8; border: 1px solid #c5d8fc;
+    border-radius: 12px; padding: 2px 9px; font-size: 11.5px; font-weight: 600;
+  }
+  .no-pareto { color: #d1d5db; font-size: 12px; }
+
+  .latency-good { color: #1e6e3a; font-weight: 600; }
+  .latency-slow { color: #856404; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-heading">🎯 Мультикритеріальний вибір моделі</div>
+<div class="page-sub">Pareto-оптимальні альтернативи + зважений інтегральний score</div>
+
+{% if not selection %}
+<div class="banner warn">
+  <span>⚠️</span>
+  <span><strong>Дані benchmark відсутні.</strong> Спочатку <a href="/benchmark">запустіть benchmark</a>.</span>
+</div>
+
+{% else %}
+
+{# ── BEST MODEL ─────────────────────────────────────── #}
+<div class="best-card" id="best-card">
+  <div class="best-icon">🏆</div>
+  <div>
+    <div class="best-label">Рекомендована модель</div>
+    <div class="best-name" id="best-name">{{ selection.best_model }}</div>
+    <div class="best-score" id="best-score">
+      Score: {{ "%.4f"|format(selection.ranked[0].score) }}
+      &nbsp;·&nbsp;
+      Pareto-оптимальна: {{ '✓' if selection.ranked[0].pareto else '✗' }}
+    </div>
+  </div>
+</div>
+
+{# ── PARETO SET ─────────────────────────────────────── #}
+<div class="pareto-card">
+  <span class="pareto-label">Pareto-множина:</span>
+  <div class="pareto-badges" id="pareto-badges">
+    {% for name in selection.pareto_set %}
+    <span class="pareto-badge {% if name == selection.best_model %}is-best{% endif %}">
+      {% if name == selection.best_model %}🏆 {% endif %}{{ name }}
+    </span>
+    {% endfor %}
+  </div>
+</div>
+
+{# ── WEIGHTS ─────────────────────────────────────────── #}
+<div class="weights-card">
+  <h2>⚖️ Ваги критеріїв</h2>
+  <div class="weight-grid">
+    {% for c in selection.criteria %}
+    <div class="weight-row">
+      <div class="weight-header">
+        <div>
+          <span class="weight-name">{{ c.label }}</span>
+          <span class="weight-dir">{{ '↑ max' if c.maximize else '↓ min' }}</span>
+        </div>
+        <span class="weight-val" id="wval-{{ c.key }}">
+          {{ "%.2f"|format(selection.weights[c.key]) }}
+        </span>
+      </div>
+      <input type="range" class="weight-slider"
+             id="w-{{ c.key }}" data-key="{{ c.key }}"
+             min="0" max="1" step="0.05"
+             value="{{ selection.weights[c.key] }}">
+    </div>
+    {% endfor %}
+  </div>
+  <div class="weight-status" id="weight-status"></div>
+  {% if benchmark_meta %}
+  <div class="meta-note">
+    Джерело: {{ benchmark_meta.timestamp[:16].replace('T', ' ') }},
+    top_k={{ benchmark_meta.top_k }}, {{ benchmark_meta.queries_count }} запитів
+  </div>
+  {% endif %}
+</div>
+
+{# ── RANKING TABLE ───────────────────────────────────── #}
+<div class="section-title">📊 Ранжування моделей</div>
+<div class="section-sub">Сортування за зваженим інтегральним показником (Score ↓ — нижче = гірше)</div>
+
+<div id="ranking-wrap">
+<table class="metrics-table">
+  <thead>
+    <tr>
+      <th style="width:44px">#</th>
+      <th>Модель</th>
+      {% for c in selection.criteria %}
+      <th class="c">{{ c.label }}</th>
+      {% endfor %}
+      <th class="c" style="min-width:75px">Score</th>
+      <th class="c">Pareto</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in selection.ranked %}
+    <tr {% if m.rank == 1 %}class="best-row"{% endif %}>
+      <td>
+        <span class="rank-badge
+          {% if m.rank == 1 %}rank-1
+          {% elif m.rank == 2 %}rank-2
+          {% elif m.rank == 3 %}rank-3
+          {% else %}rank-n{% endif %}">{{ m.rank }}</span>
+      </td>
+      <td class="model-cell">{{ m.model_name }}</td>
+
+      {% for c in selection.criteria %}
+        {% set v = m.raw[c.key] %}
+        {% if c.key == 'avg_latency_ms' %}
+          <td class="tc mono {% if v < 20 %}latency-good{% elif v > 100 %}latency-slow{% endif %}">
+            {{ "%.1f"|format(v) }}
+          </td>
+        {% else %}
+          <td class="tc mono">{{ "%.4f"|format(v) }}</td>
+        {% endif %}
+      {% endfor %}
+
+      <td class="score-cell">{{ "%.4f"|format(m.score) }}</td>
+      <td class="tc">
+        {% if m.pareto %}
+          <span class="pareto-mark">Pareto ✓</span>
+        {% else %}
+          <span class="no-pareto">—</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% endif %}
+
+<script>
+(function () {
+  const CRITERIA_KEYS = {{ selection.criteria | map(attribute='key') | list | tojson }};
+  let _timer = null;
+
+  document.querySelectorAll('.weight-slider').forEach(function (sl) {
+    sl.addEventListener('input', function () {
+      var key = sl.dataset.key;
+      document.getElementById('wval-' + key).textContent =
+        parseFloat(sl.value).toFixed(2);
+      clearTimeout(_timer);
+      _timer = setTimeout(recompute, 450);
+    });
+  });
+
+  function recompute() {
+    var weights = {};
+    CRITERIA_KEYS.forEach(function (k) {
+      var el = document.getElementById('w-' + k);
+      if (el) weights[k] = parseFloat(el.value);
+    });
+
+    setStatus('<span style="color:var(--text-muted)">Перераховується…</span>');
+
+    fetch('/benchmark/selection/compute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(weights),
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        renderResults(data);
+        setStatus('<span style="color:#1e6e3a">✓ Оновлено</span>');
+        setTimeout(function () { setStatus(''); }, 2000);
+      })
+      .catch(function () {
+        setStatus('<span style="color:#c5221f">❌ Помилка</span>');
+      });
+  }
+
+  function setStatus(html) {
+    var el = document.getElementById('weight-status');
+    if (el) el.innerHTML = html;
+  }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function renderResults(data) {
+    // Best card
+    var best = data.ranked[0];
+    if (best) {
+      document.getElementById('best-name').textContent = best.model_name;
+      document.getElementById('best-score').textContent =
+        'Score: ' + best.score.toFixed(4) +
+        ' \u00b7 Pareto-оптимальна: ' + (best.pareto ? '✓' : '✗');
+    }
+
+    // Pareto badges
+    var badgesEl = document.getElementById('pareto-badges');
+    badgesEl.innerHTML = data.pareto_set.map(function (name) {
+      var cls = name === data.best_model ? 'pareto-badge is-best' : 'pareto-badge';
+      var prefix = name === data.best_model ? '🏆 ' : '';
+      return '<span class="' + cls + '">' + prefix + esc(name) + '</span>';
+    }).join('');
+
+    // Ranking table
+    var rankCls = ['rank-1', 'rank-2', 'rank-3'];
+    var rows = data.ranked.map(function (m) {
+      var rc = rankCls[m.rank - 1] || 'rank-n';
+      var bestRow = m.rank === 1 ? ' class="best-row"' : '';
+      var metricCells = data.criteria.map(function (c) {
+        var v = m.raw[c.key];
+        if (v == null) return '<td class="tc mono">—</td>';
+        var fmt = c.key === 'avg_latency_ms' ? v.toFixed(1) : v.toFixed(4);
+        var cls2 = '';
+        if (c.key === 'avg_latency_ms') {
+          cls2 = v < 20 ? ' latency-good' : v > 100 ? ' latency-slow' : '';
+        }
+        return '<td class="tc mono' + cls2 + '">' + fmt + '</td>';
+      }).join('');
+      var paretoCell = m.pareto
+        ? '<span class="pareto-mark">Pareto \u2713</span>'
+        : '<span class="no-pareto">\u2014</span>';
+      return '<tr' + bestRow + '>' +
+        '<td><span class="rank-badge ' + rc + '">' + m.rank + '</span></td>' +
+        '<td class="model-cell">' + esc(m.model_name) + '</td>' +
+        metricCells +
+        '<td class="score-cell">' + m.score.toFixed(4) + '</td>' +
+        '<td class="tc">' + paretoCell + '</td>' +
+        '</tr>';
+    }).join('');
+
+    var hdrCells = data.criteria.map(function (c) {
+      return '<th class="c">' + esc(c.label) + '</th>';
+    }).join('');
+
+    document.getElementById('ranking-wrap').innerHTML =
+      '<table class="metrics-table">' +
+      '<thead><tr>' +
+        '<th style="width:44px">#</th>' +
+        '<th>Модель</th>' +
+        hdrCells +
+        '<th class="c" style="min-width:75px">Score</th>' +
+        '<th class="c">Pareto</th>' +
+      '</tr></thead>' +
+      '<tbody>' + rows + '</tbody>' +
+      '</table>';
+  }
+}());
+</script>
+{% endblock %}
