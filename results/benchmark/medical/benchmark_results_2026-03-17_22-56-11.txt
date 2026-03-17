@@ -1,0 +1,11 @@
+Оцінка benchmark retrieval
+Дата: 2026-03-17 22:56:11
+Queries: 20 | top_k=10
+================================================================================================================================================================================
+Model                                 Queries  Recall@k     MRR@k        nDCG@k       P@k          ms/query     Artifacts                                                       
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+bert-base-multilingual-cased          20       1.0000       0.9250       2.1969       0.3500       65.9         D:\repos\kb-semantic-search-benchmark\artifacts\medical\bert    
+fasttext                              20       1.0000       0.8125       2.0067       0.3500       0.2          D:\repos\kb-semantic-search-benchmark\artifacts\medical\fasttext
+paraphrase-multilingual-MiniLM-L12-v2 20       1.0000       0.9500       2.2086       0.3500       20.8         D:\repos\kb-semantic-search-benchmark\artifacts\medical\sbert   
+tfidf                                 20       1.0000       0.9667       2.1435       0.3500       0.4          D:\repos\kb-semantic-search-benchmark\artifacts\medical\tfidf   
+word2vec                              20       1.0000       0.9125       2.0834       0.3500       0.1          D:\repos\kb-semantic-search-benchmark\artifacts\medical\word2vec
