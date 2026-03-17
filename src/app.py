@@ -20,10 +20,33 @@ from multi_criteria import run_selection, DEFAULT_WEIGHTS, CRITERIA
 
 # ── Шляхи ────────────────────────────────────────────────────────────────────
 ROOT = Path(__file__).parent.parent
-ARTIFACTS_ROOT = ROOT / "artifacts"
-CHUNKS_PATH = ROOT / "data" / "chunks.jsonl"
-BENCHMARK_RESULTS_DIR = ROOT / "results" / "benchmark"
-RAW_DIR = ROOT / "data" / "raw"
+DOMAINS_ROOT = ROOT / "data" / "domains"
+
+DOMAINS_CONFIG = [
+    {"id": "tech",  "label": "Техніка / IT"},
+    {"id": "legal", "label": "Юридична база"},
+]
+DEFAULT_DOMAIN = "tech"
+
+
+def get_domain() -> str:
+    """Повертає поточний домен з URL-параметра або форми."""
+    d = request.args.get("domain") or request.form.get("domain") or DEFAULT_DOMAIN
+    valid = {dom["id"] for dom in DOMAINS_CONFIG}
+    return d if d in valid else DEFAULT_DOMAIN
+
+
+def domain_paths(domain_id: str) -> dict:
+    """Повертає всі шляхи для заданого домену."""
+    base = DOMAINS_ROOT / domain_id
+    return {
+        "raw":               base / "raw",
+        "chunks":            base / "chunks.jsonl",
+        "benchmark_queries": base / "benchmark" / "queries.jsonl",
+        "benchmark_qrels":   base / "benchmark" / "qrels.jsonl",
+        "artifacts_root":    ROOT / "artifacts" / domain_id,
+        "results_dir":       ROOT / "results" / "benchmark" / domain_id,
+    }
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = "kb-search-secret"
@@ -36,12 +59,13 @@ def datetimeformat(ts):
 
 
 # ── Утиліти──────────────────────────────────────────────────────────────────
-def discover_models() -> list[dict]:
-    """Повертає список доступних моделей із папки artifacts/."""
+def discover_models(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
+    """Повертає список доступних моделей для заданого домену."""
+    artifacts_root = domain_paths(domain_id)["artifacts_root"]
     models = []
-    if not ARTIFACTS_ROOT.exists():
+    if not artifacts_root.exists():
         return models
-    for model_dir in sorted(ARTIFACTS_ROOT.iterdir()):
+    for model_dir in sorted(artifacts_root.iterdir()):
         if not model_dir.is_dir():
             continue
         index_path = model_dir / "faiss.index"
@@ -61,11 +85,12 @@ def discover_models() -> list[dict]:
     return models
 
 
-def load_latest_benchmark() -> dict | None:
-    """Завантажує найновіший файл benchmark_results_*.json або None."""
-    if not BENCHMARK_RESULTS_DIR.exists():
+def load_latest_benchmark(domain_id: str = DEFAULT_DOMAIN) -> dict | None:
+    """Завантажує найновіший файл benchmark_results_*.json для домену або None."""
+    results_dir = domain_paths(domain_id)["results_dir"]
+    if not results_dir.exists():
         return None
-    files = sorted(BENCHMARK_RESULTS_DIR.glob("benchmark_results_*.json"))
+    files = sorted(results_dir.glob("benchmark_results_*.json"))
     if not files:
         return None
     try:
@@ -88,25 +113,27 @@ def load_meta(path: Path) -> list[dict]:
 _cache: dict = {}
 
 
-def get_index_and_model(model_id: str):
-    if model_id in _cache:
-        return _cache[model_id]
-    artifacts_dir = ARTIFACTS_ROOT / model_id
+def get_index_and_model(model_id: str, domain_id: str = DEFAULT_DOMAIN):
+    cache_key = f"{domain_id}/{model_id}"
+    if cache_key in _cache:
+        return _cache[cache_key]
+    artifacts_dir = domain_paths(domain_id)["artifacts_root"] / model_id
     index = faiss.read_index(str(artifacts_dir / "faiss.index"))
     meta = load_meta(artifacts_dir / "meta.jsonl")
     model, model_cfg = load_model_from_artifacts(artifacts_dir=artifacts_dir, fallback_model_name="paraphrase-multilingual-MiniLM-L12-v2")
-    _cache[model_id] = (index, meta, model)
+    _cache[cache_key] = (index, meta, model)
     return index, meta, model
 
 
-def load_all_chunks() -> list[dict]:
-    if not CHUNKS_PATH.exists():
+def load_all_chunks(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
+    chunks_path = domain_paths(domain_id)["chunks"]
+    if not chunks_path.exists():
         return []
-    return load_meta(CHUNKS_PATH)
+    return load_meta(chunks_path)
 
 
-def do_search(query: str, model_id: str, top_k: int) -> list[dict]:
-    index, meta, model = get_index_and_model(model_id)
+def do_search(query: str, model_id: str, top_k: int, domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
+    index, meta, model = get_index_and_model(model_id, domain_id)
     query_vector = model.encode_queries([query]).astype("float32")
     scores, indices = index.search(query_vector, top_k)
     results = []
@@ -134,8 +161,9 @@ def do_search(query: str, model_id: str, top_k: int) -> list[dict]:
 # ── Маршрути ──────────────────────────────────────────────────────────────────
 @app.route("/")
 def index():
-    models = discover_models()
-    benchmark = load_latest_benchmark()
+    domain = get_domain()
+    models = discover_models(domain)
+    benchmark = load_latest_benchmark(domain)
 
     # Сортуємо моделі за nDCG з бенчмарку (від найкращої до найгіршої)
     if benchmark and benchmark.get("models"):
@@ -149,27 +177,29 @@ def index():
             ndcg = ndcg_map.get(m["id"])
             if ndcg is not None:
                 m["ndcg"] = ndcg
-    query = request.args.get("q", "").strip()
+    query_text = request.args.get("q", "").strip()
     model_id = request.args.get("model", models[0]["id"] if models else "")
     top_k = int(request.args.get("top_k", 5))
 
     results = []
     error = None
-    if query and model_id:
+    if query_text and model_id:
         try:
-            results = do_search(query, model_id, top_k)
+            results = do_search(query_text, model_id, top_k, domain)
         except Exception as exc:
             error = str(exc)
 
     return render_template(
         "index.html",
         models=models,
-        query=query,
+        query=query_text,
         selected_model=model_id,
         top_k=top_k,
         results=results,
         error=error,
         benchmark=benchmark,
+        current_domain=domain,
+        domains=DOMAINS_CONFIG,
     )
 
 
@@ -177,7 +207,8 @@ def index():
 def documents():
     from collections import defaultdict
 
-    chunks = load_all_chunks()
+    domain = get_domain()
+    chunks = load_all_chunks(domain)
     source_filter = request.args.get("source", "").strip()
 
     # Унікальні джерела
@@ -204,6 +235,8 @@ def documents():
         total_chunks=total_chunks,
         all_sources=all_sources,
         source_filter=source_filter,
+        current_domain=domain,
+        domains=DOMAINS_CONFIG,
     )
 
 
@@ -214,13 +247,14 @@ _chunk_job: dict = {"running": False, "result": None, "error": None}
 _chunk_lock = threading.Lock()
 
 
-def list_raw_files() -> list[dict]:
-    """Повертає список файлів у data/raw/."""
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
+def list_raw_files(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
+    """Повертає список файлів у data/domains/{domain}/raw/."""
+    raw_dir = domain_paths(domain_id)["raw"]
+    raw_dir.mkdir(parents=True, exist_ok=True)
     files = []
-    for p in sorted(RAW_DIR.rglob("*")):
+    for p in sorted(raw_dir.rglob("*")):
         if p.is_file():
-            rel = p.relative_to(RAW_DIR)
+            rel = p.relative_to(raw_dir)
             stat = p.stat()
             files.append({
                 "name": str(rel).replace("\\", "/"),
@@ -232,27 +266,34 @@ def list_raw_files() -> list[dict]:
 
 @app.route("/raw")
 def raw_files():
-    files = list_raw_files()
-    chunk_exists = CHUNKS_PATH.exists()
+    domain = get_domain()
+    dp = domain_paths(domain)
+    files = list_raw_files(domain)
+    chunks_path = dp["chunks"]
+    chunk_exists = chunks_path.exists()
     chunk_count = 0
     if chunk_exists:
-        with CHUNKS_PATH.open("r", encoding="utf-8") as fh:
+        with chunks_path.open("r", encoding="utf-8") as fh:
             chunk_count = sum(1 for line in fh if line.strip())
     return render_template(
         "raw.html",
         files=files,
         chunk_exists=chunk_exists,
         chunk_count=chunk_count,
+        current_domain=domain,
+        domains=DOMAINS_CONFIG,
     )
 
 
 @app.route("/raw/upload", methods=["POST"])
 def raw_upload():
+    domain = get_domain()
+    raw_dir = domain_paths(domain)["raw"]
     uploaded = request.files.getlist("files")
     if not uploaded:
         flash("Файли не вибрані.", "error")
-        return redirect(url_for("raw_files"))
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
+        return redirect(url_for("raw_files", domain=domain))
+    raw_dir.mkdir(parents=True, exist_ok=True)
     saved, skipped = 0, 0
     for f in uploaded:
         if not f.filename:
@@ -261,32 +302,34 @@ def raw_upload():
         if ext not in ALLOWED_EXTENSIONS:
             skipped += 1
             continue
-        dest = RAW_DIR / secure_filename(f.filename)
+        dest = raw_dir / secure_filename(f.filename)
         f.save(str(dest))
         saved += 1
     if saved:
         flash(f"Збережено {saved} файл(ів)." + (f" Пропущено {skipped} (непідтримуваний формат)." if skipped else ""), "success")
     else:
         flash("Жодного файлу не збережено. Підтримуються: .txt .md .rst .pdf .docx", "error")
-    return redirect(url_for("raw_files"))
+    return redirect(url_for("raw_files", domain=domain))
 
 
 @app.route("/raw/delete", methods=["POST"])
 def raw_delete():
+    domain = get_domain()
+    raw_dir = domain_paths(domain)["raw"]
     name = request.form.get("name", "").strip()
     if not name:
         return jsonify({"ok": False, "error": "Не вказано ім'я файлу"}), 400
-    path = (RAW_DIR / name).resolve()
+    path = (raw_dir / name).resolve()
     try:
-        path.relative_to(RAW_DIR.resolve())
+        path.relative_to(raw_dir.resolve())
     except ValueError:
         return jsonify({"ok": False, "error": "Недозволений шлях"}), 400
     if not path.exists():
         return jsonify({"ok": False, "error": "Файл не знайдено"}), 404
     path.unlink()
     try:
-        path.parent.relative_to(RAW_DIR.resolve())
-        if path.parent != RAW_DIR.resolve() and not any(path.parent.iterdir()):
+        path.parent.relative_to(raw_dir.resolve())
+        if path.parent != raw_dir.resolve() and not any(path.parent.iterdir()):
             path.parent.rmdir()
     except Exception:
         pass
@@ -300,12 +343,17 @@ def raw_chunk():
         if _chunk_job["running"]:
             return jsonify({"ok": False, "error": "Чанкінг вже виконується"}), 409
 
+    domain = get_domain()
+    dp = domain_paths(domain)
     min_words = int(request.form.get("min_words", 300))
     max_words = int(request.form.get("max_words", 800))
     overlap   = int(request.form.get("overlap",   80))
 
     sys.path.insert(0, str(Path(__file__).parent))
     from ingest_chunk import ingest_chunks  # noqa: E402
+
+    raw_dir    = dp["raw"]
+    chunks_out = dp["chunks"]
 
     with _chunk_lock:
         _chunk_job = {"running": True, "result": None, "error": None}
@@ -314,8 +362,8 @@ def raw_chunk():
         global _chunk_job
         try:
             count = ingest_chunks(
-                input_dir=RAW_DIR,
-                output_file=CHUNKS_PATH,
+                input_dir=raw_dir,
+                output_file=chunks_out,
                 min_words=min_words,
                 max_words=max_words,
                 overlap=overlap,
@@ -399,9 +447,9 @@ _build_jobs: dict = {}   # model_id -> {running, done, exit_code, log, started_a
 _build_lock = threading.Lock()
 
 
-def _artifact_info(model_id: str) -> dict:
-    """Стан artifacts/{model_id}/ — чи існує індекс та скільки векторів."""
-    d = ARTIFACTS_ROOT / model_id
+def _artifact_info(model_id: str, domain_id: str = DEFAULT_DOMAIN) -> dict:
+    """Стан artifacts/{domain}/{model_id}/ — чи існує індекс та скільки векторів."""
+    d = domain_paths(domain_id)["artifacts_root"] / model_id
     index_path = d / "faiss.index"
     meta_path  = d / "meta.jsonl"
     if not index_path.exists():
@@ -421,33 +469,43 @@ def _artifact_info(model_id: str) -> dict:
 
 @app.route("/build")
 def build_index_page():
+    domain = get_domain()
+    dp = domain_paths(domain)
     models_info = []
     for m in MODEL_DEFS:
         info = dict(m)
-        info["artifact"] = _artifact_info(m["id"])
+        info["artifact"] = _artifact_info(m["id"], domain)
+        job_key = f"{domain}/{m['id']}"
         with _build_lock:
-            info["job"] = dict(_build_jobs.get(m["id"], {}))
+            info["job"] = dict(_build_jobs.get(job_key, {}))
         models_info.append(info)
-    chunks_exist = CHUNKS_PATH.exists()
+    chunks_path = dp["chunks"]
+    chunks_exist = chunks_path.exists()
     chunk_count = 0
     if chunks_exist:
-        with CHUNKS_PATH.open("r", encoding="utf-8") as fh:
+        with chunks_path.open("r", encoding="utf-8") as fh:
             chunk_count = sum(1 for l in fh if l.strip())
     return render_template(
         "build.html",
         models=models_info,
         chunks_exist=chunks_exist,
         chunk_count=chunk_count,
+        current_domain=domain,
+        domains=DOMAINS_CONFIG,
     )
 
 
 @app.route("/build/run", methods=["POST"])
 def build_run():
     data = request.get_json(force=True)
+    domain = data.get("domain", DEFAULT_DOMAIN)
+    if domain not in {d["id"] for d in DOMAINS_CONFIG}:
+        domain = DEFAULT_DOMAIN
+    dp = domain_paths(domain)
     selected = data.get("models", [])   # list of {id, params{}}
     if not selected:
         return jsonify({"ok": False, "error": "Не вибрано жодної моделі"}), 400
-    if not CHUNKS_PATH.exists():
+    if not dp["chunks"].exists():
         return jsonify({"ok": False, "error": "chunks.jsonl не знайдено — спочатку запустіть чанкінг"}), 400
 
     param_map = {m["id"]: {p["name"]: p["arg"] for p in m["params"]} for m in MODEL_DEFS}
@@ -455,17 +513,18 @@ def build_run():
     started = []
     for item in selected:
         mid = item["id"]
+        job_key = f"{domain}/{mid}"
         with _build_lock:
-            if _build_jobs.get(mid, {}).get("running"):
+            if _build_jobs.get(job_key, {}).get("running"):
                 continue   # вже запущено
-            _build_jobs[mid] = {"running": True, "done": False, "exit_code": None, "log": [], "started_at": time.time()}
+            _build_jobs[job_key] = {"running": True, "done": False, "exit_code": None, "log": [], "started_at": time.time()}
 
-        artifacts_dir = str(ARTIFACTS_ROOT / mid)
+        artifacts_dir = str(dp["artifacts_root"] / mid)
         cmd = [
             sys.executable,
             str(BUILD_SCRIPT),
             "--model-type", mid,
-            "--chunks", str(CHUNKS_PATH),
+            "--chunks", str(dp["chunks"]),
             "--artifacts", artifacts_dir,
         ]
         for param_name, param_val in item.get("params", {}).items():
@@ -473,7 +532,7 @@ def build_run():
             if arg_flag and param_val != "":
                 cmd += [arg_flag, str(param_val)]
 
-        def _run(model_id=mid, command=cmd):
+        def _run(model_id=mid, job_k=job_key, command=cmd):
             try:
                 proc = subprocess.Popen(
                     command,
@@ -488,24 +547,24 @@ def build_run():
                     line = line.rstrip()
                     if line:
                         with _build_lock:
-                            _build_jobs[model_id]["log"].append(line)
+                            _build_jobs[job_k]["log"].append(line)
                 proc.wait()
                 with _build_lock:
-                    _build_jobs[model_id]["running"] = False
-                    _build_jobs[model_id]["done"] = True
-                    _build_jobs[model_id]["exit_code"] = proc.returncode
+                    _build_jobs[job_k]["running"] = False
+                    _build_jobs[job_k]["done"] = True
+                    _build_jobs[job_k]["exit_code"] = proc.returncode
             except Exception as exc:
                 with _build_lock:
-                    _build_jobs[model_id]["running"] = False
-                    _build_jobs[model_id]["done"] = True
-                    _build_jobs[model_id]["exit_code"] = -1
-                    _build_jobs[model_id]["log"].append(f"ERROR: {exc}")
+                    _build_jobs[job_k]["running"] = False
+                    _build_jobs[job_k]["done"] = True
+                    _build_jobs[job_k]["exit_code"] = -1
+                    _build_jobs[job_k]["log"].append(f"ERROR: {exc}")
 
         thread = threading.Thread(target=_run, daemon=True)
         thread.start()
         started.append(mid)
-        # invalidate search cache for this model
-        _cache.pop(mid, None)
+        # invalidate search cache for this model+domain
+        _cache.pop(f"{domain}/{mid}", None)
 
     return jsonify({"ok": True, "started": started})
 
@@ -518,20 +577,18 @@ def build_status():
 
 
 # ── Benchmark ────────────────────────────────────────────────────────────
-BENCHMARK_SCRIPT  = Path(__file__).parent / "evaluate_benchmark.py"
-QUERIES_PATH      = ROOT / "data" / "benchmark" / "queries.jsonl"
-QRELS_PATH        = ROOT / "data" / "benchmark" / "qrels.jsonl"
-BENCHMARK_OUT_DIR = ROOT / "results" / "benchmark"
+BENCHMARK_SCRIPT = Path(__file__).parent / "evaluate_benchmark.py"
 
 _bench_job: dict = {"running": False, "done": False, "exit_code": None, "log": [], "result_file": None}
 _bench_lock = threading.Lock()
 
 
-def _load_benchmark_results() -> list[dict]:
-    """Повертає всі файли benchmark_results_*.json, відсортовані від найновішого."""
-    if not BENCHMARK_OUT_DIR.exists():
+def _load_benchmark_results(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
+    """Повертає всі файли benchmark_results_*.json для домену, відсортовані від найновішого."""
+    results_dir = domain_paths(domain_id)["results_dir"]
+    if not results_dir.exists():
         return []
-    files = sorted(BENCHMARK_OUT_DIR.glob("benchmark_results_*.json"), reverse=True)
+    files = sorted(results_dir.glob("benchmark_results_*.json"), reverse=True)
     results = []
     for f in files:
         try:
@@ -545,10 +602,12 @@ def _load_benchmark_results() -> list[dict]:
 
 @app.route("/benchmark")
 def benchmark_page():
-    all_results = _load_benchmark_results()
+    domain = get_domain()
+    dp = domain_paths(domain)
+    all_results = _load_benchmark_results(domain)
     latest = all_results[0] if all_results else None
-    queries_exist = QUERIES_PATH.exists() and QRELS_PATH.exists()
-    artifacts_exist = bool(discover_models())
+    queries_exist = dp["benchmark_queries"].exists() and dp["benchmark_qrels"].exists()
+    artifacts_exist = bool(discover_models(domain))
     with _bench_lock:
         job = dict(_bench_job)
     return render_template(
@@ -558,6 +617,8 @@ def benchmark_page():
         queries_exist=queries_exist,
         artifacts_exist=artifacts_exist,
         job=job,
+        current_domain=domain,
+        domains=DOMAINS_CONFIG,
     )
 
 
@@ -567,23 +628,28 @@ def benchmark_run():
         if _bench_job.get("running"):
             return jsonify({"ok": False, "error": "Бенчмарк вже виконується"}), 409
 
-    if not QUERIES_PATH.exists() or not QRELS_PATH.exists():
+    domain = get_domain()
+    dp = domain_paths(domain)
+    if not dp["benchmark_queries"].exists() or not dp["benchmark_qrels"].exists():
         return jsonify({"ok": False, "error": "queries.jsonl або qrels.jsonl не знайдено"}), 400
 
     top_k = int(request.form.get("top_k", 10))
+    dp["results_dir"].mkdir(parents=True, exist_ok=True)
 
     cmd = [
         sys.executable,
         str(BENCHMARK_SCRIPT),
-        "--queries",       str(QUERIES_PATH),
-        "--qrels",         str(QRELS_PATH),
-        "--artifacts-root", str(ARTIFACTS_ROOT),
-        "--top-k",         str(top_k),
-        "--output",        str(BENCHMARK_OUT_DIR),
+        "--queries",        str(dp["benchmark_queries"]),
+        "--qrels",          str(dp["benchmark_qrels"]),
+        "--artifacts-root", str(dp["artifacts_root"]),
+        "--top-k",          str(top_k),
+        "--output",         str(dp["results_dir"]),
     ]
 
     with _bench_lock:
         _bench_job.update({"running": True, "done": False, "exit_code": None, "log": [], "result_file": None})
+
+    results_dir = dp["results_dir"]
 
     def _run():
         try:
@@ -604,8 +670,8 @@ def benchmark_run():
             proc.wait()
             # знаходимо найновіший результат
             result_file = None
-            if BENCHMARK_OUT_DIR.exists():
-                files = sorted(BENCHMARK_OUT_DIR.glob("benchmark_results_*.json"))
+            if results_dir.exists():
+                files = sorted(results_dir.glob("benchmark_results_*.json"))
                 if files:
                     result_file = files[-1].name
             with _bench_lock:
@@ -634,7 +700,8 @@ def benchmark_status():
 @app.route("/benchmark/result")
 def benchmark_result():
     """Повертає JSON найновішого benchmark result для live-оновлення UI."""
-    results = _load_benchmark_results()
+    domain = get_domain()
+    results = _load_benchmark_results(domain)
     if not results:
         return jsonify(None)
     return jsonify(results[0])
@@ -643,9 +710,11 @@ def benchmark_result():
 @app.route("/results/benchmark/<filename>")
 def benchmark_result_file(filename: str):
     """Повертає JSON конкретного файлу результатів benchmark."""
-    path = (BENCHMARK_OUT_DIR / filename).resolve()
+    domain = get_domain()
+    results_dir = domain_paths(domain)["results_dir"]
+    path = (results_dir / filename).resolve()
     try:
-        path.relative_to(BENCHMARK_OUT_DIR.resolve())
+        path.relative_to(results_dir.resolve())
     except ValueError:
         return jsonify({"error": "forbidden"}), 403
     if not path.exists() or path.suffix != ".json":
@@ -657,7 +726,8 @@ def benchmark_result_file(filename: str):
 
 @app.route("/benchmark/selection")
 def benchmark_selection():
-    data = load_latest_benchmark()
+    domain = get_domain()
+    data = load_latest_benchmark(domain)
     selection = None
     if data and data.get("models"):
         selection = run_selection(data["models"])
@@ -665,6 +735,10 @@ def benchmark_selection():
         "selection.html",
         selection=selection,
         benchmark_meta=data,
+        criteria=CRITERIA,
+        default_weights=DEFAULT_WEIGHTS,
+        current_domain=domain,
+        domains=DOMAINS_CONFIG,
     )
 
 
@@ -680,7 +754,8 @@ def benchmark_selection_compute():
                 weights[k] = max(0.0, min(1.0, float(v)))
             except (TypeError, ValueError):
                 pass
-    data = load_latest_benchmark()
+    domain = get_domain()
+    data = load_latest_benchmark(domain)
     if not data or not data.get("models"):
         return jsonify({"error": "No benchmark data available"}), 404
     result = run_selection(data["models"], weights)

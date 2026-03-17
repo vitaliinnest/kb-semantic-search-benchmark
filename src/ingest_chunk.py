@@ -40,6 +40,8 @@ def read_pdf_file(path: Path) -> str:
 			for page_num, page in enumerate(pages_iter, 1):
 				try:
 					text_parts.append(page.get_text() or "")
+				except Exception:
+					pass
 	except Exception as e:
 			logging.error(f"Помилка читання PDF {path.name}: {e}")
 			return ""

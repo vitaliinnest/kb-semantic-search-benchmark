@@ -1,0 +1,103 @@
+{"query_id":"q1","query":"виявлення аномалій у фінансових транзакціях","lang":"uk","intent":"topic"}
+{"query_id":"q2","query":"автоенкодер для виявлення аномалій","lang":"uk","intent":"technical"}
+{"query_id":"q3","query":"комбінація Autoencoder та Isolation Forest для fraud detection","lang":"uk","intent":"technical"}
+{"query_id":"q4","query":"потокова обробка транзакцій і швидке детектування аномалій","lang":"uk","intent":"technical"}
+{"query_id":"q5","query":"аналіз поведінки клієнтів і CLV (customer lifetime value)","lang":"uk","intent":"topic"}
+{"query_id":"q6","query":"прогноз відтоку клієнтів (churn prediction)","lang":"uk","intent":"technical"}
+{"query_id":"q7","query":"когортний аналіз для сегментації клієнтів","lang":"uk","intent":"method"}
+{"query_id":"q8","query":"етичні питання використання персональних даних у аналітиці","lang":"uk","intent":"policy"}
+
+{"query_id":"q9","query":"аналіз виробничих збитків у промисловості: методи та підходи","lang":"uk","intent":"topic"}
+{"query_id":"q10","query":"ABC-аналіз для класифікації виробничих збитків","lang":"uk","intent":"method"}
+{"query_id":"q11","query":"метод Парето у виявленні найзначущіших типів збитків","lang":"uk","intent":"method"}
+{"query_id":"q12","query":"інформаційна система аналізу збитків при виробництві нержавіючої сталі","lang":"uk","intent":"technical"}
+
+{"query_id":"q13","query":"формування промптів та запитів до великих мовних моделей","lang":"uk","intent":"technical"}
+{"query_id":"q14","query":"технологія RAG (Retrieval-Augmented Generation) у системах з LLM","lang":"uk","intent":"technical"}
+{"query_id":"q15","query":"косинусна схожість векторів у семантичному пошуку","lang":"uk","intent":"method"}
+{"query_id":"q16","query":"трансформерна архітектура та механізм самоуваги в мовних моделях","lang":"uk","intent":"technical"}
+
+{"query_id":"q17","query":"рекомендаційна система для агентства нерухомості","lang":"uk","intent":"topic"}
+{"query_id":"q18","query":"контентна фільтрація та профіль користувача у рекомендаційній системі нерухомості","lang":"uk","intent":"method"}
+{"query_id":"q19","query":"застосування BERT для векторного представлення тексту у рекомендаціях","lang":"uk","intent":"technical"}
+{"query_id":"q20","query":"метод Bag-of-Words для векторизації тексту","lang":"uk","intent":"method"}
+
+{"query_id":"q21","query":"рекомендаційна система вакансій для фріланс-платформи","lang":"uk","intent":"topic"}
+{"query_id":"q22","query":"колаборативна фільтрація для рекомендацій вакансій","lang":"uk","intent":"method"}
+{"query_id":"q23","query":"гібридна система рекомендацій: колаборативний, контентний та семантичний підходи","lang":"uk","intent":"technical"}
+{"query_id":"q24","query":"оцінка якості рекомендаційної системи за метрикою MAP@K","lang":"uk","intent":"method"}
+
+{"query_id":"q25","query":"поведінкові характеристики клієнта у транзакційному аналізі","lang":"uk","intent":"technical"}
+{"query_id":"q26","query":"контекстуальні ознаки аномалій: час доби, IP-адреса, зміна пристрою","lang":"uk","intent":"technical"}
+
+{"query_id":"q27","query":"комбінований метод аналізу поведінки клієнтів для підтримки планування","lang":"uk","intent":"method"}
+{"query_id":"q28","query":"логістична регресія для прогнозування відтоку клієнтів","lang":"uk","intent":"technical"}
+
+{"query_id":"q29","query":"One-Class SVM для виявлення аномальних транзакцій","lang":"uk","intent":"technical"}
+{"query_id":"q30","query":"налаштування гіперпараметрів Isolation Forest: n_estimators, contamination","lang":"uk","intent":"technical"}
+{"query_id":"q31","query":"багаторівневий ансамблевий підхід HASBT для виявлення шахрайства","lang":"uk","intent":"method"}
+
+{"query_id":"q32","query":"методи аналізу поведінки клієнтів в електронній комерції","lang":"uk","intent":"topic"}
+{"query_id":"q33","query":"переваги та обмеження методів обчислення customer lifetime value","lang":"uk","intent":"method"}
+{"query_id":"q34","query":"коефіцієнт утримання клієнтів та формула Rc(t) у когортному аналізі","lang":"uk","intent":"technical"}
+
+{"query_id":"q35","query":"роль аналітика при формуванні висновків про виробничі збитки","lang":"uk","intent":"topic"}
+{"query_id":"q36","query":"збитки при виробництві нержавіючої сталі: типи та причини","lang":"uk","intent":"topic"}
+{"query_id":"q37","query":"когортний аналіз виробничих збитків з урахуванням сезонності","lang":"uk","intent":"method"}
+
+{"query_id":"q38","query":"chain-of-thought prompting і role prompting у великих мовних моделях","lang":"uk","intent":"technical"}
+{"query_id":"q39","query":"алгоритм BM25 для ранжування документів за релевантністю","lang":"uk","intent":"method"}
+{"query_id":"q40","query":"розширення запиту та точність ранжування у RAG-системах","lang":"uk","intent":"technical"}
+{"query_id":"q41","query":"формування контексту з історії діалогу для запитів до LLM","lang":"uk","intent":"technical"}
+
+{"query_id":"q42","query":"проблема холодного старту у рекомендаційних системах","lang":"uk","intent":"method"}
+{"query_id":"q43","query":"формула косинусної подібності для порівняння об'єктів нерухомості","lang":"uk","intent":"technical"}
+{"query_id":"q44","query":"евклідова відстань для ранжування пропозицій нерухомості","lang":"uk","intent":"technical"}
+
+{"query_id":"q45","query":"гібридний підхід в рекомендаційних системах проти окремих методів","lang":"uk","intent":"method"}
+{"query_id":"q46","query":"TF-IDF вектор для представлення опису вакансій","lang":"uk","intent":"method"}
+{"query_id":"q47","query":"аналіз поведінкових та текстових характеристик користувача у рекомендаційній системі","lang":"uk","intent":"technical"}
+{"query_id":"q48","query":"оцінка якості рекомендацій вакансій: точність на великих значеннях K","lang":"uk","intent":"method"}
+
+{"query_id":"q49","query":"метеорологічний лідар для дистанційного зондування атмосфери","lang":"uk","intent":"topic"}
+{"query_id":"q50","query":"лазерна локація LIDAR: принцип роботи та структура системи","lang":"uk","intent":"technical"}
+{"query_id":"q51","query":"вимірювання параметрів атмосфери: вологість, температура, аерозоль","lang":"uk","intent":"method"}
+{"query_id":"q52","query":"комбінаційний лідар (Autoencoder + Isolation Forest) для зондування","lang":"uk","intent":"technical"}
+{"query_id":"q53","query":"одноелектронні характеристики фотоелектронного помножувача (ФЕП)","lang":"uk","intent":"technical"}
+
+{"query_id":"q54","query":"багатохвильовий лідар для моніторингу аерозолю","lang":"uk","intent":"technical"}
+{"query_id":"q55","query":"механічне сканування променя лідара та активна фазована антенна решетка","lang":"uk","intent":"method"}
+{"query_id":"q56","query":"спектри метеорних потоків та вимірювання на висотах 80-130 км","lang":"uk","intent":"technical"}
+
+{"query_id":"q57","query":"3D-принтер з кількома екструдерами: конструкція і перемикання матеріалу","lang":"uk","intent":"technical"}
+{"query_id":"q58","query":"кінематика COREXY у системах FDM-друку","lang":"uk","intent":"technical"}
+{"query_id":"q59","query":"шарико-гвинтова передача та лінійні направляючі при 3D-друці","lang":"uk","intent":"method"}
+{"query_id":"q60","query":"подача пластику через систему Bowden у 3D-принтері","lang":"uk","intent":"technical"}
+
+{"query_id":"q61","query":"контроль якості 3D-друку за допомогою нейронної мережі","lang":"uk","intent":"topic"}
+{"query_id":"q62","query":"дефекти FDM-друку: відрив деталі, перший шар, зазор сопла","lang":"uk","intent":"technical"}
+{"query_id":"q63","query":"виявлення дефектів 3D-друку в реальному часі: методи потенціал машинного навчання","lang":"uk","intent":"method"}
+{"query_id":"q64","query":"температура екструдера та столу при друку з PLA-пластику","lang":"uk","intent":"technical"}
+{"query_id":"q65","query":"автоматичне виявлення дефектів при виробництві FDM-деталей з використанням CV","lang":"uk","intent":"method"}
+{"query_id": "q66", "query": "які методи лазерної дистанційної спектроскопії застосовуються для аналізу атмосфери?", "lang": "uk", "intent": "method"}
+{"query_id": "q67", "query": "як комбінаційне розсіювання дозволяє вимірювати молекулярну щільність атмосферних газів?", "lang": "uk", "intent": "technical"}
+{"query_id": "q68", "query": "яка структура оптичної схеми лідара з ОКГ та фотоелектронними помножувачами?", "lang": "uk", "intent": "technical"}
+{"query_id": "q69", "query": "як класифікуються фактори середовища що впливають на роботу лідарів?", "lang": "uk", "intent": "topic"}
+{"query_id": "q70", "query": "як обробляються дані лідарних вимірювань за допомогою ЕОМ?", "lang": "uk", "intent": "technical"}
+{"query_id": "q71", "query": "як гравітаційні хвилі поширюються у верхній атмосфері?", "lang": "uk", "intent": "topic"}
+{"query_id": "q72", "query": "метод амплітудної дискримінації для зниження шумів фотоелектронного помножувача", "lang": "uk", "intent": "method"}
+{"query_id": "q73", "query": "як резонансний метод дозволяє вимірювати концентрацію мікродомішків в атмосфері?", "lang": "uk", "intent": "method"}
+{"query_id": "q74", "query": "яке призначення та конструкція об'єктива Ньютона у складі лідара?", "lang": "uk", "intent": "technical"}
+{"query_id": "q75", "query": "метод Релеєвського розсіювання для зондування молекулярного складу атмосфери", "lang": "uk", "intent": "method"}
+{"query_id": "q76", "query": "лідарне рівняння з урахуванням коефіцієнта ослаблення атмосфери", "lang": "uk", "intent": "technical"}
+{"query_id": "q77", "query": "лідарне спостереження натрієвого шару мезосфери резонансним методом", "lang": "uk", "intent": "topic"}
+{"query_id": "q78", "query": "формула Кравця та доплерівське розширення лінії для розрахунку перерізу розсіювання натрію", "lang": "uk", "intent": "technical"}
+{"query_id": "q79", "query": "яке призначення системи changing tool для 3D принтера з декількома екструдерами?", "lang": "uk", "intent": "topic"}
+{"query_id": "q80", "query": "технологія FDM матеріали та переваги для 3D друку шар за шаром", "lang": "uk", "intent": "topic"}
+{"query_id": "q81", "query": "кінематика H-BOT в тривісному 3D принтері переміщення по осях XYZ", "lang": "uk", "intent": "technical"}
+{"query_id": "q82", "query": "конструкція направляючих та кареток для осей X та Y в 3D принтері", "lang": "uk", "intent": "technical"}
+{"query_id": "q83", "query": "розробка системи контролю якості 3D друку на основі нейронної мережі в Klipper", "lang": "uk", "intent": "topic"}
+{"query_id": "q84", "query": "методи контролю якості 3D друку з використанням нейронних мереж для виявлення дефектів", "lang": "uk", "intent": "method"}
+{"query_id": "q85", "query": "структурна схема системи автоматичного контролю процесу 3D друку", "lang": "uk", "intent": "technical"}
+{"query_id": "q86", "query": "YOLO архітектура для детекції дефектів при 3D друці в реальному часі", "lang": "uk", "intent": "technical"}
+{"query_id": "q87", "query": "навчання нейронної мережі в Google Colab на датасеті зображень для розпізнавання дефектів 3D друку", "lang": "uk", "intent": "method"}

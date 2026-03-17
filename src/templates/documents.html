@@ -248,6 +248,7 @@
 
 <!-- FILTER FORM -->
 <form method="GET" action="/documents" class="filter-bar">
+  <input type="hidden" name="domain" value="{{ current_domain }}">
   <label>Джерело:
     <select name="source" onchange="this.form.submit()">
       <option value="">— всі —</option>
@@ -257,7 +258,7 @@
     </select>
   </label>
   {% if source_filter %}
-    <a href="/documents" class="btn" style="background:#f1f3f4; color:var(--text);">✕ Скинути фільтр</a>
+    <a href="/documents?domain={{ current_domain }}" class="btn" style="background:#f1f3f4; color:var(--text);">✕ Скинути фільтр</a>
   {% endif %}
 </form>
 

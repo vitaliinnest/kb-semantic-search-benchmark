@@ -368,6 +368,7 @@
     <div class="hero-sub">Семантичний пошук по базі знань</div>
     <div class="search-form" style="max-width: 860px; width: 100%;">
       <form method="GET" action="/">
+        <input type="hidden" name="domain" value="{{ current_domain }}">
         <div class="search-bar">
           <input type="text" name="q" placeholder="Введіть запит…" autofocus autocomplete="off" />
           <button type="submit" class="btn btn-primary">Шукати</button>
@@ -437,6 +438,7 @@
   <!-- COMPACT HEADER with search bar -->
   <div style="margin-bottom: 24px;">
     <form method="GET" action="/" class="search-form">
+      <input type="hidden" name="domain" value="{{ current_domain }}">
       <div class="search-bar">
         <input type="text" name="q" value="{{ query }}" autofocus autocomplete="off" />
         <button type="submit" class="btn btn-primary">Шукати</button>

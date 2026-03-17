@@ -312,8 +312,8 @@
 <script>
 (function () {
   // ── Constants from server ────────────────────────────────────────────────
-  var CRITERIA_META    = {{ selection.criteria | tojson }};
-  var INITIAL_WEIGHTS  = {{ selection.weights  | tojson }};
+  var CRITERIA_META    = {{ criteria | tojson }};
+  var INITIAL_WEIGHTS  = {{ (selection.weights if selection else default_weights) | tojson }};
   var _currentWeights  = Object.assign({}, INITIAL_WEIGHTS);
   var _currentCriteria = CRITERIA_META;
   var _timer    = null;

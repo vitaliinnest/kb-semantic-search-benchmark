@@ -1,0 +1,11 @@
+Оцінка benchmark retrieval
+Дата: 2026-03-17 22:34:51
+Queries: 20 | top_k=10
+==============================================================================================================================================================================
+Model                                 Queries  Recall@k     MRR@k        nDCG@k       P@k          ms/query     Artifacts                                                     
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+bert-base-multilingual-cased          20       1.0000       0.8792       1.9926       0.3450       49.7         D:\repos\kb-semantic-search-benchmark\artifacts\legal\bert    
+fasttext                              20       1.0000       0.6958       1.7947       0.3450       0.1          D:\repos\kb-semantic-search-benchmark\artifacts\legal\fasttext
+paraphrase-multilingual-MiniLM-L12-v2 20       1.0000       0.7583       1.9697       0.3450       20.6         D:\repos\kb-semantic-search-benchmark\artifacts\legal\sbert   
+tfidf                                 20       1.0000       0.9167       2.0436       0.3450       0.3          D:\repos\kb-semantic-search-benchmark\artifacts\legal\tfidf   
+word2vec                              20       1.0000       0.7725       1.9429       0.3450       0.0          D:\repos\kb-semantic-search-benchmark\artifacts\legal\word2vec

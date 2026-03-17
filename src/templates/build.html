@@ -392,7 +392,7 @@ function startBuild() {
   fetch('/build/run', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ models })
+    body: JSON.stringify({ models, domain: '{{ current_domain }}' })
   })
   .then(r => r.json())
   .then(data => {
@@ -454,7 +454,9 @@ function pollStatus() {
     .then(r => r.json())
     .then(jobs => {
       let anyRunning = false;
-      for (const [id, job] of Object.entries(jobs)) {
+      for (const [fullKey, job] of Object.entries(jobs)) {
+        const parts = fullKey.split('/');
+        const id = parts[parts.length - 1];
         if (!_activeModels.has(id)) continue;
         renderLog(id, job);
         updateBadge(id, job);

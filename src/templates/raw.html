@@ -201,7 +201,7 @@
 {% endwith %}
 
 <!-- ── UPLOAD ZONE ── -->
-<form id="upload-form" action="/raw/upload" method="POST" enctype="multipart/form-data">
+<form id="upload-form" action="/raw/upload?domain={{ current_domain }}" method="POST" enctype="multipart/form-data">
   <div class="upload-zone" id="upload-zone">
     <div class="uz-icon">📤</div>
     <div class="uz-title">Перетягніть файли сюди або натисніть для вибору</div>
@@ -333,8 +333,9 @@ function deleteFile(btn) {
 
   const fd = new FormData();
   fd.append('name', name);
+  fd.append('domain', '{{ current_domain }}');
 
-  fetch('/raw/delete', { method: 'POST', body: fd })
+  fetch('/raw/delete?domain={{ current_domain }}', { method: 'POST', body: fd })
     .then(r => r.json())
     .then(data => {
       if (data.ok) {
@@ -383,8 +384,9 @@ function runChunk() {
   fd.append('min_words', minW);
   fd.append('max_words', maxW);
   fd.append('overlap',   ov);
+  fd.append('domain', '{{ current_domain }}');
 
-  fetch('/raw/chunk', { method: 'POST', body: fd })
+  fetch('/raw/chunk?domain={{ current_domain }}', { method: 'POST', body: fd })
     .then(r => r.json())
     .then(data => {
       if (!data.ok) {

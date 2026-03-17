@@ -63,6 +63,32 @@
     nav a:hover { background: #f1f3f4; color: var(--text); }
     nav a.active { color: var(--primary); }
 
+    /* ── DOMAIN SELECTOR ───────────────────────────── */
+    .domain-selector {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .domain-selector label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .domain-select {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+      background: #e8f0fe;
+      cursor: pointer;
+      outline: none;
+      transition: background .15s;
+    }
+    .domain-select:hover { background: #d2e3fc; }
+
     /* ── MAIN ──────────────────────────────────────── */
     main {
       max-width: 860px;
@@ -123,16 +149,35 @@
 </head>
 <body>
   <nav>
-    <a class="logo" href="/">🔍 KB Search</a>
-    <a href="/" {% if request.path == '/' %}class="active"{% endif %}>Пошук</a>
-    <a href="/documents" {% if request.path == '/documents' %}class="active"{% endif %}>Документи</a>
-    <a href="/raw" {% if request.path == '/raw' %}class="active"{% endif %}>Файли</a>
-    <a href="/build" {% if request.path == '/build' %}class="active"{% endif %}>Індекси</a>
-    <a href="/benchmark" {% if request.path == '/benchmark' %}class="active"{% endif %}>Benchmark</a>
-    <a href="/benchmark/selection" {% if request.path == '/benchmark/selection' %}class="active"{% endif %}>Вибір моделі</a>
+    <a class="logo" href="/?domain={{ current_domain }}">🔍 KB Search</a>
+    <a href="/?domain={{ current_domain }}" {% if request.path == '/' %}class="active"{% endif %}>Пошук</a>
+    <a href="/documents?domain={{ current_domain }}" {% if request.path == '/documents' %}class="active"{% endif %}>Документи</a>
+    <a href="/raw?domain={{ current_domain }}" {% if request.path == '/raw' %}class="active"{% endif %}>Файли</a>
+    <a href="/build?domain={{ current_domain }}" {% if request.path == '/build' %}class="active"{% endif %}>Індекси</a>
+    <a href="/benchmark?domain={{ current_domain }}" {% if request.path == '/benchmark' %}class="active"{% endif %}>Benchmark</a>
+    <a href="/benchmark/selection?domain={{ current_domain }}" {% if request.path == '/benchmark/selection' %}class="active"{% endif %}>Вибір моделі</a>
+    <div class="domain-selector">
+      <label for="domainSwitch">Домен:</label>
+      <select id="domainSwitch" class="domain-select" onchange="switchDomain(this.value)">
+        {% for dom in domains %}
+        <option value="{{ dom.id }}" {% if dom.id == current_domain %}selected{% endif %}>{{ dom.label }}</option>
+        {% endfor %}
+      </select>
+    </div>
   </nav>
   <main>
     {% block content %}{% endblock %}
   </main>
+  <script>
+    function switchDomain(domainId) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('domain', domainId);
+      // Strip page-specific params that may not apply cross-domain
+      url.searchParams.delete('q');
+      url.searchParams.delete('model');
+      url.searchParams.delete('source');
+      window.location.href = url.toString();
+    }
+  </script>
 </body>
 </html>

@@ -314,8 +314,9 @@ function runBenchmark() {
 
   const fd = new FormData();
   fd.append('top_k', topK);
+  fd.append('domain', '{{ current_domain }}');
 
-  fetch('/benchmark/run', { method: 'POST', body: fd })
+  fetch('/benchmark/run?domain={{ current_domain }}', { method: 'POST', body: fd })
     .then(r => r.json())
     .then(data => {
       if (!data.ok) {

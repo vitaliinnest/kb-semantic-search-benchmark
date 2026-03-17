@@ -1,0 +1,20 @@
+{"query_id": "L001", "query": "що таке цивільна дієздатність фізичної особи", "domain": "legal", "type": "definition"}
+{"query_id": "L002", "query": "з якого віку настає повна цивільна дієздатність", "domain": "legal", "type": "factual"}
+{"query_id": "L003", "query": "підстави обмеження цивільної дієздатності судом", "domain": "legal", "type": "procedural"}
+{"query_id": "L004", "query": "поняття юридичної особи та порядок її реєстрації", "domain": "legal", "type": "definition"}
+{"query_id": "L005", "query": "що входить до складу спадщини", "domain": "legal", "type": "definition"}
+{"query_id": "L006", "query": "черги спадкоємців за законом", "domain": "legal", "type": "factual"}
+{"query_id": "L007", "query": "форма та вимоги до заповіту", "domain": "legal", "type": "procedural"}
+{"query_id": "L008", "query": "що таке зобов'язання і хто є його сторонами", "domain": "legal", "type": "definition"}
+{"query_id": "L009", "query": "правові наслідки порушення зобов'язання", "domain": "legal", "type": "consequence"}
+{"query_id": "L010", "query": "що таке злочин за кримінальним кодексом", "domain": "legal", "type": "definition"}
+{"query_id": "L011", "query": "класифікація злочинів за ступенем тяжкості", "domain": "legal", "type": "classification"}
+{"query_id": "L012", "query": "відмінність умислу від необережності у кримінальному праві", "domain": "legal", "type": "comparison"}
+{"query_id": "L013", "query": "поняття та види співучасті у злочині", "domain": "legal", "type": "definition"}
+{"query_id": "L014", "query": "обставини що пом'якшують покарання", "domain": "legal", "type": "factual"}
+{"query_id": "L015", "query": "відповідальність за хабарництво та зловживання службовим становищем", "domain": "legal", "type": "factual"}
+{"query_id": "L016", "query": "право власності зміст та непорушність", "domain": "legal", "type": "definition"}
+{"query_id": "L017", "query": "відшкодування майнової та моральної шкоди", "domain": "legal", "type": "procedural"}
+{"query_id": "L018", "query": "вік кримінальної відповідальності в Україні", "domain": "legal", "type": "factual"}
+{"query_id": "L019", "query": "поняття та форми вини у кримінальному праві", "domain": "legal", "type": "definition"}
+{"query_id": "L020", "query": "відміна між крадіжкою грабежем та розбоєм", "domain": "legal", "type": "comparison"}
