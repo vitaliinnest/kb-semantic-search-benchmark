@@ -23,8 +23,9 @@ ROOT = Path(__file__).parent.parent
 DOMAINS_ROOT = ROOT / "data" / "domains"
 
 DOMAINS_CONFIG = [
-    {"id": "tech",  "label": "Техніка / IT"},
-    {"id": "legal", "label": "Юридична база"},
+    {"id": "tech",    "label": "Техніка / IT"},
+    {"id": "legal",   "label": "Юридична база"},
+    {"id": "medical", "label": "Медицина"},
 ]
 DEFAULT_DOMAIN = "tech"
 

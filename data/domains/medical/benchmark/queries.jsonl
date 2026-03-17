@@ -1,0 +1,20 @@
+{"query_id": "M001", "query": "що таке серцево-судинна система та які органи до неї входять", "domain": "medical", "type": "definition"}
+{"query_id": "M002", "query": "будова та функції серця людини", "domain": "medical", "type": "definition"}
+{"query_id": "M003", "query": "що таке артеріальний тиск і як він регулюється", "domain": "medical", "type": "definition"}
+{"query_id": "M004", "query": "велике і мале коло кровообігу відмінності", "domain": "medical", "type": "comparison"}
+{"query_id": "M005", "query": "будова дихальної системи людини", "domain": "medical", "type": "definition"}
+{"query_id": "M006", "query": "механізм газообміну в легенях та транспорт кисню кров'ю", "domain": "medical", "type": "procedural"}
+{"query_id": "M007", "query": "класифікація нервової системи та її відділи", "domain": "medical", "type": "classification"}
+{"query_id": "M008", "query": "що таке рефлекс та будова рефлекторної дуги", "domain": "medical", "type": "definition"}
+{"query_id": "M009", "query": "будова та функції травної системи", "domain": "medical", "type": "definition"}
+{"query_id": "M010", "query": "як відбувається перетравлення білків жирів і вуглеводів", "domain": "medical", "type": "procedural"}
+{"query_id": "M011", "query": "що таке фармакодинаміка і фармакокінетика", "domain": "medical", "type": "definition"}
+{"query_id": "M012", "query": "поняття терапевтичного індексу лікарського засобу", "domain": "medical", "type": "definition"}
+{"query_id": "M013", "query": "класифікація антибіотиків за механізмом дії", "domain": "medical", "type": "classification"}
+{"query_id": "M014", "query": "відмінність між бактерицидними та бактеріостатичними антибіотиками", "domain": "medical", "type": "comparison"}
+{"query_id": "M015", "query": "побічні ефекти антибіотиків та механізми резистентності", "domain": "medical", "type": "factual"}
+{"query_id": "M016", "query": "механізм дії бета-адреноблокаторів та їх показання", "domain": "medical", "type": "technical"}
+{"query_id": "M017", "query": "класифікація антигіпертензивних засобів", "domain": "medical", "type": "classification"}
+{"query_id": "M018", "query": "класифікація анальгетиків опіоїдні та неопіоїдні", "domain": "medical", "type": "classification"}
+{"query_id": "M019", "query": "що таке нестероїдні протизапальні засоби і як вони діють", "domain": "medical", "type": "definition"}
+{"query_id": "M020", "query": "показання та протипоказання до застосування НПЗЗ", "domain": "medical", "type": "factual"}
