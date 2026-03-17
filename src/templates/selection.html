@@ -150,16 +150,16 @@
   .toggle-btn:hover { border-color: var(--primary); color: var(--primary); }
   .toggle-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
   .formula-note {
-    font-size: 11.5px; color: var(--text-muted);
+    font-size: 15px; color: var(--text);
     font-family: "Consolas", "Fira Code", monospace;
-    line-height: 1.5;
+    line-height: 1.9;
   }
   .legend-row {
-    display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px;
+    display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px;
   }
   .legend-item {
-    display: flex; align-items: center; gap: 5px;
-    font-size: 11.5px; color: var(--text-muted);
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--text-muted);
   }
   .legend-dot {
     width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0;
@@ -403,7 +403,7 @@
       var color = CRIT_COLORS[c.key] || '#555';
       var label = c.label.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       return '<span style="color:' + color + ';font-weight:700">' + w +
-             '</span>\u00b7' + label + (c.maximize ? '' : '<sup style="font-size:9px">inv</sup>');
+             '</span>\u00b7' + label + (c.maximize ? '' : '<sup style="font-size:11px">inv</sup>');
     });
     var sumW = criteria.reduce(function (s, c) { return s + (weights[c.key] || 0); }, 0);
     var el = document.getElementById('formula-line');
