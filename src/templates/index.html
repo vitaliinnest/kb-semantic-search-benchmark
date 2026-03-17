@@ -37,6 +37,7 @@
     padding: 6px 8px 6px 20px;
     box-shadow: var(--shadow);
     transition: box-shadow .18s, border-color .18s;
+    position: relative;
   }
   .search-bar:focus-within {
     border-color: var(--primary);
@@ -298,6 +299,56 @@
     font-style: italic;
     letter-spacing: 0;
   }
+
+  /* ── SEARCH HISTORY AUTOCOMPLETE ── */
+  .search-suggestions {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0; right: 0;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 6px 28px rgba(0,0,0,.15);
+    z-index: 999;
+    overflow: hidden;
+  }
+  .search-suggestions.open { display: block; }
+  .sg-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    transition: background .1s;
+  }
+  .sg-item:hover, .sg-item.sg-active { background: #f1f3f4; }
+  .sg-icon { color: var(--text-muted); font-size: 13px; flex-shrink: 0; }
+  .sg-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sg-del {
+    color: var(--text-muted);
+    font-size: 14px;
+    padding: 2px 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    line-height: 1;
+    opacity: .5;
+    transition: background .1s, opacity .1s;
+  }
+  .sg-del:hover { background: #e0e0e0; opacity: 1; }
+  .sg-footer {
+    padding: 7px 16px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: right;
+    cursor: pointer;
+    border-top: 1px solid var(--border);
+    transition: color .1s;
+  }
+  .sg-footer:hover { color: var(--primary); }
 </style>
 
 <script>
@@ -358,6 +409,131 @@
   });
 }());
 </script>
+
+<script>
+/* ── Search History Autocomplete ───────────────────────────────────────────
+   Stores up to 30 recent queries per domain in localStorage.
+   Key format: kb_hist_<domain>  (e.g. kb_hist_tech, kb_hist_medical)
+   ─────────────────────────────────────────────────────────────────────── */
+(function () {
+  var DOMAIN    = {{ current_domain | tojson }};
+  var STORE_KEY = 'kb_hist_' + DOMAIN;
+  var MAX_HIST  = 30;
+  var MAX_SHOW  = 8;
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); }
+    catch (e) { return []; }
+  }
+  function save(arr) {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(arr.slice(0, MAX_HIST))); }
+    catch (e) {}
+  }
+  function push(q) {
+    q = q.trim();
+    if (!q) return;
+    save([q].concat(load().filter(function (x) { return x !== q; })));
+  }
+  function removeItem(q) { save(load().filter(function (x) { return x !== q; })); }
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function getMatches(val) {
+    var all = load();
+    if (!val.trim()) return all.slice(0, MAX_SHOW);
+    var lv = val.toLowerCase();
+    return all.filter(function (x) { return x.toLowerCase().indexOf(lv) !== -1; }).slice(0, MAX_SHOW);
+  }
+
+  function initBar(input, sug) {
+    var activeIdx = -1;
+
+    function render(list) {
+      activeIdx = -1;
+      if (!list.length) { sug.innerHTML = ''; sug.classList.remove('open'); return; }
+      var html = '';
+      list.forEach(function (q, i) {
+        html += '<div class="sg-item" data-val="' + esc(q) + '">'
+              + '<span class="sg-icon">🕐</span>'
+              + '<span class="sg-text">' + esc(q) + '</span>'
+              + '<span class="sg-del" data-del="' + esc(q) + '" title="Видалити">✕</span>'
+              + '</div>';
+      });
+      html += '<div class="sg-footer">Очистити всі</div>';
+      sug.innerHTML = html;
+      sug.classList.add('open');
+
+      sug.querySelectorAll('.sg-item').forEach(function (el) {
+        el.addEventListener('mousedown', function (e) {
+          if (e.target.classList.contains('sg-del')) return;
+          e.preventDefault();
+          input.value = el.dataset.val;
+          close();
+          input.closest('form').submit();
+        });
+        el.querySelector('.sg-del').addEventListener('mousedown', function (e) {
+          e.preventDefault(); e.stopPropagation();
+          removeItem(this.dataset.del);
+          render(getMatches(input.value));
+        });
+      });
+      var footer = sug.querySelector('.sg-footer');
+      if (footer) footer.addEventListener('mousedown', function (e) {
+        e.preventDefault(); save([]); close();
+      });
+    }
+
+    function setActive(idx) {
+      sug.querySelectorAll('.sg-item').forEach(function (el, i) {
+        el.classList.toggle('sg-active', i === idx);
+      });
+    }
+    function close() { sug.innerHTML = ''; sug.classList.remove('open'); activeIdx = -1; }
+
+    // Only show on explicit user click/tap, not on programmatic autofocus at page load
+    var expectFocusOpen = false;
+    input.addEventListener('mousedown',  function () { expectFocusOpen = true; });
+    input.addEventListener('touchstart', function () { expectFocusOpen = true; }, {passive: true});
+    input.addEventListener('focus', function () {
+      if (expectFocusOpen) { expectFocusOpen = false; render(getMatches(input.value)); }
+    });
+    input.addEventListener('input',  function () { render(getMatches(input.value)); });
+    // Close instantly when clicking outside the bar — no blur delay
+    document.addEventListener('mousedown', function (e) {
+      if (!sug.contains(e.target) && e.target !== input) { close(); }
+    }, true);
+    input.addEventListener('keydown', function (e) {
+      var items = sug.querySelectorAll('.sg-item');
+      if (!items.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIdx = Math.min(activeIdx + 1, items.length - 1);
+        input.value = items[activeIdx].dataset.val;
+        setActive(activeIdx);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIdx = Math.max(activeIdx - 1, 0);
+        input.value = items[activeIdx].dataset.val;
+        setActive(activeIdx);
+      } else if (e.key === 'Escape') {
+        close();
+      }
+    });
+
+    input.closest('form').addEventListener('submit', function () { push(input.value); });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('input[name="q"]').forEach(function (input) {
+      var bar = input.closest('.search-bar');
+      if (!bar) return;
+      var sug = bar.querySelector('.search-suggestions');
+      if (!sug) return;
+      initBar(input, sug);
+    });
+  });
+}());
+</script>
 {% endblock %}
 
 {% block content %}
@@ -372,6 +548,7 @@
         <div class="search-bar">
           <input type="text" name="q" placeholder="Введіть запит…" autofocus autocomplete="off" />
           <button type="submit" class="btn btn-primary">Шукати</button>
+          <div class="search-suggestions"></div>
         </div>
         <div class="search-options">
           <label>Модель:
@@ -442,6 +619,7 @@
       <div class="search-bar">
         <input type="text" name="q" value="{{ query }}" autofocus autocomplete="off" />
         <button type="submit" class="btn btn-primary">Шукати</button>
+        <div class="search-suggestions"></div>
       </div>
       <div class="search-options">
         <label>Модель:
