@@ -121,6 +121,49 @@
 
   .latency-good { color: #1e6e3a; font-weight: 600; }
   .latency-slow { color: #856404; }
+
+  /* ── NORM CELL COLORING ── */
+  .norm-high { background: rgba(52,168,83,.13); color: #1b5e20; font-weight: 700; }
+  .norm-low  { background: rgba(197,34,31,.08); color: #c5221f; }
+
+  /* ── CONTRIBUTION BAR ── */
+  .score-inner { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .score-val   { font-size: 14px; font-weight: 800; color: var(--primary);
+                 font-variant-numeric: tabular-nums; }
+  .contrib-bar {
+    height: 6px; width: 90%; border-radius: 3px; overflow: hidden;
+    background: #f0f0f0; display: flex;
+  }
+  .cb-seg { display: block; height: 100%; transition: width .3s ease; }
+
+  /* ── VIEW TOGGLE + FORMULA ── */
+  .view-row {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 12px; flex-wrap: wrap;
+  }
+  .toggle-btn {
+    font-size: 12px; font-weight: 600; padding: 4px 13px;
+    border: 1.5px solid var(--border); border-radius: 20px;
+    cursor: pointer; background: var(--surface); color: var(--text-muted);
+    transition: all .15s; white-space: nowrap;
+  }
+  .toggle-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .toggle-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .formula-note {
+    font-size: 11.5px; color: var(--text-muted);
+    font-family: "Consolas", "Fira Code", monospace;
+    line-height: 1.5;
+  }
+  .legend-row {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11.5px; color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0;
+  }
 </style>
 {% endblock %}
 
@@ -195,7 +238,11 @@
 
 {# ── RANKING TABLE ───────────────────────────────────── #}
 <div class="section-title">📊 Ранжування моделей</div>
-<div class="section-sub">Сортування за зваженим інтегральним показником (Score ↓ — нижче = гірше)</div>
+<div class="view-row">
+  <button class="toggle-btn" id="norm-toggle-btn" onclick="toggleNorm()">Показати норм.</button>
+  <div class="formula-note" id="formula-line"></div>
+</div>
+<div class="legend-row" id="legend-row"></div>
 
 <div id="ranking-wrap">
 <table class="metrics-table">
@@ -224,16 +271,29 @@
 
       {% for c in selection.criteria %}
         {% set v = m.raw[c.key] %}
+        {% set nv = m.normalized[c.key] %}
         {% if c.key == 'avg_latency_ms' %}
-          <td class="tc mono {% if v < 20 %}latency-good{% elif v > 100 %}latency-slow{% endif %}">
+          <td class="tc mono metric-cell {% if v < 20 %}latency-good{% elif v > 100 %}latency-slow{% endif %}"
+              data-raw="{{ '%.1f'|format(v) }}"
+              data-norm="{{ '%.4f'|format(nv) }}"
+              data-latcls="{% if v < 20 %}latency-good{% elif v > 100 %}latency-slow{% endif %}">
             {{ "%.1f"|format(v) }}
           </td>
         {% else %}
-          <td class="tc mono">{{ "%.4f"|format(v) }}</td>
+          <td class="tc mono metric-cell"
+              data-raw="{{ '%.4f'|format(v) }}"
+              data-norm="{{ '%.4f'|format(nv) }}">
+            {{ "%.4f"|format(v) }}
+          </td>
         {% endif %}
       {% endfor %}
 
-      <td class="score-cell">{{ "%.4f"|format(m.score) }}</td>
+      <td class="score-cell">
+        <div class="score-inner">
+          <span class="score-val">{{ "%.4f"|format(m.score) }}</span>
+          <div class="contrib-bar" data-norm='{{ m.normalized | tojson }}'></div>
+        </div>
+      </td>
       <td class="tc">
         {% if m.pareto %}
           <span class="pareto-mark">Pareto ✓</span>
@@ -251,36 +311,134 @@
 
 <script>
 (function () {
-  const CRITERIA_KEYS = {{ selection.criteria | map(attribute='key') | list | tojson }};
-  let _timer = null;
+  // ── Constants from server ────────────────────────────────────────────────
+  var CRITERIA_META    = {{ selection.criteria | tojson }};
+  var INITIAL_WEIGHTS  = {{ selection.weights  | tojson }};
+  var _currentWeights  = Object.assign({}, INITIAL_WEIGHTS);
+  var _currentCriteria = CRITERIA_META;
+  var _timer    = null;
+  var _showNorm = false;
 
+  var CRIT_COLORS = {
+    ndcg_at_k:      '#4285f4',
+    mrr_at_k:       '#34a853',
+    recall_at_k:    '#fbbc05',
+    precision_at_k: '#ea4335',
+    avg_latency_ms: '#9334e6',
+  };
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  buildContribBars(_currentCriteria, _currentWeights);
+  updateFormulaLine(_currentCriteria, _currentWeights);
+  buildLegend(_currentCriteria);
+
+  // ── Weight sliders ────────────────────────────────────────────────────────
   document.querySelectorAll('.weight-slider').forEach(function (sl) {
     sl.addEventListener('input', function () {
       var key = sl.dataset.key;
       document.getElementById('wval-' + key).textContent =
         parseFloat(sl.value).toFixed(2);
+      _currentWeights[key] = parseFloat(sl.value);
+      updateFormulaLine(_currentCriteria, _currentWeights);
       clearTimeout(_timer);
       _timer = setTimeout(recompute, 450);
     });
   });
 
-  function recompute() {
-    var weights = {};
-    CRITERIA_KEYS.forEach(function (k) {
-      var el = document.getElementById('w-' + k);
-      if (el) weights[k] = parseFloat(el.value);
+  // ── Raw / Norm toggle ──────────────────────────────────────────────────────
+  window.toggleNorm = function () {
+    _showNorm = !_showNorm;
+    document.querySelectorAll('td.metric-cell').forEach(function (td) {
+      if (_showNorm) {
+        var n = parseFloat(td.dataset.norm || '0');
+        td.textContent = n.toFixed(4);
+        td.className = 'tc mono metric-cell ' + normClass(n);
+      } else {
+        td.textContent = td.dataset.raw || '';
+        var lc = td.dataset.latcls || '';
+        td.className = 'tc mono metric-cell' + (lc ? ' ' + lc : '');
+      }
     });
+    var btn = document.getElementById('norm-toggle-btn');
+    if (btn) {
+      btn.textContent = _showNorm ? 'Показати raw' : 'Показати норм.';
+      btn.classList.toggle('active', _showNorm);
+    }
+  };
 
+  function normClass(v) {
+    if (v == null) return '';
+    return v >= 0.65 ? 'norm-high' : v < 0.35 ? 'norm-low' : '';
+  }
+
+  // ── Contribution bars ──────────────────────────────────────────────────────
+  function buildContribBars(criteria, weights) {
+    document.querySelectorAll('.contrib-bar').forEach(function (bar) {
+      var normData;
+      try { normData = JSON.parse(bar.dataset.norm || '{}'); } catch (e) { return; }
+
+      var total = criteria.reduce(function (s, c) {
+        return s + (weights[c.key] || 0) * (normData[c.key] || 0);
+      }, 0);
+
+      if (total < 1e-9) { bar.innerHTML = ''; return; }
+
+      bar.innerHTML = criteria.map(function (c) {
+        var contrib = (weights[c.key] || 0) * (normData[c.key] || 0);
+        var pct     = (contrib / total * 100).toFixed(2);
+        var color   = CRIT_COLORS[c.key] || '#aaa';
+        var tip     = c.label + ': ' + contrib.toFixed(3) +
+                      ' (w=' + (weights[c.key] || 0).toFixed(2) +
+                      ' \u00d7 norm=' + (normData[c.key] || 0).toFixed(3) + ')';
+        return '<span class="cb-seg" title="' + tip +
+               '" style="width:' + pct + '%;background:' + color + '"></span>';
+      }).join('');
+    });
+  }
+
+  // ── Formula line ───────────────────────────────────────────────────────────
+  function updateFormulaLine(criteria, weights) {
+    var parts = criteria.map(function (c) {
+      var w     = (weights[c.key] || 0).toFixed(2);
+      var color = CRIT_COLORS[c.key] || '#555';
+      var label = c.label.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return '<span style="color:' + color + ';font-weight:700">' + w +
+             '</span>\u00b7' + label + (c.maximize ? '' : '<sup style="font-size:9px">inv</sup>');
+    });
+    var sumW = criteria.reduce(function (s, c) { return s + (weights[c.key] || 0); }, 0);
+    var el = document.getElementById('formula-line');
+    if (el) {
+      el.innerHTML = 'Score\u00a0=\u00a0(' + parts.join('\u00a0+\u00a0') +
+                     ')\u00a0/\u00a0' + sumW.toFixed(2);
+    }
+  }
+
+  // ── Legend ──────────────────────────────────────────────────────────────────
+  function buildLegend(criteria) {
+    var el = document.getElementById('legend-row');
+    if (!el) return;
+    el.innerHTML = criteria.map(function (c) {
+      var color = CRIT_COLORS[c.key] || '#aaa';
+      return '<span class="legend-item">' +
+             '<span class="legend-dot" style="background:' + color + '"></span>' +
+             c.label + (c.maximize ? '' : ' \u2193min') +
+             '</span>';
+    }).join('');
+  }
+
+  // ── Recompute via API ─────────────────────────────────────────────────────
+  function recompute() {
     setStatus('<span style="color:var(--text-muted)">Перераховується…</span>');
-
     fetch('/benchmark/selection/compute', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(weights),
+      body: JSON.stringify(_currentWeights),
     })
       .then(function (r) { return r.json(); })
       .then(function (data) {
+        _currentCriteria = data.criteria;
         renderResults(data);
+        buildContribBars(data.criteria, data.weights);
         setStatus('<span style="color:#1e6e3a">✓ Оновлено</span>');
         setTimeout(function () { setStatus(''); }, 2000);
       })
@@ -300,8 +458,8 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
+  // ── Render ranking table (JS-side, after weight recompute) ─────────────────
   function renderResults(data) {
-    // Best card
     var best = data.ranked[0];
     if (best) {
       document.getElementById('best-name').textContent = best.model_name;
@@ -310,37 +468,60 @@
         ' \u00b7 Pareto-оптимальна: ' + (best.pareto ? '✓' : '✗');
     }
 
-    // Pareto badges
     var badgesEl = document.getElementById('pareto-badges');
     badgesEl.innerHTML = data.pareto_set.map(function (name) {
-      var cls = name === data.best_model ? 'pareto-badge is-best' : 'pareto-badge';
+      var cls    = name === data.best_model ? 'pareto-badge is-best' : 'pareto-badge';
       var prefix = name === data.best_model ? '🏆 ' : '';
       return '<span class="' + cls + '">' + prefix + esc(name) + '</span>';
     }).join('');
 
-    // Ranking table
     var rankCls = ['rank-1', 'rank-2', 'rank-3'];
     var rows = data.ranked.map(function (m) {
-      var rc = rankCls[m.rank - 1] || 'rank-n';
+      var rc      = rankCls[m.rank - 1] || 'rank-n';
       var bestRow = m.rank === 1 ? ' class="best-row"' : '';
+
       var metricCells = data.criteria.map(function (c) {
-        var v = m.raw[c.key];
-        if (v == null) return '<td class="tc mono">—</td>';
-        var fmt = c.key === 'avg_latency_ms' ? v.toFixed(1) : v.toFixed(4);
-        var cls2 = '';
-        if (c.key === 'avg_latency_ms') {
-          cls2 = v < 20 ? ' latency-good' : v > 100 ? ' latency-slow' : '';
+        var v  = m.raw[c.key];
+        var nv = m.normalized ? (m.normalized[c.key] || 0) : 0;
+        if (v == null) {
+          return '<td class="tc mono metric-cell" data-raw="\u2014" data-norm="0">\u2014</td>';
         }
-        return '<td class="tc mono' + cls2 + '">' + fmt + '</td>';
+        var rawFmt  = c.key === 'avg_latency_ms' ? v.toFixed(1) : v.toFixed(4);
+        var normFmt = nv.toFixed(4);
+        var latcls  = '';
+        if (c.key === 'avg_latency_ms') {
+          latcls = v < 20 ? 'latency-good' : v > 100 ? 'latency-slow' : '';
+        }
+        var displayVal = _showNorm ? normFmt : rawFmt;
+        var displayCls = _showNorm
+          ? ('tc mono metric-cell ' + normClass(nv))
+          : ('tc mono metric-cell' + (latcls ? ' ' + latcls : ''));
+        var latclsAttr = latcls ? (' data-latcls="' + latcls + '"') : '';
+        return '<td class="' + displayCls +
+               '" data-raw="' + rawFmt +
+               '" data-norm="' + normFmt + '"' + latclsAttr + '>' +
+               displayVal + '</td>';
       }).join('');
+
+      var normJson = m.normalized
+        ? JSON.stringify(m.normalized).replace(/'/g, '&#39;')
+        : '{}';
+      var scoreCell =
+        '<td class="score-cell">' +
+          '<div class="score-inner">' +
+            '<span class="score-val">' + m.score.toFixed(4) + '</span>' +
+            '<div class="contrib-bar" data-norm=\'' + normJson + '\'></div>' +
+          '</div>' +
+        '</td>';
+
       var paretoCell = m.pareto
         ? '<span class="pareto-mark">Pareto \u2713</span>'
         : '<span class="no-pareto">\u2014</span>';
+
       return '<tr' + bestRow + '>' +
         '<td><span class="rank-badge ' + rc + '">' + m.rank + '</span></td>' +
         '<td class="model-cell">' + esc(m.model_name) + '</td>' +
-        metricCells +
-        '<td class="score-cell">' + m.score.toFixed(4) + '</td>' +
+        metricCells + scoreCell +
         '<td class="tc">' + paretoCell + '</td>' +
         '</tr>';
     }).join('');
@@ -355,7 +536,7 @@
         '<th style="width:44px">#</th>' +
         '<th>Модель</th>' +
         hdrCells +
-        '<th class="c" style="min-width:75px">Score</th>' +
+        '<th class="c" style="min-width:80px">Score</th>' +
         '<th class="c">Pareto</th>' +
       '</tr></thead>' +
       '<tbody>' + rows + '</tbody>' +
