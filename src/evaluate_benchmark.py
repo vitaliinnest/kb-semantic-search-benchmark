@@ -262,8 +262,32 @@ def evaluate_model(
 				mrr_at_k = 1.0 / rank
 				break
 
+		# For nDCG, only the first retrieved chunk per relevant document counts.
+		# Without this, doc-level qrels (chunk_id=None) inflate DCG because every
+		# chunk from the matched document receives relevance credit, making DCG
+		# exceed IDCG and producing nDCG > 1.
+		seen_doc_ids_ndcg: set[str] = set()
+		ndcg_rels: list[int] = []
+		for record, rel in zip(retrieved_meta, retrieved_rels):
+			if rel <= 0:
+				ndcg_rels.append(0)
+				continue
+			doc_id_r = str(record.get("source", ""))
+			is_doc_level = any(
+				item.relevance > 0 and not item.chunk_id and item.doc_id == doc_id_r
+				for item in qrels
+			)
+			if is_doc_level:
+				if doc_id_r in seen_doc_ids_ndcg:
+					ndcg_rels.append(0)
+				else:
+					seen_doc_ids_ndcg.add(doc_id_r)
+					ndcg_rels.append(rel)
+			else:
+				ndcg_rels.append(rel)
+
 		ideal_rels = sorted([max(0, item.relevance) for item in qrels], reverse=True)
-		dcg = dcg_at_k(retrieved_rels, top_k)
+		dcg = dcg_at_k(ndcg_rels, top_k)
 		idcg = dcg_at_k(ideal_rels, top_k)
 		ndcg_at_k = (dcg / idcg) if idcg > 0 else 0.0
 

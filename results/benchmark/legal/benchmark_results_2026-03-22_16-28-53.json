@@ -1,0 +1,2719 @@
+{
+  "timestamp": "2026-03-22T16:28:53.644156",
+  "top_k": 10,
+  "queries_count": 53,
+  "queries_file": "data\\domains\\legal\\benchmark\\queries.jsonl",
+  "qrels_file": "data\\domains\\legal\\benchmark\\qrels.jsonl",
+  "models": [
+    {
+      "model_name": "bert-base-multilingual-cased",
+      "artifacts_dir": "artifacts\\legal\\bert",
+      "queries_evaluated": 53,
+      "recall_at_k": 0.5660377358490566,
+      "mrr_at_k": 0.42942497753818504,
+      "ndcg_at_k": 0.4635353013894617,
+      "precision_at_k": 0.2320754716981132,
+      "avg_latency_ms": 60.45105282924542,
+      "query_results": [
+        {
+          "query_id": "L001",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 501.62659998750314,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L002",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 54.11010002717376,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L003",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 57.81770002795383,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L004",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 48.25750004965812,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L005",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 33.840599993709475,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L006",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.1,
+          "latency_ms": 33.374200051184744,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L007",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 32.85560000222176,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L008",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 55.35009998129681,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L009",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 49.01770001742989,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L010",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.1,
+          "latency_ms": 51.8947999808006,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L011",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 57.27900000056252,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L012",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 48.56709996238351,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L013",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 48.86939999414608,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L014",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 39.81659997953102,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L015",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 55.02790003083646,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L016",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 44.07820000778884,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L017",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 39.70279998611659,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L018",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.1,
+          "latency_ms": 37.28799999225885,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L019",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 35.18830001121387,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L020",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 47.209099982865155,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L021",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 53.437499969732016,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L022",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.4,
+          "latency_ms": 59.079699974972755,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L023",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.7,
+          "latency_ms": 62.08699999842793,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L024",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.2,
+          "latency_ms": 54.25600003218278,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L025",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.4,
+          "latency_ms": 58.06429998483509,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L026",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.7,
+          "latency_ms": 58.39580000611022,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L027",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 51.23649997403845,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L028",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 55.818900000303984,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L029",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.14285714285714285,
+          "ndcg_at_k": 0.3333333333333333,
+          "precision_at_k": 0.1,
+          "latency_ms": 57.18699999852106,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L030",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 55.32849999144673,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L031",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.5,
+          "latency_ms": 59.28509996738285,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L032",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.2,
+          "latency_ms": 58.889899984933436,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L033",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.2,
+          "latency_ms": 52.90190002415329,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L034",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.4,
+          "latency_ms": 54.27170003531501,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L035",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.3,
+          "latency_ms": 54.38059999141842,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L036",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 61.542299983557314,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L037",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 62.459199980366975,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L038",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 55.574199999682605,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L039",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.4,
+          "latency_ms": 57.135900016874075,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L040",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.2,
+          "latency_ms": 53.87170001631603,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L041",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 55.449899984523654,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L042",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 57.37789999693632,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L043",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 53.11400000937283,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L044",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.38685280723454163,
+          "precision_at_k": 0.3,
+          "latency_ms": 53.38469997514039,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L045",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 40.9053000039421,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L046",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 58.760999992955476,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L047",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 51.7841000109911,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L048",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.7,
+          "latency_ms": 51.53349996544421,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L049",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.5,
+          "latency_ms": 59.39549999311566,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L050",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.6,
+          "latency_ms": 50.409399962518364,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L051",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.5,
+          "latency_ms": 46.96940002031624,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L052",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.4,
+          "latency_ms": 62.80620000325143,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L053",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 55.63990003429353,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    },
+    {
+      "model_name": "fasttext",
+      "artifacts_dir": "artifacts\\legal\\fasttext",
+      "queries_evaluated": 53,
+      "recall_at_k": 0.6415094339622641,
+      "mrr_at_k": 0.46650943396226413,
+      "ndcg_at_k": 0.5092377704440799,
+      "precision_at_k": 0.2886792452830188,
+      "avg_latency_ms": 0.1105981064029038,
+      "query_results": [
+        {
+          "query_id": "L001",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.831299985293299,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L002",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.3154648767857287,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.17469999147579074,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L003",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.12229999992996454,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L004",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.1134999911300838,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L005",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.10769994696602225,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L006",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.10459998156875372,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L007",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.11309998808428645,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L008",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.15949999215081334,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L009",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.15000003622844815,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L010",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.09730004239827394,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L011",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.3,
+          "latency_ms": 0.1309000072069466,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L012",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.09619997581467032,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L013",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.08970004273578525,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L014",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.08619995787739754,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L015",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.09169999975711107,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L016",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.1433999859727919,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L017",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.08399999933317304,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L018",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.07579999510198832,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L019",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.0784999574534595,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L020",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.17680000746622682,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L021",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 0.12129999231547117,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L022",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.7,
+          "latency_ms": 0.08019997039809823,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L023",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.6,
+          "latency_ms": 0.08719996549189091,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L024",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.3,
+          "latency_ms": 0.08399999933317304,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L025",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 0.08560001151636243,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L026",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 0.08839997462928295,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L027",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.6,
+          "latency_ms": 0.08789997082203627,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L028",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.08019997039809823,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L029",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.4,
+          "latency_ms": 0.08149998029693961,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L030",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.07770000956952572,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L031",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.4,
+          "latency_ms": 0.08299999171867967,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L032",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.12909999350085855,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L033",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.6,
+          "latency_ms": 0.08369999704882503,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L034",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 0.11379999341443181,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L035",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.07949996506795287,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L036",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.08650001836940646,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L037",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.2890648263178878,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.0847000046633184,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L038",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.0790000194683671,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L039",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 0.08169998181983829,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L040",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.7,
+          "latency_ms": 0.09089999366551638,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L041",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 0.08899997919797897,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L042",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.6,
+          "latency_ms": 0.08560001151636243,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L043",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.7,
+          "latency_ms": 0.07930002175271511,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L044",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.08460000390186906,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L045",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.6,
+          "latency_ms": 0.07700000423938036,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L046",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.08029997115954757,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L047",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.0771000050008297,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L048",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.7,
+          "latency_ms": 0.07860001642256975,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L049",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.07910002022981644,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L050",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.6,
+          "latency_ms": 0.08139997953549027,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L051",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.3,
+          "latency_ms": 0.0792999635450542,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L052",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.08129997877404094,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L053",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.07599999662488699,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    },
+    {
+      "model_name": "paraphrase-multilingual-MiniLM-L12-v2",
+      "artifacts_dir": "artifacts\\legal\\sbert",
+      "queries_evaluated": 53,
+      "recall_at_k": 0.6792452830188679,
+      "mrr_at_k": 0.45581761006289306,
+      "ndcg_at_k": 0.5087935244534276,
+      "precision_at_k": 0.349056603773585,
+      "avg_latency_ms": 20.45545660350296,
+      "query_results": [
+        {
+          "query_id": "L001",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 143.1066999793984,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L002",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 21.772700012661517,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L003",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 18.273299967404455,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L004",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 17.755000037141144,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L005",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.1,
+          "latency_ms": 15.892199997324497,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L006",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.1,
+          "latency_ms": 18.674599996302277,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L007",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 18.624800024554133,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L008",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 17.713400011416525,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L009",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 14.797899988479912,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L010",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 17.233600025065243,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L011",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 14.804799982812256,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L012",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 20.941400027368218,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L013",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 15.492699982132763,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L014",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.2,
+          "latency_ms": 16.83529996080324,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L015",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 20.228800014592707,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L016",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 14.14929999737069,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L017",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 16.526799998246133,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L018",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 12.8885000012815,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L019",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.3154648767857287,
+          "precision_at_k": 0.1,
+          "latency_ms": 14.8930000141263,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L020",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 25.094999989960343,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L021",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 18.998000014107674,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L022",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.4,
+          "latency_ms": 21.606899972539395,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L023",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 22.344900004100055,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L024",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.3562071871080222,
+          "precision_at_k": 0.2,
+          "latency_ms": 22.693500039167702,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L025",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.6,
+          "latency_ms": 23.07269995799288,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L026",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.7,
+          "latency_ms": 23.75739999115467,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L027",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.3,
+          "latency_ms": 17.974099959246814,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L028",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.6,
+          "latency_ms": 11.761699977796525,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L029",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.3154648767857287,
+          "precision_at_k": 0.1,
+          "latency_ms": 14.028700010385364,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L030",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.3,
+          "latency_ms": 16.83099998626858,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L031",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.5,
+          "latency_ms": 18.293799948878586,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L032",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 22.843800019472837,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L033",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 19.477800000458956,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L034",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 22.174300043843687,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L035",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 17.202300019562244,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L036",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 22.13360002497211,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L037",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.2890648263178878,
+          "precision_at_k": 0.1,
+          "latency_ms": 18.1806999607943,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L038",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.1,
+          "ndcg_at_k": 0.2890648263178878,
+          "precision_at_k": 0.1,
+          "latency_ms": 17.381699988618493,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L039",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 14.354599989019334,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L040",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 13.69300001533702,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L041",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.6,
+          "latency_ms": 21.803800016641617,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L042",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 19.545599992852658,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L043",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.2,
+          "latency_ms": 17.22350000636652,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L044",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.3,
+          "latency_ms": 19.707699946593493,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L045",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 15.386899991426617,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L046",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 18.245099985506386,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L047",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 17.87260000128299,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L048",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 23.444000049494207,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L049",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.6,
+          "latency_ms": 17.495499982032925,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L050",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 13.457000022754073,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L051",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.5,
+          "latency_ms": 15.597700024954975,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L052",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.3,
+          "latency_ms": 16.33050001692027,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L053",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.3154648767857287,
+          "precision_at_k": 0.2,
+          "latency_ms": 13.525000016670674,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    },
+    {
+      "model_name": "tfidf",
+      "artifacts_dir": "artifacts\\legal\\tfidf",
+      "queries_evaluated": 53,
+      "recall_at_k": 0.8490566037735849,
+      "mrr_at_k": 0.7237945492662473,
+      "ndcg_at_k": 0.7544499798226139,
+      "precision_at_k": 0.4867924528301886,
+      "avg_latency_ms": 10.768362270439711,
+      "query_results": [
+        {
+          "query_id": "L001",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.2,
+          "latency_ms": 20.560499979183078,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L002",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 9.92380001116544,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L003",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 11.056700022891164,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L004",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.1,
+          "latency_ms": 9.660699986852705,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L005",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.2,
+          "latency_ms": 11.037499993108213,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L006",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.3,
+          "latency_ms": 11.27059996360913,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L007",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.1,
+          "latency_ms": 9.527199959848076,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L008",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 11.15660002687946,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L009",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 11.158200039062649,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L010",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.1,
+          "latency_ms": 9.639600000809878,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L011",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 11.049400025513023,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L012",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 11.249099974520504,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L013",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.1,
+          "latency_ms": 9.610300010535866,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L014",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 11.252600001171231,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L015",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.1,
+          "latency_ms": 9.494800004176795,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L016",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 11.129499995149672,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L017",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 11.15939998999238,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L018",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 9.579700010363013,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L019",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 11.00990001577884,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L020",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 11.338000011164695,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L021",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 9.509800001978874,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L022",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 11.167700053192675,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L023",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 11.139900016132742,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L024",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 9.664300014264882,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L025",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 11.760200024582446,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L026",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 11.357599985785782,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L027",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 9.550200018566102,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L028",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.7,
+          "latency_ms": 11.071900022216141,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L029",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 9.422200033441186,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L030",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 11.00539998151362,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L031",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 11.046500003430992,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L032",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.1111111111111111,
+          "ndcg_at_k": 0.3010299956639812,
+          "precision_at_k": 0.1,
+          "latency_ms": 9.569100046064705,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L033",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 10.935799975413829,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L034",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 11.219899985007942,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L035",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 9.447499993257225,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L036",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.4,
+          "latency_ms": 11.050200031604618,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L037",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.4,
+          "latency_ms": 9.481500019319355,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L038",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.6,
+          "latency_ms": 10.687500005587935,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L039",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 11.053599999286234,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L040",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 9.682699979748577,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L041",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 11.132500017993152,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L042",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 11.263600026722997,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L043",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 9.521500032860786,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L044",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 11.460000008810312,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L045",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 11.463000031653792,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L046",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 9.66439995681867,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L047",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 11.031600006390363,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L048",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 11.082300043199211,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L049",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 9.542399959173054,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L050",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 11.115600005723536,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L051",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.7,
+          "latency_ms": 9.479800006374717,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L052",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.5,
+          "latency_ms": 11.126500030513853,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L053",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.4,
+          "latency_ms": 11.152399994898587,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    },
+    {
+      "model_name": "word2vec",
+      "artifacts_dir": "artifacts\\legal\\word2vec",
+      "queries_evaluated": 53,
+      "recall_at_k": 0.6792452830188679,
+      "mrr_at_k": 0.4736373165618449,
+      "ndcg_at_k": 0.5233379220177949,
+      "precision_at_k": 0.34528301886792445,
+      "avg_latency_ms": 0.11039623344879386,
+      "query_results": [
+        {
+          "query_id": "L001",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.28390000807121396,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L002",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.18370000179857016,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L003",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.10960001964122057,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L004",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.10810000821948051,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L005",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.10610005119815469,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L006",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.10350003140047193,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L007",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.10420003673061728,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L008",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.19079999765381217,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L009",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.1398000167682767,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L010",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.10050000855699182,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L011",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.10200001997873187,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L012",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.10539998766034842,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L013",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.12580002658069134,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L014",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.09950000094249845,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L015",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.1230000052601099,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L016",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.0914999982342124,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L017",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.09929999941959977,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L018",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.08430000161752105,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L019",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.08299999171867967,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L020",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.07740000728517771,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L021",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 0.08650001836940646,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L022",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 0.08339999476447701,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L023",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.1111111111111111,
+          "ndcg_at_k": 0.3010299956639812,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.09789998875930905,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L024",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.09310001041740179,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L025",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 0.10030000703409314,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L026",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 0.09210000280290842,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L027",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.6,
+          "latency_ms": 0.08759996853768826,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L028",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.125,
+          "ndcg_at_k": 0.3154648767857287,
+          "precision_at_k": 0.1,
+          "latency_ms": 0.08539995178580284,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L029",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.3,
+          "latency_ms": 0.08590001380071044,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L030",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "latency_ms": 0.08460000390186906,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L031",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.6,
+          "latency_ms": 0.08720002369955182,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L032",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.08440000237897038,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L033",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.7,
+          "latency_ms": 0.08790002902969718,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L034",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 0.08450000314041972,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L035",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 0.08450000314041972,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L036",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.25,
+          "ndcg_at_k": 0.4306765580733931,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.08849997539073229,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L037",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.09410001803189516,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L038",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.16666666666666666,
+          "ndcg_at_k": 0.3562071871080222,
+          "precision_at_k": 0.3,
+          "latency_ms": 0.07529999129474163,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L039",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.9,
+          "latency_ms": 0.07810001261532307,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L040",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.5,
+          "latency_ms": 0.07990002632141113,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L041",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.9,
+          "latency_ms": 0.09400001727044582,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L042",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 0.0990999978967011,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L043",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.2,
+          "ndcg_at_k": 0.38685280723454163,
+          "precision_at_k": 0.6,
+          "latency_ms": 0.10689999908208847,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L044",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.20789995323866606,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L045",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.5,
+          "ndcg_at_k": 0.6309297535714574,
+          "precision_at_k": 0.4,
+          "latency_ms": 0.13960001524537802,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L046",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.3,
+          "latency_ms": 0.17280003521591425,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L047",
+          "recall_at_k": 0.0,
+          "mrr_at_k": 0.0,
+          "ndcg_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "latency_ms": 0.152299995534122,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L048",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "latency_ms": 0.17960002878680825,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L049",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.5,
+          "latency_ms": 0.13669999316334724,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L050",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 0.3333333333333333,
+          "ndcg_at_k": 0.5,
+          "precision_at_k": 0.4,
+          "latency_ms": 0.1050999853760004,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L051",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.3,
+          "latency_ms": 0.09540002793073654,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L052",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.2,
+          "latency_ms": 0.09520002640783787,
+          "retrieved": 10,
+          "relevant_total": 1
+        },
+        {
+          "query_id": "L053",
+          "recall_at_k": 1.0,
+          "mrr_at_k": 1.0,
+          "ndcg_at_k": 1.0,
+          "precision_at_k": 0.7,
+          "latency_ms": 0.10380003368481994,
+          "retrieved": 10,
+          "relevant_total": 1
+        }
+      ]
+    }
+  ]
+}
