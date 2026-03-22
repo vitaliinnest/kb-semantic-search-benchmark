@@ -1,0 +1,11 @@
+Оцінка benchmark retrieval
+Дата: 2026-03-22 16:38:18
+Queries: 53 | top_k=10
+========================================================================================================================================
+Model                                 Queries  Recall@k     MRR@k        nDCG@k       P@k          ms/query     Artifacts               
+----------------------------------------------------------------------------------------------------------------------------------------
+bert-base-multilingual-cased          53       0.1541       0.1861       0.1342       0.0453       64.6         artifacts\legal\bert    
+fasttext                              53       0.0912       0.0920       0.0589       0.0264       0.1          artifacts\legal\fasttext
+paraphrase-multilingual-MiniLM-L12-v2 53       0.5912       0.4558       0.4953       0.1736       18.3         artifacts\legal\sbert   
+tfidf                                 53       0.2516       0.2501       0.1924       0.0660       11.2         artifacts\legal\tfidf   
+word2vec                              53       0.1038       0.0920       0.0709       0.0302       0.1          artifacts\legal\word2vec
