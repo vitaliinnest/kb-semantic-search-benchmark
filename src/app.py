@@ -60,6 +60,56 @@ def datetimeformat(ts):
 
 
 # ── Утиліти──────────────────────────────────────────────────────────────────
+_TYPE_TO_DISPLAY = {
+    "sbert":    "SBERT",
+    "bert":     "BERT",
+    "tfidf":    "TF-IDF",
+    "word2vec": "Word2Vec",
+    "fasttext": "FastText",
+    "glove":    "GloVe",
+}
+
+
+# Known sub-strings in model_name that identify the model type when stored as raw model_name
+_MODEL_NAME_TO_TYPE: dict[str, str] = {
+    "paraphrase-multilingual": "sbert",
+    "sentence-transformers":   "sbert",
+    "bert-base-multilingual":  "bert",
+    "bert-large":              "bert",
+    "roberta":                 "bert",
+}
+
+
+def _prettify_benchmark_data(data: dict) -> dict:
+    """Замінює сирі model_name у завантажених benchmark-результатах на читабельні."""
+    if not data or "models" not in data:
+        return data
+    for m in data["models"]:
+        raw_name = m.get("model_name", "")
+        artifacts_dir = m.get("artifacts_dir", "")
+        # Determine model type from artifacts_dir folder name first (most reliable)
+        dir_name = Path(artifacts_dir).name.lower() if artifacts_dir else ""
+        model_type = dir_name if dir_name in _TYPE_TO_DISPLAY else None
+        # Fallback: infer from raw_name substrings
+        if model_type is None:
+            for substr, mtype in _MODEL_NAME_TO_TYPE.items():
+                if substr in raw_name.lower():
+                    model_type = mtype
+                    break
+        # Fallback: raw_name itself might be a type key (e.g. "tfidf", "word2vec")
+        if model_type is None and raw_name.lower() in _TYPE_TO_DISPLAY:
+            model_type = raw_name.lower()
+        if model_type is None:
+            continue  # can't determine, leave as-is
+        display = _TYPE_TO_DISPLAY[model_type]
+        # For SBERT/BERT include the specific model identifier
+        if model_type in {"sbert", "bert"} and raw_name and raw_name.lower() != model_type:
+            m["model_name"] = f"{display} ({raw_name})"
+        else:
+            m["model_name"] = display
+    return data
+
+
 def discover_models(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
     """Повертає список доступних моделей для заданого домену."""
     artifacts_root = domain_paths(domain_id)["artifacts_root"]
@@ -79,7 +129,8 @@ def discover_models(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
                     cfg = json.loads(model_json.read_text(encoding="utf-8"))
                     mt = cfg.get("model_type", label)
                     mn = cfg.get("model_name")
-                    label = f"{mt}" + (f" — {mn}" if mn else "")
+                    display = _TYPE_TO_DISPLAY.get(mt, mt.upper())
+                    label = display + (f" ({mn})" if mn else "")
                 except Exception:
                     pass
             models.append({"id": model_dir.name, "label": label})
@@ -95,7 +146,7 @@ def load_latest_benchmark(domain_id: str = DEFAULT_DOMAIN) -> dict | None:
     if not files:
         return None
     try:
-        return json.loads(files[-1].read_text(encoding="utf-8"))
+        return _prettify_benchmark_data(json.loads(files[-1].read_text(encoding="utf-8")))
     except Exception:
         return None
 
@@ -393,7 +444,7 @@ BUILD_SCRIPT = Path(__file__).parent / "build_index.py"
 MODEL_DEFS = [
     {
         "id": "sbert",
-        "label": "SBERT",
+        "label": "SBERT (paraphrase-multilingual-MiniLM-L12-v2)",
         "desc": "Sentence-Transformers — найкраща якість для семантичного пошуку",
         "params": [
             {"name": "model",      "label": "Назва моделі",  "type": "text",   "default": "paraphrase-multilingual-MiniLM-L12-v2", "arg": "--model"},
@@ -434,7 +485,7 @@ MODEL_DEFS = [
     },
     {
         "id": "bert",
-        "label": "BERT",
+        "label": "BERT (bert-base-multilingual-cased)",
         "desc": "Повноцінний трансформер — повільно, але потужно",
         "params": [
             {"name": "bert_model",      "label": "Назва моделі",  "type": "text",   "default": "bert-base-multilingual-cased", "arg": "--bert-model"},
@@ -593,7 +644,7 @@ def _load_benchmark_results(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
     results = []
     for f in files:
         try:
-            data = json.loads(f.read_text(encoding="utf-8"))
+            data = _prettify_benchmark_data(json.loads(f.read_text(encoding="utf-8")))
             data["_filename"] = f.name
             results.append(data)
         except Exception:
@@ -720,7 +771,7 @@ def benchmark_result_file(filename: str):
         return jsonify({"error": "forbidden"}), 403
     if not path.exists() or path.suffix != ".json":
         return jsonify({"error": "not found"}), 404
-    return jsonify(json.loads(path.read_text(encoding="utf-8")))
+    return jsonify(_prettify_benchmark_data(json.loads(path.read_text(encoding="utf-8"))))
 
 
 # ── Multi-criteria model selection ──────────────────────────────────────────

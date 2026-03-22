@@ -18,7 +18,7 @@ if sys.platform == "win32":
 
 MODELS = [
 	{
-		"name": "Sentence-BERT",
+		"name": "SBERT (paraphrase-multilingual-MiniLM-L12-v2)",
 		"type": "sbert",
 		"args": ["--model-type", "sbert", "--model", "paraphrase-multilingual-MiniLM-L12-v2"],
 	},
@@ -56,7 +56,7 @@ MODELS = [
 		],
 	},
 	{
-		"name": "BERT",
+		"name": "BERT (bert-base-multilingual-cased)",
 		"type": "bert",
 		"args": [
 			"--model-type",

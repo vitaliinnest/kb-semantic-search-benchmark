@@ -20,6 +20,23 @@ if sys.platform == "win32":
 
 from embedding_models import load_model_from_artifacts
 
+_TYPE_TO_DISPLAY = {
+	"sbert":    "SBERT",
+	"bert":     "BERT",
+	"tfidf":    "TF-IDF",
+	"word2vec": "Word2Vec",
+	"fasttext": "FastText",
+	"glove":    "GloVe",
+}
+
+
+def _format_model_display_name(model_type: str, model_name: str | None) -> str:
+	display = _TYPE_TO_DISPLAY.get(model_type, model_type.upper())
+	if model_name and model_name != model_type:
+		return f"{display} ({model_name})"
+	return display
+
+
 logging.basicConfig(
 	level=logging.INFO,
 	format="%(asctime)s - %(levelname)s - %(message)s",
@@ -228,7 +245,7 @@ def evaluate_model(
 		fallback_model_name=fallback_model_name,
 	)
 
-	model_name = config.model_name or config.model_type
+	model_name = _format_model_display_name(config.model_type, config.model_name)
 	query_results: list[QueryEvalResult] = []
 
 	for query_item in queries:
