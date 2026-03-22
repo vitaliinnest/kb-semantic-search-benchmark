@@ -253,12 +253,12 @@
 {% if chunks_exist %}
 <div class="chunks-banner ok">
   <span class="cb-icon">✅</span>
-  <span>Знайдено <strong>{{ chunk_count }}</strong> чанків у <code>data/chunks.jsonl</code> — готово до побудови індексів.</span>
+  <span>Знайдено <strong>{{ chunk_count }}</strong> чанків у <code>data/domains/{{ current_domain }}/chunks.jsonl</code> — готово до побудови індексів.</span>
 </div>
 {% else %}
 <div class="chunks-banner warn">
   <span class="cb-icon">⚠️</span>
-  <span><strong>chunks.jsonl не знайдено.</strong> Спочатку <a href="/raw">завантажте файли та запустіть чанкінг</a>.</span>
+  <span><strong>chunks.jsonl не знайдено.</strong> Спочатку <a href="/raw?domain={{ current_domain }}">завантажте файли та запустіть чанкінг</a>.</span>
 </div>
 {% endif %}
 

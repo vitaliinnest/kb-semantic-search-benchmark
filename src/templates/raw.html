@@ -220,7 +220,7 @@
 <!-- ── FILES TABLE ── -->
 <div class="files-card">
   <div class="files-card-header">
-    <span class="title">Файли у data/raw/</span>
+    <span class="title">Файли у data/domains/{{ current_domain }}/raw/</span>
     <span class="count-badge">{{ files|length }} файл(ів)</span>
   </div>
   {% if files %}
@@ -261,7 +261,7 @@
   {% else %}
   <div class="empty-state">
     <div class="es-icon">🗂</div>
-    <p>Папка <code>data/raw/</code> порожня.<br>Завантажте файли вище.</p>
+    <p>Папка <code>data/domains/{{ current_domain }}/raw/</code> порожня.<br>Завантажте файли вище.</p>
   </div>
   {% endif %}
 </div>
@@ -351,8 +351,8 @@ function deleteFile(btn) {
         const tbody = document.getElementById('files-tbody');
         if (tbody && tbody.rows.length === 0) {
           const card = document.querySelector('.files-card');
-          card.innerHTML = `<div class="files-card-header"><span class="title">Файли у data/raw/</span><span class="count-badge">0 файл(ів)</span></div>
-            <div class="empty-state"><div class="es-icon">🗂</div><p>Папка <code>data/raw/</code> порожня.</p></div>`;
+          card.innerHTML = `<div class="files-card-header"><span class="title">Файли у data/domains/{{ current_domain }}/raw/</span><span class="count-badge">0 файл(ів)</span></div>
+            <div class="empty-state"><div class="es-icon">🗂</div><p>Папка <code>data/domains/{{ current_domain }}/raw/</code> порожня.</p></div>`;
         }
       } else {
         alert('Помилка: ' + data.error);
@@ -414,7 +414,7 @@ function pollStatus() {
         setStatus('error', '❌ ' + data.error);
       } else {
         const count = data.result;
-        setStatus('success', `✅ Готово! Створено <strong>${count}</strong> чанків. Файл <code>data/chunks.jsonl</code> оновлено.`);
+        setStatus('success', `✅ Готово! Створено <strong>${count}</strong> чанків. Файл <code>data/domains/{{ current_domain }}/chunks.jsonl</code> оновлено.`);
         // оновлюємо лічильник
         const ex = document.querySelector('.existing-chunks');
         if (ex) ex.innerHTML = `Поточний chunks.jsonl: <strong>${count}</strong> чанків`;
