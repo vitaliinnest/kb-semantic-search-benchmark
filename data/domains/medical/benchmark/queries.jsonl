@@ -18,3 +18,20 @@
 {"query_id": "M018", "query": "класифікація анальгетиків опіоїдні та неопіоїдні", "domain": "medical", "type": "classification"}
 {"query_id": "M019", "query": "що таке нестероїдні протизапальні засоби і як вони діють", "domain": "medical", "type": "definition"}
 {"query_id": "M020", "query": "показання та протипоказання до застосування НПЗЗ", "domain": "medical", "type": "factual"}
+{"query_id": "M021", "query": "прогностичні чинники успішності механічної тромбектомії при ішемічному інсульті", "domain": "medical", "type": "technical"}
+{"query_id": "M022", "query": "характеристики тромбів при оклюзії мозкових судин та реперфузія", "domain": "medical", "type": "definition"}
+{"query_id": "M023", "query": "ускладнення та результати лікування пацієнтів після тромбектомії", "domain": "medical", "type": "factual"}
+{"query_id": "M024", "query": "патоморфологічні зміни легень при коронавірусній хворобі COVID-19", "domain": "medical", "type": "definition"}
+{"query_id": "M025", "query": "гострий респіраторний дистрес-синдром та поліорганна недостатність при COVID-19", "domain": "medical", "type": "technical"}
+{"query_id": "M026", "query": "летальність та чинники ризику тяжкого перебігу COVID-19", "domain": "medical", "type": "factual"}
+{"query_id": "M027", "query": "зв'язок між станом ротової порожнини та серцево-судинними захворюваннями", "domain": "medical", "type": "definition"}
+{"query_id": "M028", "query": "артеріальний тиск гіперглікемія та гіперхолестеринемія у стоматологічних пацієнтів", "domain": "medical", "type": "factual"}
+{"query_id": "M029", "query": "некротизуючий фасциїт черепно-лицевої ділянки: клінічна картина та лікування", "domain": "medical", "type": "technical"}
+{"query_id": "M030", "query": "одонтогенне походження глибоких інфекцій шиї ускладнення та медіастиніт", "domain": "medical", "type": "definition"}
+{"query_id": "M031", "query": "соціологічне опитування як метод збору даних у медичних дослідженнях", "domain": "medical", "type": "definition"}
+{"query_id": "M032", "query": "самозвітність пацієнтів достовірність та точність даних у медичних анкетах", "domain": "medical", "type": "technical"}
+{"query_id": "M033", "query": "профілактика карієсу постійних зубів у дітей з аномаліями зубощелепної системи", "domain": "medical", "type": "procedural"}
+{"query_id": "M034", "query": "поширеність та інтенсивність карієсу у дітей шкільного віку", "domain": "medical", "type": "factual"}
+{"query_id": "M035", "query": "оклюзійна патологія та стратегія комплексного стоматологічного лікування", "domain": "medical", "type": "procedural"}
+{"query_id": "M036", "query": "дефекти зубних рядів надмірна стертість зубів діагностика та реабілітація", "domain": "medical", "type": "technical"}
+{"query_id": "M037", "query": "ортодонтична патологія та її вплив на оклюзію", "domain": "medical", "type": "definition"}
