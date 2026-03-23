@@ -30,7 +30,7 @@
   }
   .search-bar {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     background: var(--surface);
     border: 1.5px solid var(--border);
     border-radius: 28px;
@@ -43,7 +43,7 @@
     border-color: var(--primary);
     box-shadow: 0 2px 12px rgba(26,115,232,.18);
   }
-  .search-bar input[type="text"] {
+  .search-bar textarea {
     flex: 1;
     border: none;
     outline: none;
@@ -51,6 +51,11 @@
     background: transparent;
     color: var(--text);
     padding: 4px 0;
+    resize: none;
+    overflow: hidden;
+    line-height: 1.5;
+    min-height: 30px;
+    font-family: inherit;
   }
   .search-bar button {
     flex-shrink: 0;
@@ -517,14 +522,27 @@
         setActive(activeIdx);
       } else if (e.key === 'Escape') {
         close();
+      } else if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        close();
+        input.closest('form').requestSubmit();
       }
     });
 
     input.closest('form').addEventListener('submit', function () { push(input.value); });
   }
 
+  function autoResize(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('input[name="q"]').forEach(function (input) {
+    document.querySelectorAll('textarea[name="q"]').forEach(function (input) {
+      // Initial resize (for pre-filled value on results page)
+      autoResize(input);
+      input.addEventListener('input', function () { autoResize(this); });
+
       var bar = input.closest('.search-bar');
       if (!bar) return;
       var sug = bar.querySelector('.search-suggestions');
@@ -546,7 +564,7 @@
       <form method="GET" action="/">
         <input type="hidden" name="domain" value="{{ current_domain }}">
         <div class="search-bar">
-          <input type="text" name="q" placeholder="Введіть запит…" autofocus autocomplete="off" />
+          <textarea name="q" placeholder="Введіть запит…" autofocus autocomplete="off" rows="1"></textarea>
           <button type="submit" class="btn btn-primary">Шукати</button>
           <div class="search-suggestions"></div>
         </div>
@@ -617,7 +635,7 @@
     <form method="GET" action="/" class="search-form">
       <input type="hidden" name="domain" value="{{ current_domain }}">
       <div class="search-bar">
-        <input type="text" name="q" value="{{ query }}" autofocus autocomplete="off" />
+        <textarea name="q" autofocus autocomplete="off" rows="1">{{ query }}</textarea>
         <button type="submit" class="btn btn-primary">Шукати</button>
         <div class="search-suggestions"></div>
       </div>
