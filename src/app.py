@@ -793,6 +793,44 @@ def benchmark_result_file(filename: str):
 
 # ── Multi-criteria model selection ──────────────────────────────────────────
 
+_VIEWABLE_ARTIFACT_FILES = {"model.json", "meta.jsonl"}
+_ARTIFACT_PREVIEW_LIMIT  = 30   # max chunks shown from meta.jsonl
+
+@app.route("/build/artifact-view")
+def build_artifact_view():
+    """Return text content of a viewable artifact file (model.json or meta.jsonl)."""
+    domain   = request.args.get("domain", DEFAULT_DOMAIN)
+    model_id = request.args.get("model", "")
+    filename = request.args.get("file", "")
+    if filename not in _VIEWABLE_ARTIFACT_FILES:
+        return jsonify({"error": "forbidden"}), 403
+    artifacts_root = domain_paths(domain)["artifacts_root"]
+    path = (artifacts_root / model_id / filename).resolve()
+    try:
+        path.relative_to(artifacts_root.resolve())
+    except ValueError:
+        return jsonify({"error": "forbidden"}), 403
+    if not path.exists():
+        return jsonify({"error": "not found"}), 404
+    raw = path.read_text(encoding="utf-8")
+    if filename == "meta.jsonl":
+        lines = [l for l in raw.splitlines() if l.strip()]
+        total = len(lines)
+        rows = []
+        for line in lines[:_ARTIFACT_PREVIEW_LIMIT]:
+            try:
+                obj = json.loads(line)
+                rows.append({"chunk_id": obj.get("chunk_id", ""), "source": obj.get("source", ""), "text": obj.get("text", "")[:200]})
+            except Exception:
+                rows.append({"chunk_id": "", "source": "", "text": line[:200]})
+        return jsonify({"type": "meta", "rows": rows, "total": total, "shown": len(rows)})
+    # model.json
+    try:
+        return jsonify({"type": "json", "content": json.loads(raw)})
+    except Exception:
+        return jsonify({"type": "text", "content": raw})
+
+
 @app.route("/benchmark/selection")
 def benchmark_selection():
     domain = get_domain()
