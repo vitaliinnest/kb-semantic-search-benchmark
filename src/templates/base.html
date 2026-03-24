@@ -144,10 +144,77 @@
     }
     .alert-error { background: #fce8e6; color: #c5221f; border: 1px solid #f5c6c4; }
     .alert-info  { background: #e8f0fe; color: #174ea6; border: 1px solid #c5d8fc; }
+
+    /* ── PAGE LOADER ───────────────────────────────── */
+    #page-loader {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(248,249,250,.72);
+      backdrop-filter: blur(2px);
+    }
+    #page-loader.active { display: block; }
+
+    /* top progress bar */
+    #loader-bar {
+      position: absolute;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: var(--primary);
+      border-radius: 0 3px 3px 0;
+      box-shadow: 0 0 8px rgba(26,115,232,.6);
+      transition: width .3s ease;
+    }
+    #loader-bar.indeterminate {
+      animation: bar-slide 1.5s ease-in-out infinite;
+      width: 30% !important;
+    }
+
+    /* spinner */
+    #loader-spinner {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .spinner-ring {
+      width: 44px; height: 44px;
+      border: 4px solid #e0e0e0;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    .spinner-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: .2px;
+    }
+
+    @keyframes spin      { to { transform: rotate(360deg); } }
+    @keyframes bar-slide {
+      0%   { left: -30%; width: 30%; }
+      60%  { left: 60%;  width: 40%; }
+      100% { left: 100%; width: 30%; }
+    }
   </style>
   {% block head %}{% endblock %}
 </head>
 <body>
+  <!-- Page loader (shown on form submit / navigation) -->
+  <div id="page-loader">
+    <div id="loader-bar"></div>
+    <div id="loader-spinner">
+      <div class="spinner-ring"></div>
+      <span class="spinner-label">Пошук…</span>
+    </div>
+  </div>
+
   <nav>
     <a class="logo" href="/?domain={{ current_domain }}">🔍 KB Search</a>
     <a href="/?domain={{ current_domain }}" {% if request.path == '/' %}class="active"{% endif %}>Пошук</a>
@@ -178,6 +245,70 @@
       url.searchParams.delete('source');
       window.location.href = url.toString();
     }
+  </script>
+
+  <script>
+  /* ── Page Loader ──────────────────────────────────────────────────────── */
+  (function () {
+    var loader  = document.getElementById('page-loader');
+    var bar     = document.getElementById('loader-bar');
+    var label   = document.querySelector('#loader-spinner .spinner-label');
+
+    var _raf;
+    var _pct = 0;
+
+    function startProgress(text) {
+      if (label) label.textContent = text || 'Завантаження…';
+      loader.classList.add('active');
+      bar.classList.remove('indeterminate');
+      _pct = 0;
+      bar.style.width = '0%';
+
+      // Smoothly advance to ~85% then stall
+      (function tick() {
+        if (_pct < 30)       _pct += 3;
+        else if (_pct < 60)  _pct += 1.5;
+        else if (_pct < 85)  _pct += 0.5;
+        else return; // stall – wait for page load
+        bar.style.width = _pct + '%';
+        _raf = requestAnimationFrame(function () { setTimeout(tick, 80); });
+      }());
+    }
+
+    function finish() {
+      cancelAnimationFrame(_raf);
+      bar.style.transition = 'width .2s ease';
+      bar.style.width = '100%';
+      setTimeout(function () { loader.classList.remove('active'); }, 250);
+    }
+
+    // Show loader on any form submit, with context-aware label
+    document.addEventListener('submit', function (e) {
+      var form = e.target;
+      var action = (form.getAttribute('action') || '').split('?')[0];
+      var isSearch = (action === '/' || action === '' || action.endsWith('/'));
+      startProgress(isSearch ? 'Пошук…' : 'Завантаження…');
+    }, true);
+
+    // Show loader on nav links that cause full-page navigation (not anchors/JS)
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest('a[href]');
+      if (!link) return;
+      var href = link.getAttribute('href') || '';
+      // Skip anchors, javascript: links, and new-tab
+      if (href.startsWith('#') || href.startsWith('javascript:')) return;
+      if (link.target === '_blank') return;
+      startProgress('Завантаження…');
+    }, true);
+
+    // Hide loader if user navigates back (bfcache restore)
+    window.addEventListener('pageshow', function (e) {
+      if (e.persisted) finish();
+    });
+
+    // Hide on actual DOMContentLoaded (covers all normal loads)
+    document.addEventListener('DOMContentLoaded', finish);
+  }());
   </script>
 </body>
 </html>
