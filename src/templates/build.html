@@ -242,6 +242,57 @@
     margin-right: 4px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── ARTIFACTS TABLE ── */
+  .artifacts-section {
+    margin-bottom: 28px;
+  }
+  .artifacts-section h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .artifacts-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .artifacts-table thead th {
+    background: #f1f3f4;
+    padding: 9px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .artifacts-table tbody tr:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+  }
+  .artifacts-table tbody td {
+    padding: 9px 14px;
+    color: var(--text);
+  }
+  .art-badge-built    { color: #1e6e3a; font-weight: 700; }
+  .art-badge-notbuilt { color: var(--text-muted); }
+  .art-files { display: flex; flex-wrap: wrap; gap: 5px; }
+  .art-file-tag {
+    font-size: 11px;
+    font-family: monospace;
+    background: #e8f5e9;
+    color: #1e6e3a;
+    border: 1px solid #b6dfc5;
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
 </style>
 {% endblock %}
 
@@ -261,6 +312,49 @@
   <span><strong>chunks.jsonl не знайдено.</strong> Спочатку <a href="/raw?domain={{ current_domain }}">завантажте файли та запустіть чанкінг</a>.</span>
 </div>
 {% endif %}
+
+<!-- ARTIFACTS SUMMARY TABLE -->
+<div class="artifacts-section">
+  <h3>📦 Доступні індекси</h3>
+  <table class="artifacts-table">
+    <thead>
+      <tr>
+        <th>Модель</th>
+        <th>Статус</th>
+        <th>Векторів</th>
+        <th>Розмір індексу</th>
+        <th>Артефакти</th>
+        <th>Дата побудови</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in models %}
+      <tr>
+        <td><strong>{{ m.label }}</strong></td>
+        {% if m.artifact.exists %}
+        <td><span class="art-badge-built">✓ Побудовано</span></td>
+        <td>{{ m.artifact.chunk_count }}</td>
+        <td>{{ m.artifact.index_size_fmt }}</td>
+        <td>
+          <div class="art-files">
+            {% for f in m.artifact.artifact_files %}
+            <span class="art-file-tag">{{ f }}</span>
+            {% endfor %}
+          </div>
+        </td>
+        <td>{{ m.artifact.mtime_fmt }}</td>
+        {% else %}
+        <td><span class="art-badge-notbuilt">— Не побудовано</span></td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 <!-- MODEL CARDS -->
 <div class="models-grid" id="models-grid">

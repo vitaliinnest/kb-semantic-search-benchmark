@@ -518,11 +518,21 @@ def _artifact_info(model_id: str, domain_id: str = DEFAULT_DOMAIN) -> dict:
         with meta_path.open("r", encoding="utf-8") as fh:
             chunk_count = sum(1 for l in fh if l.strip())
     mtime = index_path.stat().st_mtime
+    index_size = index_path.stat().st_size
+    # Collect present artifact files
+    _candidate_files = [
+        "faiss.index", "vectors.npy", "model.json", "meta.jsonl",
+        "tfidf.joblib", "gensim.model",
+    ]
+    artifact_files = [f for f in _candidate_files if (d / f).exists()]
     return {
         "exists": True,
         "chunk_count": chunk_count,
         "mtime": mtime,
         "mtime_fmt": _dt.datetime.fromtimestamp(mtime).strftime("%d.%m.%Y %H:%M"),
+        "index_size": index_size,
+        "index_size_fmt": f"{index_size / 1024:.1f} KB" if index_size < 1024 * 1024 else f"{index_size / 1024 / 1024:.1f} MB",
+        "artifact_files": artifact_files,
     }
 
 
