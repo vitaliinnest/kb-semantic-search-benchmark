@@ -102,6 +102,9 @@ def _prettify_benchmark_data(data: dict) -> dict:
         if model_type is None:
             continue  # can't determine, leave as-is
         display = _TYPE_TO_DISPLAY[model_type]
+        # Skip if already prettified (evaluate_benchmark.py stores formatted names)
+        if raw_name.startswith(display):
+            continue
         # For SBERT/BERT include the specific model identifier
         if model_type in {"sbert", "bert"} and raw_name and raw_name.lower() != model_type:
             m["model_name"] = f"{display} ({raw_name})"
