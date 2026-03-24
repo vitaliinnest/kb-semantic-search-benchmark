@@ -255,28 +255,41 @@
     var label   = document.querySelector('#loader-spinner .spinner-label');
 
     var _raf;
+    var _showTimer;
     var _pct = 0;
+    var _pending = false;
 
     function startProgress(text) {
+      _pending = true;
       if (label) label.textContent = text || 'Завантаження…';
-      loader.classList.add('active');
       bar.classList.remove('indeterminate');
       _pct = 0;
+      bar.style.transition = '';
       bar.style.width = '0%';
 
-      // Smoothly advance to ~85% then stall
-      (function tick() {
-        if (_pct < 30)       _pct += 3;
-        else if (_pct < 60)  _pct += 1.5;
-        else if (_pct < 85)  _pct += 0.5;
-        else return; // stall – wait for page load
-        bar.style.width = _pct + '%';
-        _raf = requestAnimationFrame(function () { setTimeout(tick, 80); });
-      }());
+      // Only show the loader after 500 ms – instant loads will never see it
+      _showTimer = setTimeout(function () {
+        if (!_pending) return;
+        loader.classList.add('active');
+
+        // Smoothly advance to ~85% then stall
+        (function tick() {
+          if (!_pending) return;
+          if (_pct < 30)       _pct += 3;
+          else if (_pct < 60)  _pct += 1.5;
+          else if (_pct < 85)  _pct += 0.5;
+          else return; // stall – wait for page load
+          bar.style.width = _pct + '%';
+          _raf = requestAnimationFrame(function () { setTimeout(tick, 80); });
+        }());
+      }, 500);
     }
 
     function finish() {
+      _pending = false;
+      clearTimeout(_showTimer);
       cancelAnimationFrame(_raf);
+      if (!loader.classList.contains('active')) return; // never shown – nothing to hide
       bar.style.transition = 'width .2s ease';
       bar.style.width = '100%';
       setTimeout(function () { loader.classList.remove('active'); }, 250);
