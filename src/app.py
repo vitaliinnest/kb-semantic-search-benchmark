@@ -10,7 +10,7 @@ from functools import lru_cache
 
 import faiss
 import numpy as np
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, Response
 from werkzeug.utils import secure_filename
 
 # Додаємо src/ до sys.path, щоб імпортувати сусідні модулі
@@ -51,6 +51,10 @@ def domain_paths(domain_id: str) -> dict:
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = "kb-search-secret"
+
+@app.route("/favicon.ico")
+def favicon():
+    return Response(status=204)
 
 import datetime as _dt
 
