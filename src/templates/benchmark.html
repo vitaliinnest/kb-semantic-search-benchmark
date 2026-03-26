@@ -166,11 +166,31 @@
   /* empty */
   .empty { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 14px; }
   .empty-icon { font-size: 36px; margin-bottom: 10px; }
+
+  /* domain badge */
+  .domain-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary); color: #fff;
+    font-size: 13px; font-weight: 700;
+    padding: 4px 14px; border-radius: 20px;
+    vertical-align: middle; margin-left: 10px;
+    letter-spacing: .3px;
+  }
+  .page-heading-row {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 4px;
+  }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="page-heading">📊 Benchmark</div>
+<div class="page-heading-row">
+  <div class="page-heading">📊 Benchmark
+    {% for d in domains %}{% if d.id == current_domain %}
+    <span class="domain-badge">🗂 {{ d.label }}</span>
+    {% endif %}{% endfor %}
+  </div>
+</div>
 <div class="page-sub">Порівняння якості retrieval між моделями за Recall, MRR, nDCG, Precision</div>
 
 <!-- STATUS BANNERS -->
