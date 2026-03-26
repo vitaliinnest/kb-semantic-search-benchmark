@@ -9,6 +9,7 @@
 """
 
 import argparse
+import json
 import subprocess
 import sys
 import time
@@ -196,13 +197,43 @@ def take_screenshots(page, out_dir: Path) -> None:
 
     # ── Пошукові запити × моделі ─────────────────────────────────────────
     import urllib.parse
+    import urllib.request as _ureq
+
+    # domain → { model_id → [ { query, screenshot, results: [...] } ] }
+    domain_data: dict = {d: {} for d in SEARCH_QUERIES}
+
     for domain, models_queries in SEARCH_QUERIES.items():
         for model_id, queries in models_queries.items():
             m_dir = out_dir / domain / "search" / model_id
+            domain_data[domain][model_id] = []
             for query in queries:
+                name = slug(query)
                 params = urllib.parse.urlencode({"q": query, "domain": domain, "model": model_id, "top_k": 5})
                 url = f"{BASE_URL}/?{params}"
-                shot(m_dir / f"{slug(query)}.png", url, wait_ms=1500)
+                shot(m_dir / f"{name}.png", url, wait_ms=1500)
+
+                # ── збираємо результати пошуку (без full_text) ────────────
+                api_url = f"{BASE_URL}/api/search?{params}"
+                try:
+                    with _ureq.urlopen(api_url, timeout=10) as resp:
+                        data = json.loads(resp.read().decode("utf-8"))
+                    results = [
+                        {k: v for k, v in r.items() if k != "full_text"}
+                        for r in data.get("results", [])
+                    ]
+                except Exception as exc:
+                    results = [{"error": str(exc)}]
+                domain_data[domain][model_id].append({
+                    "query": query,
+                    "screenshot": f"{domain}/search/{model_id}/{name}.png",
+                    "results": results,
+                })
+
+    # ── Зберігаємо по одному JSON на домен ───────────────────────────────
+    for domain, models in domain_data.items():
+        json_path = out_dir / domain / "search_results.json"
+        json_path.write_text(json.dumps({"domain": domain, "models": models}, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"  ·  {json_path}")
 
 
 def main() -> None:

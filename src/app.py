@@ -262,6 +262,27 @@ def index():
     )
 
 
+@app.route("/api/search")
+def api_search():
+    domain = get_domain()
+    query_text = request.args.get("q", "").strip()
+    model_id = request.args.get("model", "")
+    top_k = int(request.args.get("top_k", 5))
+    if not query_text or not model_id:
+        return jsonify({"error": "Параметри 'q' та 'model' обов'язкові"}), 400
+    try:
+        results = do_search(query_text, model_id, top_k, domain)
+        return jsonify({
+            "query": query_text,
+            "domain": domain,
+            "model": model_id,
+            "top_k": top_k,
+            "results": results,
+        })
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
+
+
 @app.route("/documents")
 def documents():
     from collections import defaultdict
