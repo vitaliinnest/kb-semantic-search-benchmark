@@ -188,11 +188,11 @@
   }
   .existing-chunks strong { color: var(--text); }
   .domain-badge {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center;
     background: var(--primary); color: #fff;
-    font-size: 13px; font-weight: 700;
-    padding: 4px 14px; border-radius: 20px;
-    vertical-align: middle; margin-left: 10px;
+    font-size: 16px; font-weight: 700;
+    padding: 5px 18px; border-radius: 20px;
+    vertical-align: middle; margin-left: 14px;
     letter-spacing: .3px;
   }
   .page-heading-row { display: flex; align-items: center; gap: 0; margin-bottom: 4px; }
@@ -203,7 +203,7 @@
 <div class="page-heading-row">
   <div class="page-heading">📂 Файли (raw)
     {% for d in domains %}{% if d.id == current_domain %}
-    <span class="domain-badge">🗂 {{ d.label }}</span>
+    <span class="domain-badge">{{ d.label }}</span>
     {% endif %}{% endfor %}
   </div>
 </div>
