@@ -95,6 +95,12 @@ SEARCH_QUERIES: dict[str, dict[str, list[str]]] = {
     },
 }
 
+CLIP_CSS = """
+    nav { display: none !important; }
+    main { padding-top: 16px !important; padding-bottom: 16px !important; }
+    body { padding-top: 0 !important; margin-top: 0 !important; }
+"""
+
 VIEWPORT = {"width": 1440, "height": 900}
 
 
@@ -122,6 +128,7 @@ def take_screenshots(page, out_dir: Path) -> None:
 
     def shot(path: Path, url: str, wait_ms: int = 800) -> None:
         page.goto(url, wait_until="networkidle")
+        page.add_style_tag(content=CLIP_CSS)
         page.wait_for_timeout(wait_ms)
         path.parent.mkdir(parents=True, exist_ok=True)
         page.screenshot(path=str(path), full_page=True)
