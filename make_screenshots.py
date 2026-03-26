@@ -177,6 +177,7 @@ def take_screenshots(page, out_dir: Path) -> None:
     """Основна логіка скріншотів — виконується всередині playwright context."""
 
     page.set_viewport_size(VIEWPORT)
+    page.set_default_timeout(120_000)  # 2 хв — для першого завантаження важких моделей
 
     def shot(path: Path, url: str, wait_ms: int = 800) -> None:
         page.goto(url, wait_until="networkidle")
