@@ -323,5 +323,121 @@
     document.addEventListener('DOMContentLoaded', finish);
   }());
   </script>
+
+  <!-- ── Hidden Search-History Admin Panel (Ctrl+Shift+H) ── -->
+  <div id="hist-panel" style="
+    display:none; position:fixed; bottom:24px; right:24px; z-index:99999;
+    background:#fff; border:1.5px solid #1a73e8; border-radius:12px;
+    box-shadow:0 4px 24px rgba(0,0,0,.18); padding:20px 24px; min-width:320px;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <strong style="font-size:15px;">🗂 Історія пошуку</strong>
+      <span onclick="document.getElementById('hist-panel').style.display='none'"
+            style="cursor:pointer;font-size:18px;color:#5f6368;line-height:1;">✕</span>
+    </div>
+    <div id="hist-status" style="font-size:12px;color:#5f6368;margin-bottom:14px;">
+      Натисніть «Додати» щоб заповнити дефолтні фрази для домену
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button onclick="histSeed('tech')"    class="btn btn-primary" style="justify-content:center;">+ Техніка / IT</button>
+      <button onclick="histSeed('legal')"   class="btn btn-primary" style="justify-content:center;">+ Юридична база</button>
+      <button onclick="histSeed('medical')" class="btn btn-primary" style="justify-content:center;">+ Медицина</button>
+      <button onclick="histClearAll()" style="
+        margin-top:4px; padding:8px; border:1px solid #e0e0e0; border-radius:8px;
+        background:#fce8e6; color:#c5221f; cursor:pointer; font-size:13px; font-weight:600;">
+        🗑 Очистити всю історію
+      </button>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    var SEEDS = {
+      tech: [
+        "як налаштувати SSH-ключі",
+        "різниця між TCP та UDP",
+        "що таке Docker контейнер",
+        "як працює REST API",
+        "налаштування nginx reverse proxy",
+        "git rebase vs merge",
+        "що таке індекс у базі даних",
+        "як написати bash скрипт",
+        "принцип роботи JWT токена",
+        "оптимізація SQL запитів",
+        "що таке мікросервіси",
+        "як налаштувати CI/CD pipeline",
+        "різниця між процесом і потоком",
+        "що таке WebSocket",
+        "як працює DNS"
+      ],
+      legal: [
+        "порядок розірвання трудового договору",
+        "права орендаря при виселенні",
+        "відповідальність за порушення авторських прав",
+        "як оскаржити адміністративний штраф",
+        "умови визнання договору недійсним",
+        "права споживача при поверненні товару",
+        "порядок спадкування за законом",
+        "що таке позовна давність",
+        "відповідальність директора за борги компанії",
+        "порядок реєстрації ФОП",
+        "що таке форс-мажор у договорі",
+        "підстави для розірвання оренди",
+        "як захистити комерційну таємницю",
+        "порядок ліквідації підприємства",
+        "відповідальність за несплату аліментів"
+      ],
+      medical: [
+        "симптоми цукрового діабету 2 типу",
+        "як знизити артеріальний тиск без ліків",
+        "перша допомога при переломі",
+        "різниця між МРТ та КТ",
+        "причини підвищеного холестерину",
+        "як лікують пневмонію",
+        "побічні ефекти антибіотиків",
+        "норми рівня цукру в крові",
+        "симптоми інфаркту міокарда",
+        "профілактика остеопорозу",
+        "що таке анемія і як її лікувати",
+        "симптоми апендициту",
+        "як діє загальна анестезія",
+        "причини хронічної втоми",
+        "норми тиску для дорослого"
+      ]
+    };
+
+    window.histSeed = function (domain) {
+      var key = 'kb_hist_' + domain;
+      var existing = [];
+      try { existing = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) {}
+      var toAdd = SEEDS[domain].filter(function (q) { return existing.indexOf(q) === -1; });
+      var merged = toAdd.concat(existing).slice(0, 30);
+      try { localStorage.setItem(key, JSON.stringify(merged)); } catch(e) {}
+      var lbl = {tech:'Техніка / IT', legal:'Юридична база', medical:'Медицина'};
+      var status = document.getElementById('hist-status');
+      status.style.color = '#1e6e3a';
+      status.textContent = '✓ ' + lbl[domain] + ': додано ' + toAdd.length + ' фраз (загалом ' + merged.length + ')';
+    };
+
+    window.histClearAll = function () {
+      ['tech','legal','medical'].forEach(function (d) {
+        try { localStorage.removeItem('kb_hist_' + d); } catch(e) {}
+      });
+      var status = document.getElementById('hist-status');
+      status.style.color = '#c5221f';
+      status.textContent = '✓ Всю історію очищено';
+    };
+
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey && e.shiftKey && e.key === 'H') {
+        e.preventDefault();
+        var panel = document.getElementById('hist-panel');
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        document.getElementById('hist-status').style.color = '#5f6368';
+        document.getElementById('hist-status').textContent = 'Натисніть «Додати» щоб заповнити дефолтні фрази для домену';
+      }
+    });
+  }());
+  </script>
 </body>
 </html>
