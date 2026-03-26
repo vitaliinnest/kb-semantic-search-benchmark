@@ -485,7 +485,7 @@
           e.preventDefault();
           input.value = el.dataset.val;
           close();
-          input.closest('form').submit();
+          input.focus();
         });
         el.querySelector('.sg-del').addEventListener('mousedown', function (e) {
           e.preventDefault(); e.stopPropagation();
