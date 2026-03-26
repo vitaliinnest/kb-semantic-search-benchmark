@@ -508,7 +508,14 @@
 
     // Only show on explicit user click/tap, not on programmatic autofocus at page load
     var expectFocusOpen = false;
-    input.addEventListener('mousedown',  function () { expectFocusOpen = true; });
+    input.addEventListener('mousedown', function () {
+      if (document.activeElement === input) {
+        // Already focused — focus won't fire, open directly
+        render(getMatches(input.value));
+      } else {
+        expectFocusOpen = true;
+      }
+    });
     input.addEventListener('touchstart', function () { expectFocusOpen = true; }, {passive: true});
     input.addEventListener('focus', function () {
       if (expectFocusOpen) { expectFocusOpen = false; render(getMatches(input.value)); }
