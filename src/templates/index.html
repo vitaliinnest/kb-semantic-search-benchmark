@@ -356,15 +356,26 @@
   }
   .sg-del:hover { background: #e0e0e0; opacity: 1; }
   .sg-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 7px 16px;
     font-size: 12px;
     color: var(--text-muted);
-    text-align: right;
-    cursor: pointer;
     border-top: 1px solid var(--border);
-    transition: color .1s;
   }
-  .sg-footer:hover { color: var(--primary); }
+  .sg-footer-clear { cursor: pointer; transition: color .1s; }
+  .sg-footer-clear:hover { color: var(--primary); }
+  .sg-footer-hide {
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #f1f3f4;
+    transition: background .1s;
+  }
+  .sg-footer-hide:hover { background: var(--border); }
 </style>
 
 <script>
@@ -463,19 +474,30 @@
 
   function initBar(input, sug) {
     var activeIdx = -1;
+    var manualClose = false;
 
-    function render(list) {
+    function highlight(text, query) {
+      if (!query.trim()) return esc(text);
+      var idx = text.toLowerCase().indexOf(query.toLowerCase());
+      if (idx === -1) return esc(text);
+      return esc(text.slice(0, idx))
+           + '<strong>' + esc(text.slice(idx, idx + query.length)) + '</strong>'
+           + esc(text.slice(idx + query.length));
+    }
+
+    function render(list, query) {
       activeIdx = -1;
       if (!list.length) { sug.innerHTML = ''; sug.classList.remove('open'); return; }
+      var q = query || '';
       var html = '';
-      list.forEach(function (q, i) {
-        html += '<div class="sg-item" data-val="' + esc(q) + '">'
+      list.forEach(function (item) {
+        html += '<div class="sg-item" data-val="' + esc(item) + '">'
               + '<span class="sg-icon">🕐</span>'
-              + '<span class="sg-text">' + esc(q) + '</span>'
-              + '<span class="sg-del" data-del="' + esc(q) + '" title="Видалити">✕</span>'
+              + '<span class="sg-text">' + highlight(item, q) + '</span>'
+              + '<span class="sg-del" data-del="' + esc(item) + '" title="Видалити">✕</span>'
               + '</div>';
       });
-      html += '<div class="sg-footer">Очистити всі</div>';
+      html += '<div class="sg-footer"><span class="sg-footer-clear">Очистити всі</span><span class="sg-footer-hide">Сховати ✕</span></div>';
       sug.innerHTML = html;
       sug.classList.add('open');
 
@@ -490,12 +512,16 @@
         el.querySelector('.sg-del').addEventListener('mousedown', function (e) {
           e.preventDefault(); e.stopPropagation();
           removeItem(this.dataset.del);
-          render(getMatches(input.value));
+          render(getMatches(input.value), input.value);
         });
       });
-      var footer = sug.querySelector('.sg-footer');
-      if (footer) footer.addEventListener('mousedown', function (e) {
+      var footerClear = sug.querySelector('.sg-footer-clear');
+      if (footerClear) footerClear.addEventListener('mousedown', function (e) {
         e.preventDefault(); save([]); close();
+      });
+      var footerHide = sug.querySelector('.sg-footer-hide');
+      if (footerHide) footerHide.addEventListener('mousedown', function (e) {
+        e.preventDefault(); manualClose = true; close();
       });
     }
 
@@ -511,16 +537,17 @@
     input.addEventListener('mousedown', function () {
       if (document.activeElement === input) {
         // Already focused — focus won't fire, open directly
-        render(getMatches(input.value));
+        if (!manualClose) render(getMatches(input.value), input.value);
       } else {
         expectFocusOpen = true;
       }
     });
-    input.addEventListener('touchstart', function () { expectFocusOpen = true; }, {passive: true});
+    input.addEventListener('touchstart', function () { expectFocusOpen = true; manualClose = false; }, {passive: true});
     input.addEventListener('focus', function () {
-      if (expectFocusOpen) { expectFocusOpen = false; render(getMatches(input.value)); }
+      manualClose = false;
+      if (expectFocusOpen) { expectFocusOpen = false; render(getMatches(input.value), input.value); }
     });
-    input.addEventListener('input',  function () { render(getMatches(input.value)); });
+    input.addEventListener('input',  function () { render(getMatches(input.value), input.value); });
     // Close instantly when clicking outside the bar — no blur delay
     document.addEventListener('mousedown', function (e) {
       if (!sug.contains(e.target) && e.target !== input) { close(); }
