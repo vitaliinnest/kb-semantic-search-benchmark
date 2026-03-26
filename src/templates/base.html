@@ -429,7 +429,7 @@
     };
 
     document.addEventListener('keydown', function (e) {
-      if (e.ctrlKey && e.shiftKey && e.key === 'H') {
+      if (e.ctrlKey && e.shiftKey && e.code === 'KeyH') {
         e.preventDefault();
         var panel = document.getElementById('hist-panel');
         panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
