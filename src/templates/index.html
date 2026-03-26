@@ -23,6 +23,17 @@
     font-size: 15px;
     margin-bottom: 36px;
   }
+  .domain-badge {
+    display: inline-flex; align-items: center;
+    background: var(--primary); color: #fff;
+    font-size: 13px; font-weight: 700;
+    padding: 4px 16px; border-radius: 20px;
+    letter-spacing: .3px;
+  }
+  .hero-domain {
+    margin-bottom: 10px;
+    margin-top: -2px;
+  }
 
   /* ── SEARCH FORM ── */
   .search-form {
@@ -559,6 +570,11 @@
   <!-- HERO: no search yet -->
   <div class="hero">
     <div class="hero-title">KB Search</div>
+    <div class="hero-domain">
+      {% for d in domains %}{% if d.id == current_domain %}
+      <span class="domain-badge">{{ d.label }}</span>
+      {% endif %}{% endfor %}
+    </div>
     <div class="hero-sub">Семантичний пошук по базі знань</div>
     <div class="search-form" style="max-width: 860px; width: 100%;">
       <form method="GET" action="/">
@@ -590,7 +606,9 @@
   {% set bm_models = benchmark.models %}
   {% set best_ndcg = bm_models | map(attribute='ndcg_at_k') | max %}
   <div class="benchmark-section">
-    <h2>📊 Результати бенчмарку</h2>
+    <h2>📊 Результати бенчмарку
+      {% for d in domains %}{% if d.id == current_domain %}<span class="domain-badge" style="font-size:13px;padding:3px 14px;vertical-align:middle;margin-left:10px;">{{ d.label }}</span>{% endif %}{% endfor %}
+    </h2>
     <div class="benchmark-meta">
       Час: {{ benchmark.timestamp[:16] | replace('T', ' ') }}
       &nbsp;·  Запитів: {{ benchmark.queries_count }}
@@ -632,6 +650,9 @@
 {% else %}
   <!-- COMPACT HEADER with search bar -->
   <div style="margin-bottom: 24px;">
+    {% for d in domains %}{% if d.id == current_domain %}
+    <span class="domain-badge" style="margin-bottom:12px;">{{ d.label }}</span>
+    {% endif %}{% endfor %}
     <form method="GET" action="/" class="search-form">
       <input type="hidden" name="domain" value="{{ current_domain }}">
       <div class="search-bar">
