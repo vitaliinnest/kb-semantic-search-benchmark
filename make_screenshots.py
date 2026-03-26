@@ -1,0 +1,215 @@
+"""
+Автоматичні скріншоти всіх сторінок KB Search для звіту.
+
+Використання:
+    pip install playwright
+    playwright install chromium
+    python make_screenshots.py          # сервер вже запущений на :5000
+    python make_screenshots.py --start  # script сам запускає сервер
+"""
+
+import argparse
+import subprocess
+import sys
+import time
+import shutil
+from pathlib import Path
+
+BASE_URL = "http://127.0.0.1:5000"
+OUT_DIR  = Path("screenshots")
+
+DOMAINS = ["tech", "legal", "medical"]
+
+# Сторінки без пошуку (знімаємо для кожного домену)
+STATIC_PAGES = [
+    ("home",      "/"),
+    ("documents", "/documents"),
+    ("raw",           "/raw"),
+    ("build",         "/build"),
+    ("benchmark",     "/benchmark"),
+    ("selection",     "/benchmark/selection"),
+]
+
+# Пошукові запити + моделі для кожного домену.
+# Структура: { domain: { model_id: [query, ...] } }
+SEARCH_QUERIES: dict[str, dict[str, list[str]]] = {
+    "tech": {
+        "sbert":    [
+            "machine learning algorithms overview",
+            "how does TCP/IP protocol work",
+        ],
+        "bert":     [
+            "REST API best practices",
+            "database indexing performance",
+        ],
+        "tfidf":    [
+            "sorting algorithms complexity",
+            "object-oriented programming principles",
+        ],
+        "word2vec": [
+            "neural network training techniques",
+        ],
+        "fasttext": [
+            "cloud computing infrastructure",
+        ],
+    },
+    "legal": {
+        "sbert":    [
+            "цивільна відповідальність за завдану шкоду",
+            "порядок укладення господарського договору",
+        ],
+        "bert":     [
+            "права споживача при поверненні товару",
+            "трудовий договір умови розірвання",
+        ],
+        "tfidf":    [
+            "кримінальна відповідальність неповнолітніх",
+            "захист персональних даних законодавство",
+        ],
+        "word2vec": [
+            "спадщина та заповіт оформлення",
+        ],
+        "fasttext": [
+            "адміністративне правопорушення штраф",
+        ],
+    },
+    "medical": {
+        "sbert":    [
+            "симптоми та лікування пневмонії",
+            "цукровий діабет типу 2 дієта",
+        ],
+        "bert":     [
+            "першочергова допомога при серцевому нападі",
+            "антибіотики та резистентність бактерій",
+        ],
+        "tfidf":    [
+            "вакцинація дітей календар щеплень",
+            "артеріальний тиск норма гіпертонія",
+        ],
+        "word2vec": [
+            "реабілітація після інсульту",
+        ],
+        "fasttext": [
+            "алергічна реакція лікування",
+        ],
+    },
+}
+
+VIEWPORT = {"width": 1440, "height": 900}
+
+
+def wait_for_server(timeout: int = 30) -> bool:
+    import urllib.request, urllib.error
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            urllib.request.urlopen(f"{BASE_URL}/favicon.ico", timeout=2)
+            return True
+        except Exception:
+            time.sleep(0.5)
+    return False
+
+
+def slug(text: str) -> str:
+    import re
+    return re.sub(r"[^a-z0-9а-яіїєґ]+", "_", text.lower()).strip("_")[:60]
+
+
+def take_screenshots(page, out_dir: Path) -> None:
+    """Основна логіка скріншотів — виконується всередині playwright context."""
+
+    page.set_viewport_size(VIEWPORT)
+
+    def shot(path: Path, url: str, wait_ms: int = 800) -> None:
+        page.goto(url, wait_until="networkidle")
+        page.wait_for_timeout(wait_ms)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        page.screenshot(path=str(path), full_page=True)
+        print(f"  ✓  {path}")
+
+    # ── Статичні сторінки для кожного домену ──────────────────────────────
+    for domain in DOMAINS:
+        d_dir = out_dir / domain
+        d_dir.mkdir(parents=True, exist_ok=True)
+        for page_id, route in STATIC_PAGES:
+            sep = "&" if "?" in route else "?"
+            url = f"{BASE_URL}{route}{sep}domain={domain}"
+            shot(d_dir / f"{page_id}.png", url)
+
+    # ── Пошукові запити × моделі ─────────────────────────────────────────
+    import urllib.parse
+    for domain, models_queries in SEARCH_QUERIES.items():
+        for model_id, queries in models_queries.items():
+            m_dir = out_dir / domain / "search" / model_id
+            for query in queries:
+                params = urllib.parse.urlencode({"q": query, "domain": domain, "model": model_id, "top_k": 5})
+                url = f"{BASE_URL}/?{params}"
+                shot(m_dir / f"{slug(query)}.png", url, wait_ms=1500)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Автоматичні скріни KB Search")
+    parser.add_argument("--start",  action="store_true", help="запустити Flask-сервер")
+    parser.add_argument("--port",   type=int, default=5000, help="порт сервера (default 5000)")
+    parser.add_argument("--out",    default="screenshots", help="папка для скріншотів")
+    parser.add_argument("--headed", action="store_true", help="показати вікно браузера")
+    args = parser.parse_args()
+
+    global BASE_URL
+    BASE_URL = f"http://127.0.0.1:{args.port}"
+    timestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
+    out_dir = Path(args.out) / timestamp
+
+    # ── Запускаємо сервер якщо потрібно ───────────────────────────────────
+    server_proc = None
+    if args.start:
+        print("▶  Запускаємо Flask-сервер…")
+        server_proc = subprocess.Popen(
+            [sys.executable, "src/app.py"],
+            env={**__import__("os").environ, "FLASK_ENV": "development"},
+        )
+        print("   Чекаємо готовності…", end="", flush=True)
+        if not wait_for_server():
+            print(" TIMEOUT — сервер не відповів за 30 с")
+            server_proc.terminate()
+            sys.exit(1)
+        print(" OK")
+
+    # ── Перевіряємо, чи playwright встановлено ────────────────────────────
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        print("Playwright не встановлено. Виконайте:\n  pip install playwright\n  playwright install chromium")
+        if server_proc:
+            server_proc.terminate()
+        sys.exit(1)
+
+    # ── Очищаємо папку ────────────────────────────────────────────────────
+    if out_dir.exists():
+        shutil.rmtree(out_dir)
+    out_dir.mkdir(parents=True)
+    print(f"\n📸 Зберігаємо скріншоти у «{out_dir}/»\n")
+
+    # ── Playwright ────────────────────────────────────────────────────────
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=not args.headed)
+        context = browser.new_context(
+            viewport=VIEWPORT,
+            locale="uk-UA",
+        )
+        page = context.new_page()
+        try:
+            take_screenshots(page, out_dir)
+        finally:
+            context.close()
+            browser.close()
+
+    total = sum(1 for _ in out_dir.rglob("*.png"))
+    print(f"\n✅  Готово! Збережено {total} скріншотів у «{out_dir}/»")
+
+    if server_proc:
+        server_proc.terminate()
+
+
+if __name__ == "__main__":
+    main()
