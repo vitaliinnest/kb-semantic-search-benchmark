@@ -97,11 +97,11 @@ SEARCH_QUERIES: dict[str, dict[str, list[str]]] = {
 
 CLIP_CSS = """
     nav { display: none !important; }
-    main { padding-top: 16px !important; padding-bottom: 16px !important; }
+    main { padding: 16px !important; max-width: 100% !important; }
     body { padding-top: 0 !important; margin-top: 0 !important; }
 """
 
-VIEWPORT = {"width": 1440, "height": 900}
+VIEWPORT = {"width": 1200, "height": 900}
 
 
 def wait_for_server(timeout: int = 30) -> bool:
