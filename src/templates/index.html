@@ -547,7 +547,7 @@
       manualClose = false;
       if (expectFocusOpen) { expectFocusOpen = false; render(getMatches(input.value), input.value); }
     });
-    input.addEventListener('input',  function () { render(getMatches(input.value), input.value); });
+    input.addEventListener('input',  function () { if (!manualClose) render(getMatches(input.value), input.value); });
     // Close instantly when clicking outside the bar — no blur delay
     document.addEventListener('mousedown', function (e) {
       if (!sug.contains(e.target) && e.target !== input) { close(); }
