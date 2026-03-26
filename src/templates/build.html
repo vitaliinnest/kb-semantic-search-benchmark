@@ -368,11 +368,26 @@
     border-top: 1px solid var(--border);
     background: #f8f9fa;
   }
+  .domain-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary); color: #fff;
+    font-size: 13px; font-weight: 700;
+    padding: 4px 14px; border-radius: 20px;
+    vertical-align: middle; margin-left: 10px;
+    letter-spacing: .3px;
+  }
+  .page-heading-row { display: flex; align-items: center; gap: 0; margin-bottom: 4px; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="page-heading">🔨 Побудова індексів</div>
+<div class="page-heading-row">
+  <div class="page-heading">🔨 Побудова індексів
+    {% for d in domains %}{% if d.id == current_domain %}
+    <span class="domain-badge">🗂 {{ d.label }}</span>
+    {% endif %}{% endfor %}
+  </div>
+</div>
 <div class="page-sub">Оберіть моделі, налаштуйте параметри та запустіть векторизацію чанків</div>
 
 <!-- CHUNKS STATUS -->

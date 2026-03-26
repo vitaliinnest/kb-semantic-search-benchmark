@@ -164,11 +164,26 @@
   .legend-dot {
     width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0;
   }
+  .domain-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary); color: #fff;
+    font-size: 13px; font-weight: 700;
+    padding: 4px 14px; border-radius: 20px;
+    vertical-align: middle; margin-left: 10px;
+    letter-spacing: .3px;
+  }
+  .page-heading-row { display: flex; align-items: center; gap: 0; margin-bottom: 4px; }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="page-heading">🎯 Мультикритеріальний вибір моделі</div>
+<div class="page-heading-row">
+  <div class="page-heading">🎯 Мультикритеріальний вибір моделі
+    {% for d in domains %}{% if d.id == current_domain %}
+    <span class="domain-badge">🗂 {{ d.label }}</span>
+    {% endif %}{% endfor %}
+  </div>
+</div>
 <div class="page-sub">Pareto-оптимальні альтернативи + зважений інтегральний score</div>
 
 {% if not selection %}
