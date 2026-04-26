@@ -1,0 +1,10 @@
+Оцінка benchmark retrieval
+Дата: 2026-04-27 02:10:44
+Queries: 100 | top_k=10
+==============================================================================================================================================================================
+Model                                  Queries  Recall@k     MRR@k        nDCG@k       P@k          ms/query     Artifacts                                                    
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+E5 (intfloat/multilingual-e5-base)     100      0.3500       0.3145       0.2567       0.0990       110.4        D:\repos\kb-semantic-search-benchmark\artifacts\legal\e5-base
+Nomic (nomic-ai/nomic-embed-text-v1.5) 100      0.1250       0.1384       0.0951       0.0370       244.6        D:\repos\kb-semantic-search-benchmark\artifacts\legal\nomic  
+SBERT (BAAI/bge-m3)                    100      0.3750       0.3831       0.3065       0.1060       322.1        D:\repos\kb-semantic-search-benchmark\artifacts\legal\bge-m3 
+SBERT (Qwen/Qwen3-Embedding-0.6B)      100      0.3750       0.3999       0.3199       0.1070       710.6        D:\repos\kb-semantic-search-benchmark\artifacts\legal\qwen3  

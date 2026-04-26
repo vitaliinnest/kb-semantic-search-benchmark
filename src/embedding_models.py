@@ -334,7 +334,8 @@ def load_model_from_artifacts(
 		return model, config
 
 	config = ModelConfig.load(config_path)
-	_msl = int(config.params.get("max_seq_length", 0)) if config.params else 0
+	_msl_raw = config.params.get("max_seq_length", 0) if config.params else 0
+	_msl = int(_msl_raw) if _msl_raw is not None else 0
 	if config.model_type == "sbert":
 		model_name = config.model_name or fallback_model_name
 		return SbertEmbeddingModel(model_name, max_seq_length=_msl or None), config
