@@ -27,6 +27,9 @@ _TYPE_TO_DISPLAY = {
 	"word2vec": "Word2Vec",
 	"fasttext": "FastText",
 	"glove":    "GloVe",
+	"e5":       "E5",
+	"nomic":    "Nomic",
+	"openai":   "OpenAI",
 }
 
 

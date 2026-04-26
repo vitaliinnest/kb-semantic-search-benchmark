@@ -71,6 +71,9 @@ _TYPE_TO_DISPLAY = {
     "word2vec": "Word2Vec",
     "fasttext": "FastText",
     "glove":    "GloVe",
+    "e5":       "E5",
+    "nomic":    "Nomic",
+    "openai":   "OpenAI",
 }
 
 
@@ -471,54 +474,47 @@ BUILD_SCRIPT = Path(__file__).parent / "build_index.py"
 
 MODEL_DEFS = [
     {
-        "id": "sbert",
-        "label": "SBERT (paraphrase-multilingual-MiniLM-L12-v2)",
-        "desc": "Sentence-Transformers — найкраща якість для семантичного пошуку",
+        "id": "bge-m3",
+        "label": "BGE-M3 (BAAI/bge-m3)",
+        "desc": "Багатомовна модель BAAI — висока якість семантичного пошуку",
         "params": [
-            {"name": "model",      "label": "Назва моделі",  "type": "text",   "default": "paraphrase-multilingual-MiniLM-L12-v2", "arg": "--model"},
-            {"name": "batch_size", "label": "Batch size",    "type": "number", "default": 64,   "arg": "--batch-size"},
+            {"name": "model",      "label": "Назва моделі",  "type": "text",   "default": "BAAI/bge-m3", "arg": "--model"},
+            {"name": "batch_size", "label": "Batch size",    "type": "number", "default": 32,            "arg": "--batch-size"},
         ],
     },
     {
-        "id": "tfidf",
-        "label": "TF-IDF",
-        "desc": "Класична частотна модель, швидка та інтерпретована",
+        "id": "e5-base",
+        "label": "E5-base (intfloat/multilingual-e5-base)",
+        "desc": "Microsoft E5 — ефективна багатомовна модель з prefix-кодуванням",
         "params": [
-            {"name": "tfidf_max_features", "label": "Max features", "type": "number", "default": 50000, "arg": "--tfidf-max-features"},
-            {"name": "tfidf_ngram_min",    "label": "N-gram min",   "type": "number", "default": 1,     "arg": "--tfidf-ngram-min"},
-            {"name": "tfidf_ngram_max",    "label": "N-gram max",   "type": "number", "default": 2,     "arg": "--tfidf-ngram-max"},
+            {"name": "model",      "label": "Назва моделі",  "type": "text",   "default": "intfloat/multilingual-e5-base", "arg": "--model"},
+            {"name": "batch_size", "label": "Batch size",    "type": "number", "default": 64,                              "arg": "--batch-size"},
         ],
     },
     {
-        "id": "word2vec",
-        "label": "Word2Vec",
-        "desc": "Навчається на ваших чанках, середня якість",
+        "id": "qwen3",
+        "label": "Qwen3-Embedding-0.6B (Qwen/Qwen3-Embedding-0.6B)",
+        "desc": "Alibaba Qwen3 — компактна сучасна модель ембеддінгів",
         "params": [
-            {"name": "gensim_vector_size", "label": "Vector size", "type": "number", "default": 300, "arg": "--gensim-vector-size"},
-            {"name": "gensim_window",      "label": "Window",      "type": "number", "default": 5,   "arg": "--gensim-window"},
-            {"name": "gensim_min_count",   "label": "Min count",   "type": "number", "default": 2,   "arg": "--gensim-min-count"},
-            {"name": "gensim_epochs",      "label": "Epochs",      "type": "number", "default": 10,  "arg": "--gensim-epochs"},
+            {"name": "model",      "label": "Назва моделі",  "type": "text",   "default": "Qwen/Qwen3-Embedding-0.6B", "arg": "--model"},
+            {"name": "batch_size", "label": "Batch size",    "type": "number", "default": 16,                          "arg": "--batch-size"},
         ],
     },
     {
-        "id": "fasttext",
-        "label": "FastText",
-        "desc": "Як Word2Vec, але з підтримкою підслів (добре для морфології)",
+        "id": "nomic",
+        "label": "nomic-embed-text-v1.5 (nomic-ai/nomic-embed-text-v1.5)",
+        "desc": "Nomic AI — відкрита модель з довгим контекстом (8192 токенів)",
         "params": [
-            {"name": "gensim_vector_size", "label": "Vector size", "type": "number", "default": 300, "arg": "--gensim-vector-size"},
-            {"name": "gensim_window",      "label": "Window",      "type": "number", "default": 5,   "arg": "--gensim-window"},
-            {"name": "gensim_min_count",   "label": "Min count",   "type": "number", "default": 2,   "arg": "--gensim-min-count"},
-            {"name": "gensim_epochs",      "label": "Epochs",      "type": "number", "default": 10,  "arg": "--gensim-epochs"},
+            {"name": "model",      "label": "Назва моделі",  "type": "text",   "default": "nomic-ai/nomic-embed-text-v1.5", "arg": "--model"},
+            {"name": "batch_size", "label": "Batch size",    "type": "number", "default": 64,                               "arg": "--batch-size"},
         ],
     },
     {
-        "id": "bert",
-        "label": "BERT (bert-base-multilingual-cased)",
-        "desc": "Повноцінний трансформер — повільно, але потужно",
+        "id": "openai",
+        "label": "text-embedding-3-large (OpenAI API)",
+        "desc": "OpenAI API — найвища якість, потребує OPENAI_API_KEY",
         "params": [
-            {"name": "bert_model",      "label": "Назва моделі",  "type": "text",   "default": "bert-base-multilingual-cased", "arg": "--bert-model"},
-            {"name": "bert_batch_size", "label": "Batch size",    "type": "number", "default": 32,  "arg": "--bert-batch-size"},
-            {"name": "bert_max_length", "label": "Max length",   "type": "number", "default": 256, "arg": "--bert-max-length"},
+            {"name": "model", "label": "Назва моделі", "type": "text", "default": "text-embedding-3-large", "arg": "--model"},
         ],
     },
 ]
@@ -610,10 +606,19 @@ def build_run():
             _build_jobs[job_key] = {"running": True, "done": False, "exit_code": None, "log": [], "started_at": time.time()}
 
         artifacts_dir = str(dp["artifacts_root"] / mid)
+        # Map UI model-id → build_index --model-type
+        _MODEL_ID_TO_TYPE = {
+            "bge-m3":   "sbert",
+            "e5-base":  "e5",
+            "qwen3":    "sbert",
+            "nomic":    "nomic",
+            "openai":   "openai",
+        }
+        model_type_arg = _MODEL_ID_TO_TYPE.get(mid, mid)
         cmd = [
             sys.executable,
             str(BUILD_SCRIPT),
-            "--model-type", mid,
+            "--model-type", model_type_arg,
             "--chunks", str(dp["chunks"]),
             "--artifacts", artifacts_dir,
         ]

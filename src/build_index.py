@@ -46,15 +46,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
 	parser.add_argument("--artifacts", default="artifacts", help="Папка для збереження індексу")
 	parser.add_argument(
 		"--model-type",
-		choices=["sbert", "tfidf", "word2vec", "fasttext", "glove", "bert"],
+		choices=["sbert", "tfidf", "word2vec", "fasttext", "glove", "bert", "e5", "nomic", "openai"],
 		default="sbert",
 		help="Тип моделі для векторизації",
 	)
 	parser.add_argument(
 		"--model",
 		default="paraphrase-multilingual-MiniLM-L12-v2",
-		help="Назва моделі SBERT",
+		help="Назва моделі SBERT/E5/nomic/BGE",
 	)
+	parser.add_argument("--openai-api-key", default=None, help="OpenAI API key для text-embedding-*")
+	parser.add_argument("--max-seq-length", type=int, default=None, help="Максимальна довжина послідовності (токенів) для sentence-transformers")
 	parser.add_argument(
 		"--bert-model",
 		default="bert-base-multilingual-cased",
@@ -101,6 +103,8 @@ def main() -> None:
 		from sentence_transformers import SentenceTransformer
 
 		model = SentenceTransformer(args.model)
+		if args.max_seq_length:
+			model.max_seq_length = args.max_seq_length
 		vectors = []
 		for start in tqdm(range(0, len(texts), args.batch_size), desc="Векторизація"):
 			batch = texts[start : start + args.batch_size]
@@ -109,7 +113,7 @@ def main() -> None:
 			)
 			vectors.append(batch_vectors)
 		vectors_np = np.vstack(vectors).astype("float32")
-		config = ModelConfig(model_type="sbert", model_name=args.model, params={})
+		config = ModelConfig(model_type="sbert", model_name=args.model, params={"max_seq_length": args.max_seq_length})
 	elif args.model_type == "tfidf":
 		model = build_tfidf_model(
 			texts,
@@ -151,6 +155,31 @@ def main() -> None:
 			},
 		)
 		save_gensim_model(model, artifacts_dir / "gensim.model")
+	elif args.model_type == "e5":
+		from embedding_models import E5EmbeddingModel
+
+		model_name = args.model if args.model != "paraphrase-multilingual-MiniLM-L12-v2" else "intfloat/multilingual-e5-base"
+		model = E5EmbeddingModel(model_name, max_seq_length=args.max_seq_length)
+		vectors_np = model.encode_documents(texts)
+		config = ModelConfig(model_type="e5", model_name=model_name, params={"max_seq_length": args.max_seq_length})
+	elif args.model_type == "nomic":
+		from embedding_models import NomicEmbeddingModel
+
+		model_name = args.model if args.model != "paraphrase-multilingual-MiniLM-L12-v2" else "nomic-ai/nomic-embed-text-v1.5"
+		model = NomicEmbeddingModel(model_name, max_seq_length=args.max_seq_length)
+		vectors_np = model.encode_documents(texts)
+		config = ModelConfig(model_type="nomic", model_name=model_name, params={"max_seq_length": args.max_seq_length})
+	elif args.model_type == "openai":
+		import os
+		from embedding_models import OpenAIEmbeddingModel
+
+		model_name = args.model if args.model != "paraphrase-multilingual-MiniLM-L12-v2" else "text-embedding-3-large"
+		api_key = args.openai_api_key or os.environ.get("OPENAI_API_KEY")
+		if not api_key:
+			raise SystemExit("OpenAI model requires --openai-api-key or OPENAI_API_KEY env var")
+		model = OpenAIEmbeddingModel(model_name, api_key=api_key)
+		vectors_np = model.encode_documents(texts)
+		config = ModelConfig(model_type="openai", model_name=model_name, params={})
 	elif args.model_type == "glove":
 		if not args.glove_path:
 			raise SystemExit("Для GloVe потрібен --glove-path")
