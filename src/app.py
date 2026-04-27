@@ -68,7 +68,6 @@ _TYPE_TO_DISPLAY = {
     "sbert":  "SBERT",
     "e5":     "E5",
     "nomic":  "Nomic",
-    "openai": "OpenAI",
     "bm25":   "BM25",
 }
 
@@ -546,14 +545,6 @@ MODEL_DEFS = [
             {"name": "batch_size", "label": "Batch size",    "type": "number", "default": 64,                               "arg": "--batch-size"},
         ],
     },
-    {
-        "id": "openai",
-        "label": "text-embedding-3-large (OpenAI API)",
-        "desc": "OpenAI API — найвища якість, потребує OPENAI_API_KEY",
-        "params": [
-            {"name": "model", "label": "Назва моделі", "type": "text", "default": "text-embedding-3-large", "arg": "--model"},
-        ],
-    },
 ]
 
 _build_jobs: dict = {}   # model_id -> {running, done, exit_code, log, started_at}
@@ -649,7 +640,6 @@ def build_run():
             "e5-base":  "e5",
             "qwen3":    "sbert",
             "nomic":    "nomic",
-            "openai":   "openai",
         }
         model_type_arg = _MODEL_ID_TO_TYPE.get(mid, mid)
         cmd = [

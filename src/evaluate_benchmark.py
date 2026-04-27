@@ -24,7 +24,6 @@ _TYPE_TO_DISPLAY = {
 	"sbert":  "SBERT",
 	"e5":     "E5",
 	"nomic":  "Nomic",
-	"openai": "OpenAI",
 	"bm25":   "BM25",
 }
 

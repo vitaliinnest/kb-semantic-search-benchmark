@@ -39,7 +39,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 	parser.add_argument("--artifacts", default="artifacts", help="Папка для збереження індексу")
 	parser.add_argument(
 		"--model-type",
-		choices=["sbert", "e5", "nomic", "openai", "bm25"],
+		choices=["sbert", "e5", "nomic", "bm25"],
 		default="sbert",
 		help="Тип моделі для векторизації",
 	)
@@ -48,7 +48,6 @@ def build_arg_parser() -> argparse.ArgumentParser:
 		default="BAAI/bge-m3",
 		help="Назва моделі SBERT/E5/nomic/BGE (HuggingFace repo або локальний шлях)",
 	)
-	parser.add_argument("--openai-api-key", default=None, help="OpenAI API key для text-embedding-*")
 	parser.add_argument("--max-seq-length", type=int, default=None, help="Максимальна довжина послідовності (токенів) для sentence-transformers")
 	parser.add_argument("--batch-size", type=int, default=64, help="Розмір батчу для обробки")
 	return parser
@@ -95,17 +94,6 @@ def main() -> None:
 		model = NomicEmbeddingModel(model_name, max_seq_length=args.max_seq_length)
 		vectors_np = model.encode_documents(texts)
 		config = ModelConfig(model_type="nomic", model_name=model_name, params={"max_seq_length": args.max_seq_length})
-	elif args.model_type == "openai":
-		import os
-		from embedding_models import OpenAIEmbeddingModel
-
-		model_name = args.model if args.model != "BAAI/bge-m3" else "text-embedding-3-large"
-		api_key = args.openai_api_key or os.environ.get("OPENAI_API_KEY")
-		if not api_key:
-			raise SystemExit("OpenAI model requires --openai-api-key or OPENAI_API_KEY env var")
-		model = OpenAIEmbeddingModel(model_name, api_key=api_key)
-		vectors_np = model.encode_documents(texts)
-		config = ModelConfig(model_type="openai", model_name=model_name, params={})
 	elif args.model_type == "bm25":
 		from embedding_models import BM25RetrievalModel, save_bm25_model
 

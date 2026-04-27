@@ -104,32 +104,6 @@ class NomicEmbeddingModel(BaseEmbeddingModel):
 		return np.asarray(vectors, dtype="float32")
 
 
-class OpenAIEmbeddingModel(BaseEmbeddingModel):
-	"""OpenAI text-embedding API (text-embedding-3-large etc.)."""
-
-	def __init__(self, model_name: str, api_key: str | None = None) -> None:
-		import os
-		from openai import OpenAI
-
-		self.model_name = model_name
-		key = api_key or os.environ.get("OPENAI_API_KEY")
-		if not key:
-			raise ValueError("OPENAI_API_KEY env variable is not set")
-		self.client = OpenAI(api_key=key)
-
-	def _embed_batch(self, texts: list[str]) -> np.ndarray:
-		response = self.client.embeddings.create(model=self.model_name, input=texts)
-		vecs = [item.embedding for item in response.data]
-		return l2_normalize(np.array(vecs, dtype="float32"))
-
-	def encode_documents(self, texts: list[str]) -> np.ndarray:
-		batch_size = 512
-		parts = []
-		for i in range(0, len(texts), batch_size):
-			parts.append(self._embed_batch(texts[i : i + batch_size]))
-		return np.vstack(parts).astype("float32")
-
-
 class BM25RetrievalModel:
 	"""BM25 (Okapi) lexical retrieval — does not use neural embeddings or FAISS."""
 
@@ -189,9 +163,4 @@ def load_model_from_artifacts(
 	if config.model_type == "nomic":
 		model_name = config.model_name or "nomic-ai/nomic-embed-text-v1.5"
 		return NomicEmbeddingModel(model_name, max_seq_length=_msl or None), config
-	if config.model_type == "openai":
-		params = config.params or {}
-		model_name = config.model_name or "text-embedding-3-large"
-		return OpenAIEmbeddingModel(model_name, api_key=params.get("api_key")), config
-
 	raise ValueError(f"Unknown model type in artifacts: {config.model_type}")
