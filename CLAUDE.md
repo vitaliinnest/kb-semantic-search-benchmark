@@ -49,7 +49,7 @@ RESULTS.md              Auto-generated markdown summary (run_all_benchmarks.py)
 .venv/Scripts/python.exe src/build_index.py --domain tech --model-config artifacts/tech/e5-base/model.json
 
 # Run full benchmark (all domains, all built models) → writes RESULTS.md
-.venv/Scripts/python.exe run_all_benchmarks.py
+.venv/Scripts/python.exe scripts/run_all_benchmarks.py
 
 # Run eval for one domain
 .venv/Scripts/python.exe src/evaluate_benchmark.py \
@@ -61,7 +61,7 @@ RESULTS.md              Auto-generated markdown summary (run_all_benchmarks.py)
 
 ## Thesis document
 
-The Word document `2026_М_ПІ_ПРАКТИКА_ІПЗм_24_1_Нестеренко_В_В.docx` is the master's thesis. Edits are done by unpacking to `unpacked_docx/word/document.xml` (via zipfile), editing with ElementTree, then repacking. Several `update_*.py` scripts in the root were used for bulk paragraph updates.
+The Word document `2026_М_ПІ_ПРАКТИКА_ІПЗм_24_1_Нестеренко_В_В.docx` is the master's thesis. Edits are done by unpacking to `unpacked_docx/word/document.xml` (via zipfile), editing with ElementTree, then repacking. One-off migration scripts live in `scripts/update_*.py`.
 
 ## Current benchmark results (as of 2026-04-27)
 
