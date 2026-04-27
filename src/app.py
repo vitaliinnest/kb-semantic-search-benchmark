@@ -65,15 +65,10 @@ def datetimeformat(ts):
 
 # ── Утиліти──────────────────────────────────────────────────────────────────
 _TYPE_TO_DISPLAY = {
-    "sbert":    "SBERT",
-    "bert":     "BERT",
-    "tfidf":    "TF-IDF",
-    "word2vec": "Word2Vec",
-    "fasttext": "FastText",
-    "glove":    "GloVe",
-    "e5":       "E5",
-    "nomic":    "Nomic",
-    "openai":   "OpenAI",
+    "sbert":  "SBERT",
+    "e5":     "E5",
+    "nomic":  "Nomic",
+    "openai": "OpenAI",
 }
 
 
@@ -81,9 +76,8 @@ _TYPE_TO_DISPLAY = {
 _MODEL_NAME_TO_TYPE: dict[str, str] = {
     "paraphrase-multilingual": "sbert",
     "sentence-transformers":   "sbert",
-    "bert-base-multilingual":  "bert",
-    "bert-large":              "bert",
-    "roberta":                 "bert",
+    "bge-m3":                  "sbert",
+    "qwen3":                   "sbert",
 }
 
 
@@ -112,8 +106,8 @@ def _prettify_benchmark_data(data: dict) -> dict:
         # Skip if already prettified (evaluate_benchmark.py stores formatted names)
         if raw_name.startswith(display):
             continue
-        # For SBERT/BERT include the specific model identifier
-        if model_type in {"sbert", "bert"} and raw_name and raw_name.lower() != model_type:
+        # For SBERT include the specific model identifier
+        if model_type == "sbert" and raw_name and raw_name.lower() != model_type:
             m["model_name"] = f"{display} ({raw_name})"
         else:
             m["model_name"] = display
@@ -539,7 +533,6 @@ def _artifact_info(model_id: str, domain_id: str = DEFAULT_DOMAIN) -> dict:
     # Collect present artifact files
     _candidate_files = [
         "faiss.index", "vectors.npy", "model.json", "meta.jsonl",
-        "tfidf.joblib", "gensim.model",
     ]
     artifact_files = [f for f in _candidate_files if (d / f).exists()]
     return {

@@ -14,14 +14,7 @@ if sys.platform == "win32":
 	sys.stdout = codecs.getwriter("utf-8")(sys.stdout.buffer, "strict")
 	sys.stderr = codecs.getwriter("utf-8")(sys.stderr.buffer, "strict")
 
-from embedding_models import (
-	ModelConfig,
-	build_gensim_model,
-	build_tfidf_model,
-	save_gensim_model,
-	save_tfidf_model,
-	tokenize,
-)
+from embedding_models import ModelConfig
 
 logging.basicConfig(
 	level=logging.INFO,
@@ -46,43 +39,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
 	parser.add_argument("--artifacts", default="artifacts", help="Папка для збереження індексу")
 	parser.add_argument(
 		"--model-type",
-		choices=["sbert", "tfidf", "word2vec", "fasttext", "glove", "bert", "e5", "nomic", "openai"],
+		choices=["sbert", "e5", "nomic", "openai"],
 		default="sbert",
 		help="Тип моделі для векторизації",
 	)
 	parser.add_argument(
 		"--model",
-		default="paraphrase-multilingual-MiniLM-L12-v2",
-		help="Назва моделі SBERT/E5/nomic/BGE",
+		default="BAAI/bge-m3",
+		help="Назва моделі SBERT/E5/nomic/BGE (HuggingFace repo або локальний шлях)",
 	)
 	parser.add_argument("--openai-api-key", default=None, help="OpenAI API key для text-embedding-*")
 	parser.add_argument("--max-seq-length", type=int, default=None, help="Максимальна довжина послідовності (токенів) для sentence-transformers")
-	parser.add_argument(
-		"--bert-model",
-		default="bert-base-multilingual-cased",
-		help="Назва моделі BERT",
-	)
-	parser.add_argument("--bert-batch-size", type=int, default=32, help="Розмір батчу для BERT")
-	parser.add_argument("--bert-max-length", type=int, default=256, help="Макс. довжина послідовності BERT")
-	parser.add_argument("--glove-path", help="Шлях до GloVe/word2vec векторів")
-	parser.add_argument(
-		"--glove-binary",
-		action="store_true",
-		help="Формат GloVe у binary word2vec",
-	)
-	parser.add_argument(
-		"--glove-has-header",
-		action="store_true",
-		help="GloVe файл із заголовком (word2vec формат)",
-	)
-	parser.add_argument("--tfidf-max-features", type=int, default=50000, help="Макс. кількість ознак TF-IDF")
-	parser.add_argument("--tfidf-ngram-min", type=int, default=1, help="Мін. розмір n-грами TF-IDF")
-	parser.add_argument("--tfidf-ngram-max", type=int, default=2, help="Макс. розмір n-грами TF-IDF")
-	parser.add_argument("--gensim-vector-size", type=int, default=300, help="Розмірність векторів Word2Vec/FastText")
-	parser.add_argument("--gensim-window", type=int, default=5, help="Контекстне вікно Word2Vec/FastText")
-	parser.add_argument("--gensim-min-count", type=int, default=2, help="Мін. частота токенів Word2Vec/FastText")
-	parser.add_argument("--gensim-epochs", type=int, default=10, help="Кількість епох Word2Vec/FastText")
-	parser.add_argument("--gensim-workers", type=int, default=4, help="Кількість потоків Word2Vec/FastText")
 	parser.add_argument("--batch-size", type=int, default=64, help="Розмір батчу для обробки")
 	return parser
 
@@ -114,47 +81,6 @@ def main() -> None:
 			vectors.append(batch_vectors)
 		vectors_np = np.vstack(vectors).astype("float32")
 		config = ModelConfig(model_type="sbert", model_name=args.model, params={"max_seq_length": args.max_seq_length})
-	elif args.model_type == "tfidf":
-		model = build_tfidf_model(
-			texts,
-			max_features=args.tfidf_max_features,
-			ngram_range=(args.tfidf_ngram_min, args.tfidf_ngram_max),
-		)
-		vectors_np = model.encode_documents(texts)
-		config = ModelConfig(
-			model_type="tfidf",
-			model_name=None,
-			params={
-				"max_features": args.tfidf_max_features,
-				"ngram_min": args.tfidf_ngram_min,
-				"ngram_max": args.tfidf_ngram_max,
-			},
-		)
-		save_tfidf_model(model, artifacts_dir / "tfidf.joblib")
-	elif args.model_type in {"word2vec", "fasttext"}:
-		sentences = [tokenize(text) for text in texts]
-		model = build_gensim_model(
-			args.model_type,
-			sentences,
-			vector_size=args.gensim_vector_size,
-			window=args.gensim_window,
-			min_count=args.gensim_min_count,
-			epochs=args.gensim_epochs,
-			workers=args.gensim_workers,
-		)
-		vectors_np = model.encode_documents(texts)
-		config = ModelConfig(
-			model_type=args.model_type,
-			model_name=None,
-			params={
-				"vector_size": args.gensim_vector_size,
-				"window": args.gensim_window,
-				"min_count": args.gensim_min_count,
-				"epochs": args.gensim_epochs,
-				"workers": args.gensim_workers,
-			},
-		)
-		save_gensim_model(model, artifacts_dir / "gensim.model")
 	elif args.model_type == "e5":
 		from embedding_models import E5EmbeddingModel
 
@@ -180,44 +106,6 @@ def main() -> None:
 		model = OpenAIEmbeddingModel(model_name, api_key=api_key)
 		vectors_np = model.encode_documents(texts)
 		config = ModelConfig(model_type="openai", model_name=model_name, params={})
-	elif args.model_type == "glove":
-		if not args.glove_path:
-			raise SystemExit("Для GloVe потрібен --glove-path")
-		from embedding_models import load_glove_model
-
-		no_header = not args.glove_has_header
-		model = load_glove_model(
-			Path(args.glove_path),
-			binary=args.glove_binary,
-			no_header=no_header,
-		)
-		vectors_np = model.encode_documents(texts)
-		config = ModelConfig(
-			model_type="glove",
-			model_name=None,
-			params={
-				"glove_path": args.glove_path,
-				"glove_binary": args.glove_binary,
-				"glove_no_header": no_header,
-			},
-		)
-	elif args.model_type == "bert":
-		from embedding_models import BertEmbeddingModel
-
-		model = BertEmbeddingModel(
-			args.bert_model,
-			batch_size=args.bert_batch_size,
-			max_length=args.bert_max_length,
-		)
-		vectors_np = model.encode_documents(texts)
-		config = ModelConfig(
-			model_type="bert",
-			model_name=args.bert_model,
-			params={
-				"batch_size": args.bert_batch_size,
-				"max_length": args.bert_max_length,
-			},
-		)
 	else:
 		raise SystemExit(f"Невідомий тип моделі: {args.model_type}")
 
