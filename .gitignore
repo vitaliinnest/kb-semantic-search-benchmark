@@ -37,3 +37,11 @@ dist/
 
 # dotenv
 .env
+
+# Claude Code runtime files (lock files are ephemeral)
+.claude/scheduled_tasks.lock
+
+# Thesis document working files
+*.bak*.docx
+unpacked_docx/
+doc_text.txt
