@@ -39,7 +39,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 	parser.add_argument("--artifacts", default="artifacts", help="Папка для збереження індексу")
 	parser.add_argument(
 		"--model-type",
-		choices=["sbert", "e5", "nomic", "openai"],
+		choices=["sbert", "e5", "nomic", "openai", "bm25"],
 		default="sbert",
 		help="Тип моделі для векторизації",
 	)
@@ -99,13 +99,25 @@ def main() -> None:
 		import os
 		from embedding_models import OpenAIEmbeddingModel
 
-		model_name = args.model if args.model != "paraphrase-multilingual-MiniLM-L12-v2" else "text-embedding-3-large"
+		model_name = args.model if args.model != "BAAI/bge-m3" else "text-embedding-3-large"
 		api_key = args.openai_api_key or os.environ.get("OPENAI_API_KEY")
 		if not api_key:
 			raise SystemExit("OpenAI model requires --openai-api-key or OPENAI_API_KEY env var")
 		model = OpenAIEmbeddingModel(model_name, api_key=api_key)
 		vectors_np = model.encode_documents(texts)
 		config = ModelConfig(model_type="openai", model_name=model_name, params={})
+	elif args.model_type == "bm25":
+		from embedding_models import BM25RetrievalModel, save_bm25_model
+
+		bm25_model = BM25RetrievalModel(texts)
+		save_bm25_model(bm25_model, artifacts_dir / "bm25.pkl")
+		with (artifacts_dir / "meta.jsonl").open("w", encoding="utf-8") as handle:
+			for chunk in chunks:
+				handle.write(json.dumps(chunk, ensure_ascii=False) + "\n")
+		config = ModelConfig(model_type="bm25", model_name="BM25 (Okapi)", params={})
+		config.save(artifacts_dir / "model.json")
+		print(f"BM25: проіндексовано {len(chunks)} документів у {artifacts_dir}")
+		return
 	else:
 		raise SystemExit(f"Невідомий тип моделі: {args.model_type}")
 

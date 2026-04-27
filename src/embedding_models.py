@@ -130,6 +130,42 @@ class OpenAIEmbeddingModel(BaseEmbeddingModel):
 		return np.vstack(parts).astype("float32")
 
 
+class BM25RetrievalModel:
+	"""BM25 (Okapi) lexical retrieval — does not use neural embeddings or FAISS."""
+
+	def __init__(self, corpus_texts: list[str]) -> None:
+		import re
+		from rank_bm25 import BM25Okapi
+
+		self._re = re.compile(r"\w+", re.UNICODE)
+		tokenized = [self._re.findall(t.lower()) for t in corpus_texts]
+		self.bm25 = BM25Okapi(tokenized)
+
+	def search(self, query: str, top_k: int) -> list[tuple[int, float]]:
+		"""Return (corpus_index, score) pairs sorted by score descending."""
+		tokens = self._re.findall(query.lower())
+		scores = self.bm25.get_scores(tokens)
+		top_indices = np.argsort(scores)[::-1][:top_k]
+		return [(int(i), float(scores[i])) for i in top_indices]
+
+
+def save_bm25_model(model: BM25RetrievalModel, path: Path) -> None:
+	import pickle
+	with open(path, "wb") as fh:
+		pickle.dump(model.bm25, fh)
+
+
+def load_bm25_model(path: Path, corpus_texts: list[str]) -> BM25RetrievalModel:
+	"""Load a pre-built BM25 index; corpus_texts are needed for tokenization state."""
+	import pickle
+	import re
+	obj = BM25RetrievalModel.__new__(BM25RetrievalModel)
+	obj._re = re.compile(r"\w+", re.UNICODE)
+	with open(path, "rb") as fh:
+		obj.bm25 = pickle.load(fh)
+	return obj
+
+
 def load_model_from_artifacts(
 	artifacts_dir: Path,
 	fallback_model_name: str,

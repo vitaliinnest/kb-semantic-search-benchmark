@@ -1,5 +1,5 @@
 """
-Run evaluate_benchmark.py for all 3 domains and all available new model artifacts.
+Run evaluate_benchmark.py for all 3 domains and all available model artifacts.
 Collects metrics and writes RESULTS.md.
 """
 import sys
@@ -8,21 +8,23 @@ import subprocess
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).parent
+# Project root is one level above this script (which lives in scripts/)
+ROOT = Path(__file__).parent.parent
 VENV_PYTHON = ROOT / ".venv" / "Scripts" / "python.exe"
 EVAL_SCRIPT = ROOT / "src" / "evaluate_benchmark.py"
 
 DOMAINS = ["tech", "legal", "medical"]
-NEW_MODEL_IDS = ["e5-base", "nomic", "bge-m3", "qwen3"]
+# Dense models + BM25 baseline
+DENSE_MODEL_IDS = ["bm25", "e5-base", "nomic", "bge-m3", "qwen3"]
 RESULTS_DIR = ROOT / "results"
 
-# The 5 models that were specified in the original task (text-embedding-3-large = openai, skipped)
-ALL_EXPECTED = ["e5-base", "nomic", "bge-m3", "qwen3"]
 
-
-def check_artifact(domain: str, model_id: str) -> bool:
-    path = ROOT / "artifacts" / domain / model_id / "faiss.index"
-    return path.exists()
+def _is_ready(domain: str, model_id: str) -> bool:
+    path = ROOT / "artifacts" / domain / model_id
+    return (
+        ((path / "faiss.index").exists() and (path / "meta.jsonl").exists())
+        or ((path / "bm25.pkl").exists() and (path / "meta.jsonl").exists())
+    )
 
 
 def run_eval(domain: str) -> dict | None:
@@ -38,11 +40,13 @@ def run_eval(domain: str) -> dict | None:
         print(f"  SKIP {domain}: qrels not found at {qrels}")
         return None
 
-    # Only pass model dirs that exist
+    # Collect all valid model dirs (FAISS or BM25)
     model_dirs = []
-    for mid in NEW_MODEL_IDS:
+    for mid in DENSE_MODEL_IDS:
         p = artifacts_root / mid
         if (p / "faiss.index").exists() and (p / "meta.jsonl").exists():
+            model_dirs.append(str(p))
+        elif (p / "bm25.pkl").exists() and (p / "meta.jsonl").exists():
             model_dirs.append(str(p))
 
     if not model_dirs:
@@ -61,25 +65,35 @@ def run_eval(domain: str) -> dict | None:
         "--output", str(out_txt),
     ]
 
-    print(f"  CMD: evaluate {domain} ({len(model_dirs)} models)")
+    print(f"  CMD: evaluate {domain} ({len(model_dirs)} models: {', '.join(Path(d).name for d in model_dirs)})")
     t0 = time.time()
-    result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", cwd=str(ROOT / "src"))
+    result = subprocess.run(
+        cmd, capture_output=True, text=True, encoding="utf-8", errors="replace",
+        cwd=str(ROOT / "src"),
+    )
     elapsed = time.time() - t0
 
     if result.returncode != 0:
         print(f"  FAIL {domain} ({elapsed:.0f}s) exit={result.returncode}")
-        err_lines = (result.stderr or result.stdout or "").strip().splitlines()[-5:]
+        err_lines = (result.stderr or result.stdout or "").strip().splitlines()[-10:]
         for line in err_lines:
             print(f"    {line}")
         return None
 
-    # evaluate_benchmark writes .json alongside the .txt with the same stem
-    txt_file = RESULTS_DIR / f"benchmark_{domain}.txt"
-    json_candidate = txt_file.with_suffix(".json")
+    json_candidate = out_txt.with_suffix(".json")
     if json_candidate.exists():
+        print(f"  OK: {len(model_dirs)} models evaluated in {elapsed:.0f}s")
         return json.loads(json_candidate.read_text(encoding="utf-8"))
     print(f"  WARN {domain}: JSON output not found at {json_candidate}")
     return None
+
+
+def _fmt_ci(row: dict) -> str:
+    lo = row.get("ndcg_ci_lo")
+    hi = row.get("ndcg_ci_hi")
+    if lo is not None and hi is not None:
+        return f"[{lo:.4f}, {hi:.4f}]"
+    return "—"
 
 
 def write_results_md(all_domain_data: dict):
@@ -87,7 +101,7 @@ def write_results_md(all_domain_data: dict):
     lines = []
     lines.append("# Benchmark Results")
     lines.append("")
-    lines.append("Real evaluation results for new embedding models across 3 domains.")
+    lines.append("Real evaluation results for embedding models vs BM25 baseline across 3 domains.")
     lines.append("")
     lines.append("## Metric Definitions")
     lines.append("| Metric | Description |")
@@ -95,17 +109,18 @@ def write_results_md(all_domain_data: dict):
     lines.append("| **Recall@10** | Fraction of relevant items retrieved in top-10 |")
     lines.append("| **MRR@10** | Mean Reciprocal Rank of the first relevant item |")
     lines.append("| **nDCG@10** | Normalized Discounted Cumulative Gain at top-10 |")
+    lines.append("| **nDCG 95% CI** | Bootstrap confidence interval for nDCG@10 (n=2000 resamples) |")
     lines.append("| **P@10** | Precision at top-10 |")
     lines.append("| **ms/query** | Average query latency in milliseconds |")
     lines.append("")
 
-    MODEL_ORDER = ["e5-base", "nomic", "bge-m3", "qwen3", "openai"]
-    # map artifact dir suffix → display name
+    MODEL_ORDER = ["bm25", "e5-base", "nomic", "bge-m3", "qwen3", "openai"]
     DISPLAY = {
+        "bm25":   "BM25 (Okapi) — baseline",
         "e5-base": "E5-base (Microsoft multilingual-e5-base)",
-        "nomic": "Nomic (nomic-embed-text-v1.5)",
+        "nomic":  "Nomic (nomic-embed-text-v1.5)",
         "bge-m3": "BGE-M3 (BAAI/bge-m3)",
-        "qwen3": "Qwen3-Embedding-0.6B",
+        "qwen3":  "Qwen3-Embedding-0.6B",
         "openai": "text-embedding-3-large (OpenAI)",
     }
 
@@ -124,39 +139,42 @@ def write_results_md(all_domain_data: dict):
             lines.append("")
             continue
 
-        # Build lookup by artifacts dir basename
         by_model: dict[str, dict] = {}
         for row in model_rows:
-            artifacts_dir = row.get("artifacts_dir", "")
-            key = Path(artifacts_dir).name
+            key = Path(row.get("artifacts_dir", "")).name
             by_model[key] = row
 
-        lines.append("| Model | Recall@10 | MRR@10 | nDCG@10 | P@10 | ms/query |")
-        lines.append("|-------|-----------|--------|---------|------|---------|")
+        lines.append("| Model | Recall@10 | MRR@10 | nDCG@10 | nDCG 95% CI | P@10 | ms/query |")
+        lines.append("|-------|-----------|--------|---------|-------------|------|---------|")
         for mid in MODEL_ORDER:
             display = DISPLAY.get(mid, mid)
             if mid == "openai":
-                lines.append(f"| {display} | — | — | — | — | — (API key not available) |")
+                lines.append(f"| {display} | — | — | — | — | — | — (API key not available) |")
                 continue
             row = by_model.get(mid)
             if row is None:
-                lines.append(f"| {display} | _(not built)_ | — | — | — | — |")
+                lines.append(f"| {display} | _(not built)_ | — | — | — | — | — |")
                 continue
             r = row.get("recall_at_k", 0)
             m = row.get("mrr_at_k", 0)
             n = row.get("ndcg_at_k", 0)
+            ci = _fmt_ci(row)
             p = row.get("precision_at_k", 0)
             lat = row.get("avg_latency_ms", 0)
-            lines.append(f"| {display} | {r:.4f} | {m:.4f} | {n:.4f} | {p:.4f} | {lat:.1f} |")
+            lines.append(f"| {display} | {r:.4f} | {m:.4f} | {n:.4f} | {ci} | {p:.4f} | {lat:.1f} |")
 
         lines.append("")
 
     lines.append("## Notes")
     lines.append("")
-    lines.append("- **text-embedding-3-large** (OpenAI): requires `OPENAI_API_KEY`, skipped — API key not available in the build environment.")
-    lines.append("- **BGE-M3 / Qwen3-Embedding**: evaluated with `max_seq_length=256` truncation to make CPU inference feasible.")
+    lines.append("- **BM25 (Okapi)**: lexical baseline, no neural embeddings. Tokenization: Unicode word tokens, lowercased.")
+    lines.append("- **text-embedding-3-large** (OpenAI): requires `OPENAI_API_KEY`, skipped — API key not available.")
+    lines.append("- **BGE-M3 / Qwen3-Embedding**: evaluated with `max_seq_length=256` truncation for CPU feasibility.")
     lines.append("- **nomic-embed-text-v1.5**: evaluated with `max_seq_length=512`.")
+    lines.append("- **E5-base**: query prefix `query:`, document prefix `passage:` applied.")
+    lines.append("- **nomic**: task prefixes `search_query:` / `search_document:` applied.")
     lines.append("- All FAISS indexes use `IndexFlatIP` with L2-normalized vectors (cosine similarity).")
+    lines.append("- Bootstrap CI: 2000 resamples with replacement, seed=42.")
     lines.append("- Evaluation performed on CPU only (no CUDA).")
     lines.append("")
 
@@ -170,12 +188,12 @@ def main():
     print("Running benchmark evaluations")
     print("=" * 60)
 
-    # Check what's available
+    print("\nArtifact status:")
     for domain in DOMAINS:
-        print(f"\nDomain: {domain}")
-        for mid in NEW_MODEL_IDS:
-            status = "READY" if check_artifact(domain, mid) else "missing"
-            print(f"  {mid:12}: {status}")
+        print(f"  Domain: {domain}")
+        for mid in DENSE_MODEL_IDS:
+            status = "READY" if _is_ready(domain, mid) else "missing"
+            print(f"    {mid:12}: {status}")
 
     print("\nRunning evaluations...")
     all_domain_data = {}
@@ -184,11 +202,9 @@ def main():
         result = run_eval(domain)
         if result is not None:
             all_domain_data[domain] = result
-            print(f"  OK: {len(result.get('models', []))} models evaluated")
 
     print("\nWriting RESULTS.md...")
     write_results_md(all_domain_data)
-
     print("\nDone!")
 
 

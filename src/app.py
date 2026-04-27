@@ -69,6 +69,7 @@ _TYPE_TO_DISPLAY = {
     "e5":     "E5",
     "nomic":  "Nomic",
     "openai": "OpenAI",
+    "bm25":   "BM25",
 }
 
 
@@ -114,6 +115,13 @@ def _prettify_benchmark_data(data: dict) -> dict:
     return data
 
 
+def _dir_has_model(d: Path) -> bool:
+    """True if directory contains a FAISS or BM25 model."""
+    has_faiss = (d / "faiss.index").exists() and (d / "meta.jsonl").exists()
+    has_bm25 = (d / "bm25.pkl").exists() and (d / "meta.jsonl").exists()
+    return has_faiss or has_bm25
+
+
 def discover_models(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
     """Повертає список доступних моделей для заданого домену."""
     artifacts_root = domain_paths(domain_id)["artifacts_root"]
@@ -123,21 +131,20 @@ def discover_models(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
     for model_dir in sorted(artifacts_root.iterdir()):
         if not model_dir.is_dir():
             continue
-        index_path = model_dir / "faiss.index"
-        meta_path = model_dir / "meta.jsonl"
-        if index_path.exists() and meta_path.exists():
-            model_json = model_dir / "model.json"
-            label = model_dir.name
-            if model_json.exists():
-                try:
-                    cfg = json.loads(model_json.read_text(encoding="utf-8"))
-                    mt = cfg.get("model_type", label)
-                    mn = cfg.get("model_name")
-                    display = _TYPE_TO_DISPLAY.get(mt, mt.upper())
-                    label = display + (f" ({mn})" if mn else "")
-                except Exception:
-                    pass
-            models.append({"id": model_dir.name, "label": label})
+        if not _dir_has_model(model_dir):
+            continue
+        model_json = model_dir / "model.json"
+        label = model_dir.name
+        if model_json.exists():
+            try:
+                cfg = json.loads(model_json.read_text(encoding="utf-8"))
+                mt = cfg.get("model_type", label)
+                mn = cfg.get("model_name")
+                display = _TYPE_TO_DISPLAY.get(mt, mt.upper())
+                label = display + (f" ({mn})" if mn else "")
+            except Exception:
+                pass
+        models.append({"id": model_dir.name, "label": label})
     return models
 
 
@@ -169,14 +176,32 @@ def load_meta(path: Path) -> list[dict]:
 _cache: dict = {}
 
 
+def _get_artifacts_dir(model_id: str, domain_id: str) -> Path:
+    return domain_paths(domain_id)["artifacts_root"] / model_id
+
+
+def get_bm25_model(model_id: str, domain_id: str = DEFAULT_DOMAIN):
+    """Load and cache a BM25 model."""
+    cache_key = f"bm25/{domain_id}/{model_id}"
+    if cache_key in _cache:
+        return _cache[cache_key]
+    from embedding_models import load_bm25_model
+    artifacts_dir = _get_artifacts_dir(model_id, domain_id)
+    meta = load_meta(artifacts_dir / "meta.jsonl")
+    corpus_texts = [r.get("text", "") for r in meta]
+    bm25 = load_bm25_model(artifacts_dir / "bm25.pkl", corpus_texts)
+    _cache[cache_key] = (bm25, meta)
+    return bm25, meta
+
+
 def get_index_and_model(model_id: str, domain_id: str = DEFAULT_DOMAIN):
     cache_key = f"{domain_id}/{model_id}"
     if cache_key in _cache:
         return _cache[cache_key]
-    artifacts_dir = domain_paths(domain_id)["artifacts_root"] / model_id
+    artifacts_dir = _get_artifacts_dir(model_id, domain_id)
     index = faiss.read_index(str(artifacts_dir / "faiss.index"))
     meta = load_meta(artifacts_dir / "meta.jsonl")
-    model, model_cfg = load_model_from_artifacts(artifacts_dir=artifacts_dir, fallback_model_name="paraphrase-multilingual-MiniLM-L12-v2")
+    model, model_cfg = load_model_from_artifacts(artifacts_dir=artifacts_dir, fallback_model_name="BAAI/bge-m3")
     _cache[cache_key] = (index, meta, model)
     return index, meta, model
 
@@ -188,30 +213,42 @@ def load_all_chunks(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
     return load_meta(chunks_path)
 
 
-def do_search(query: str, model_id: str, top_k: int, domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
-    index, meta, model = get_index_and_model(model_id, domain_id)
-    query_vector = model.encode_queries([query]).astype("float32")
-    scores, indices = index.search(query_vector, top_k)
+def _format_search_results(ranked: list[tuple[dict, float]], start_rank: int = 1) -> list[dict]:
     results = []
-    for rank, (score, idx) in enumerate(zip(scores[0], indices[0]), start=1):
-        if idx < 0 or idx >= len(meta):
-            continue
-        record = meta[idx]
+    for rank, (record, score) in enumerate(ranked, start=start_rank):
         snippet = record["text"][:400]
         if len(record["text"]) > 400:
             snippet += "…"
-        results.append(
-            {
-                "rank": rank,
-                "score": float(score),
-                "source": record["source"],
-                "chunk_id": record["chunk_id"],
-                "snippet": snippet,
-                "full_text": record["text"],
-                "full_length": len(record["text"]),
-            }
-        )
+        results.append({
+            "rank": rank,
+            "score": float(score),
+            "source": record.get("source", ""),
+            "chunk_id": record.get("chunk_id", ""),
+            "snippet": snippet,
+            "full_text": record["text"],
+            "full_length": len(record["text"]),
+        })
     return results
+
+
+def do_search(query: str, model_id: str, top_k: int, domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
+    artifacts_dir = _get_artifacts_dir(model_id, domain_id)
+    # BM25 path
+    if (artifacts_dir / "bm25.pkl").exists():
+        bm25, meta = get_bm25_model(model_id, domain_id)
+        ranked_idx = bm25.search(query, top_k)
+        ranked = [(meta[i], score) for i, score in ranked_idx if 0 <= i < len(meta)]
+        return _format_search_results(ranked)
+    # FAISS path
+    index, meta, model = get_index_and_model(model_id, domain_id)
+    query_vector = model.encode_queries([query]).astype("float32")
+    scores, indices = index.search(query_vector, top_k)
+    ranked = [
+        (meta[idx], float(score))
+        for score, idx in zip(scores[0], indices[0])
+        if 0 <= idx < len(meta)
+    ]
+    return _format_search_results(ranked)
 
 
 # ── Маршрути ──────────────────────────────────────────────────────────────────
@@ -468,6 +505,12 @@ BUILD_SCRIPT = Path(__file__).parent / "build_index.py"
 
 MODEL_DEFS = [
     {
+        "id": "bm25",
+        "label": "BM25 (Okapi) — лексичний бейзлайн",
+        "desc": "Класичний лексичний пошук BM25 — швидкий baseline без нейромережі",
+        "params": [],
+    },
+    {
         "id": "bge-m3",
         "label": "BGE-M3 (BAAI/bge-m3)",
         "desc": "Багатомовна модель BAAI — висока якість семантичного пошуку",
@@ -520,20 +563,20 @@ _build_lock = threading.Lock()
 def _artifact_info(model_id: str, domain_id: str = DEFAULT_DOMAIN) -> dict:
     """Стан artifacts/{domain}/{model_id}/ — чи існує індекс та скільки векторів."""
     d = domain_paths(domain_id)["artifacts_root"] / model_id
+    # Support both FAISS and BM25 artifacts
     index_path = d / "faiss.index"
+    bm25_path  = d / "bm25.pkl"
     meta_path  = d / "meta.jsonl"
-    if not index_path.exists():
+    primary_path = index_path if index_path.exists() else (bm25_path if bm25_path.exists() else None)
+    if primary_path is None:
         return {"exists": False}
     chunk_count = 0
     if meta_path.exists():
         with meta_path.open("r", encoding="utf-8") as fh:
             chunk_count = sum(1 for l in fh if l.strip())
-    mtime = index_path.stat().st_mtime
-    index_size = index_path.stat().st_size
-    # Collect present artifact files
-    _candidate_files = [
-        "faiss.index", "vectors.npy", "model.json", "meta.jsonl",
-    ]
+    mtime = primary_path.stat().st_mtime
+    index_size = primary_path.stat().st_size
+    _candidate_files = ["faiss.index", "bm25.pkl", "vectors.npy", "model.json", "meta.jsonl"]
     artifact_files = [f for f in _candidate_files if (d / f).exists()]
     return {
         "exists": True,
@@ -601,6 +644,7 @@ def build_run():
         artifacts_dir = str(dp["artifacts_root"] / mid)
         # Map UI model-id → build_index --model-type
         _MODEL_ID_TO_TYPE = {
+            "bm25":     "bm25",
             "bge-m3":   "sbert",
             "e5-base":  "e5",
             "qwen3":    "sbert",

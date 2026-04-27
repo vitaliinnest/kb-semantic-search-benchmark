@@ -1,10 +1,11 @@
 Оцінка benchmark retrieval
-Дата: 2026-04-27 02:39:28
+Дата: 2026-04-27 13:59:03
 Queries: 100 | top_k=10
 ================================================================================================================================================================================
 Model                                  Queries  Recall@k     MRR@k        nDCG@k       P@k          ms/query     Artifacts                                                      
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-E5 (intfloat/multilingual-e5-base)     100      0.4583       0.4888       0.3909       0.1140       71.8         D:\repos\kb-semantic-search-benchmark\artifacts\medical\e5-base
-Nomic (nomic-ai/nomic-embed-text-v1.5) 100      0.1917       0.2110       0.1668       0.0510       144.6        D:\repos\kb-semantic-search-benchmark\artifacts\medical\nomic  
-SBERT (BAAI/bge-m3)                    100      0.5450       0.5054       0.4339       0.1400       236.8        D:\repos\kb-semantic-search-benchmark\artifacts\medical\bge-m3 
-SBERT (Qwen/Qwen3-Embedding-0.6B)      100      0.4483       0.4184       0.3629       0.1150       418.9        D:\repos\kb-semantic-search-benchmark\artifacts\medical\qwen3  
+BM25 (Okapi)                           100      0.3983       0.4003       0.3222       0.1000       0.6          D:\repos\kb-semantic-search-benchmark\artifacts\medical\bm25   
+E5 (intfloat/multilingual-e5-base)     100      0.4583       0.4888       0.3909       0.1140       80.3         D:\repos\kb-semantic-search-benchmark\artifacts\medical\e5-base
+Nomic (nomic-ai/nomic-embed-text-v1.5) 100      0.1917       0.2110       0.1668       0.0510       150.4        D:\repos\kb-semantic-search-benchmark\artifacts\medical\nomic  
+SBERT (BAAI/bge-m3)                    100      0.5450       0.5054       0.4339       0.1400       236.3        D:\repos\kb-semantic-search-benchmark\artifacts\medical\bge-m3 
+SBERT (Qwen/Qwen3-Embedding-0.6B)      100      0.4483       0.4184       0.3629       0.1150       465.9        D:\repos\kb-semantic-search-benchmark\artifacts\medical\qwen3  

@@ -21,15 +21,11 @@ if sys.platform == "win32":
 from embedding_models import load_model_from_artifacts
 
 _TYPE_TO_DISPLAY = {
-	"sbert":    "SBERT",
-	"bert":     "BERT",
-	"tfidf":    "TF-IDF",
-	"word2vec": "Word2Vec",
-	"fasttext": "FastText",
-	"glove":    "GloVe",
-	"e5":       "E5",
-	"nomic":    "Nomic",
-	"openai":   "OpenAI",
+	"sbert":  "SBERT",
+	"e5":     "E5",
+	"nomic":  "Nomic",
+	"openai": "OpenAI",
+	"bm25":   "BM25",
 }
 
 
@@ -83,6 +79,9 @@ class ModelEvalResult:
 	precision_at_k: float
 	avg_latency_ms: float
 	query_results: list[QueryEvalResult]
+	# 95 % bootstrap CI на nDCG@k (None якщо < 2 queries)
+	ndcg_ci_lo: float | None = None
+	ndcg_ci_hi: float | None = None
 
 
 def load_jsonl(path: Path) -> list[dict]:
@@ -203,6 +202,26 @@ def count_matched_targets(
 	return len(matched)
 
 
+def bootstrap_ci_mean(
+	values: list[float],
+	n_boot: int = 2000,
+	ci: float = 0.95,
+	seed: int = 42,
+) -> tuple[float, float] | None:
+	"""95 % bootstrap CI for the mean. Returns (lo, hi) or None if < 2 values."""
+	if len(values) < 2:
+		return None
+	rng = np.random.default_rng(seed)
+	arr = np.array(values, dtype=float)
+	boot_means = np.array(
+		[np.mean(rng.choice(arr, len(arr), replace=True)) for _ in range(n_boot)]
+	)
+	alpha = 1.0 - ci
+	lo = float(np.percentile(boot_means, 100 * alpha / 2))
+	hi = float(np.percentile(boot_means, 100 * (1 - alpha / 2)))
+	return lo, hi
+
+
 def build_output_paths(output_arg: Path) -> tuple[Path, Path]:
 	timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 	if output_arg.suffix.lower() == ".txt":
@@ -221,17 +240,136 @@ def build_output_paths(output_arg: Path) -> tuple[Path, Path]:
 	return text_path, json_path
 
 
+def _is_valid_artifacts_dir(path: Path) -> bool:
+	"""Check if a directory contains a valid model (FAISS or BM25)."""
+	has_faiss = (path / "faiss.index").exists() and (path / "meta.jsonl").exists()
+	has_bm25 = (path / "bm25.pkl").exists() and (path / "meta.jsonl").exists()
+	return has_faiss or has_bm25
+
+
 def discover_artifacts_dirs(artifacts_root: Path) -> list[Path]:
 	dirs: list[Path] = []
-	if (artifacts_root / "faiss.index").exists() and (artifacts_root / "meta.jsonl").exists():
+	if _is_valid_artifacts_dir(artifacts_root):
 		dirs.append(artifacts_root)
 
 	for child in sorted(artifacts_root.iterdir() if artifacts_root.exists() else []):
 		if not child.is_dir():
 			continue
-		if (child / "faiss.index").exists() and (child / "meta.jsonl").exists():
+		if _is_valid_artifacts_dir(child):
 			dirs.append(child)
 	return dirs
+
+
+def evaluate_bm25_model(
+	artifacts_dir: Path,
+	queries: list[QueryItem],
+	qrels_by_query: dict[str, list[QrelItem]],
+	top_k: int,
+) -> ModelEvalResult:
+	"""Evaluate a BM25 model — no FAISS, no neural embeddings."""
+	from embedding_models import load_bm25_model
+
+	meta = load_meta(artifacts_dir / "meta.jsonl")
+	corpus_texts = [r.get("text", "") for r in meta]
+	bm25 = load_bm25_model(artifacts_dir / "bm25.pkl", corpus_texts)
+
+	query_results: list[QueryEvalResult] = []
+	for query_item in queries:
+		qrels = qrels_by_query.get(query_item.query_id, [])
+		if not qrels:
+			continue
+
+		t0 = time.perf_counter()
+		ranked = bm25.search(query_item.query, top_k)
+		latency_ms = (time.perf_counter() - t0) * 1000
+
+		retrieved_meta: list[dict] = []
+		retrieved_rels: list[int] = []
+		for idx, _score in ranked:
+			if idx < 0 or idx >= len(meta):
+				continue
+			record = meta[idx]
+			retrieved_meta.append(record)
+			chunk_id = str(record.get("chunk_id", ""))
+			doc_id = str(record.get("source", ""))
+			retrieved_rels.append(match_relevance(qrels, chunk_id=chunk_id, doc_id=doc_id))
+
+		relevant_total = count_relevant_targets(qrels)
+		matched_total = count_matched_targets(retrieved_meta, qrels, top_k)
+		recall_at_k = (matched_total / relevant_total) if relevant_total > 0 else 0.0
+
+		mrr_at_k = 0.0
+		for rank, rel in enumerate(retrieved_rels[:top_k], start=1):
+			if rel > 0:
+				mrr_at_k = 1.0 / rank
+				break
+
+		seen_doc_ids_ndcg: set[str] = set()
+		ndcg_rels: list[int] = []
+		for record, rel in zip(retrieved_meta, retrieved_rels):
+			if rel <= 0:
+				ndcg_rels.append(0)
+				continue
+			doc_id_r = str(record.get("source", ""))
+			is_doc_level = any(
+				item.relevance > 0 and not item.chunk_id and item.doc_id == doc_id_r
+				for item in qrels
+			)
+			if is_doc_level:
+				if doc_id_r in seen_doc_ids_ndcg:
+					ndcg_rels.append(0)
+				else:
+					seen_doc_ids_ndcg.add(doc_id_r)
+					ndcg_rels.append(rel)
+			else:
+				ndcg_rels.append(rel)
+
+		ideal_rels = sorted([max(0, item.relevance) for item in qrels], reverse=True)
+		dcg = dcg_at_k(ndcg_rels, top_k)
+		idcg = dcg_at_k(ideal_rels, top_k)
+		ndcg_at_k_val = (dcg / idcg) if idcg > 0 else 0.0
+
+		relevant_in_top_k = sum(1 for rel in retrieved_rels[:top_k] if rel > 0)
+		precision_at_k = relevant_in_top_k / top_k
+
+		query_results.append(
+			QueryEvalResult(
+				query_id=query_item.query_id,
+				recall_at_k=recall_at_k,
+				mrr_at_k=mrr_at_k,
+				ndcg_at_k=ndcg_at_k_val,
+				precision_at_k=precision_at_k,
+				latency_ms=latency_ms,
+				retrieved=len(retrieved_meta),
+				relevant_total=relevant_total,
+			)
+		)
+
+	queries_evaluated = len(query_results)
+	if queries_evaluated == 0:
+		return ModelEvalResult(
+			model_name="BM25 (Okapi)",
+			artifacts_dir=str(artifacts_dir),
+			queries_evaluated=0,
+			recall_at_k=0.0, mrr_at_k=0.0, ndcg_at_k=0.0,
+			precision_at_k=0.0, avg_latency_ms=0.0, query_results=[],
+		)
+
+	ndcg_vals = [x.ndcg_at_k for x in query_results]
+	ci = bootstrap_ci_mean(ndcg_vals)
+	return ModelEvalResult(
+		model_name="BM25 (Okapi)",
+		artifacts_dir=str(artifacts_dir),
+		queries_evaluated=queries_evaluated,
+		recall_at_k=float(np.mean([x.recall_at_k for x in query_results])),
+		mrr_at_k=float(np.mean([x.mrr_at_k for x in query_results])),
+		ndcg_at_k=float(np.mean(ndcg_vals)),
+		precision_at_k=float(np.mean([x.precision_at_k for x in query_results])),
+		avg_latency_ms=float(np.mean([x.latency_ms for x in query_results])),
+		query_results=query_results,
+		ndcg_ci_lo=ci[0] if ci else None,
+		ndcg_ci_hi=ci[1] if ci else None,
+	)
 
 
 def evaluate_model(
@@ -341,16 +479,20 @@ def evaluate_model(
 			query_results=[],
 		)
 
+	ndcg_vals = [x.ndcg_at_k for x in query_results]
+	ci = bootstrap_ci_mean(ndcg_vals)
 	return ModelEvalResult(
 		model_name=model_name,
 		artifacts_dir=str(artifacts_dir),
 		queries_evaluated=queries_evaluated,
 		recall_at_k=float(np.mean([x.recall_at_k for x in query_results])),
 		mrr_at_k=float(np.mean([x.mrr_at_k for x in query_results])),
-		ndcg_at_k=float(np.mean([x.ndcg_at_k for x in query_results])),
+		ndcg_at_k=float(np.mean(ndcg_vals)),
 		precision_at_k=float(np.mean([x.precision_at_k for x in query_results])),
 		avg_latency_ms=float(np.mean([x.latency_ms for x in query_results])),
 		query_results=query_results,
+		ndcg_ci_lo=ci[0] if ci else None,
+		ndcg_ci_hi=ci[1] if ci else None,
 	)
 
 
@@ -408,13 +550,21 @@ def main() -> None:
 	model_results: list[ModelEvalResult] = []
 	for artifacts_dir in artifacts_dirs:
 		logging.info(f"Оцінка моделі в: {artifacts_dir}")
-		result = evaluate_model(
-			artifacts_dir=artifacts_dir,
-			queries=queries,
-			qrels_by_query=qrels_by_query,
-			top_k=args.top_k,
-			fallback_model_name=args.model,
-		)
+		if (artifacts_dir / "bm25.pkl").exists():
+			result = evaluate_bm25_model(
+				artifacts_dir=artifacts_dir,
+				queries=queries,
+				qrels_by_query=qrels_by_query,
+				top_k=args.top_k,
+			)
+		else:
+			result = evaluate_model(
+				artifacts_dir=artifacts_dir,
+				queries=queries,
+				qrels_by_query=qrels_by_query,
+				top_k=args.top_k,
+				fallback_model_name=args.model,
+			)
 		model_results.append(result)
 
 	text_path, json_path = build_output_paths(Path(args.output))
@@ -456,6 +606,8 @@ def main() -> None:
 				"recall_at_k": row.recall_at_k,
 				"mrr_at_k": row.mrr_at_k,
 				"ndcg_at_k": row.ndcg_at_k,
+				"ndcg_ci_lo": row.ndcg_ci_lo,
+				"ndcg_ci_hi": row.ndcg_ci_hi,
 				"precision_at_k": row.precision_at_k,
 				"avg_latency_ms": row.avg_latency_ms,
 				"query_results": [
