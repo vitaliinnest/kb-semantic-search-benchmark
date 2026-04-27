@@ -33,6 +33,7 @@ RESULTS.md              Auto-generated markdown summary (run_all_benchmarks.py)
 
 | ID | Class | HF name | Notes |
 |----|-------|---------|-------|
+| `bm25` | `BM25RetrievalModel` | — (rank_bm25) | lexical baseline, no FAISS |
 | `e5-base` | `E5EmbeddingModel` | intfloat/multilingual-e5-base | prefix query:/passage: |
 | `bge-m3` | `SbertEmbeddingModel` | BAAI/bge-m3 | max_seq_length=256 |
 | `nomic` | `NomicEmbeddingModel` | nomic-ai/nomic-embed-text-v1.5 | trust_remote_code, max_seq_length=512 |
@@ -71,4 +72,7 @@ The Word document `2026_М_ПІ_ПРАКТИКА_ІПЗм_24_1_Нестерен�
 | Qwen3 | 0.6325 | 0.3199 | 0.3629 |
 | E5-base | 0.6121 | 0.2567 | 0.3909 |
 | nomic | 0.3765 | 0.0951 | 0.1668 |
+| BM25 (baseline) | 0.4861 | 0.1875 | 0.3222 |
 | OAI text-3-large | — | — | — (no API key) |
+
+Bootstrap 95% CI (nDCG@10, n=2000): BGE-M3 Tech [0.6059, 0.7367] vs BM25 [0.4312, 0.5412] — non-overlapping (statistically significant).
