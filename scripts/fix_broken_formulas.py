@@ -104,60 +104,76 @@ BROKEN = {
     ),
 }
 
+# Page geometry (A4, from sectPr):
+#   page width  = 11906 twips
+#   left margin =  1418 twips
+#   right margin =  567 twips
+#   text width  =  9921 twips  → center at 4960, right edge at 9921
+CENTER_TAB = 4960
+RIGHT_TAB  = 9921
+
+
 # ── Helper: build replacement paragraph ───────────────────────────────
 def make_latex_formula_para(old_para, latex, num):
     """
-    Return a new w:p that contains:
-      - the same w:pPr as old_para (keeps style & right-justification)
-      - m:oMathPara (centered) with m:oMath containing LaTeX text + formula number
+    Return a new w:p:
+      [tab→center]  [m:oMath LaTeX]  [tab→right]  (4.xx)
+
+    The formula box (m:oMath inline) is visually centered on the line
+    via a center tab stop at 4960 twips.  The number is a plain text
+    run right-aligned via a right tab stop at 9921 twips.
+    This puts the number at the rightmost position of the line,
+    outside the formula box — matching the thesis layout requirement.
     """
     p = ET.Element(_w("p"))
 
-    # 1. Copy paragraph properties
-    pPr_src = old_para.find(_w("pPr"))
-    if pPr_src is not None:
-        p.append(copy.deepcopy(pPr_src))
-    else:
-        pPr = ET.SubElement(p, _w("pPr"))
-        pStyle = ET.SubElement(pPr, _w("pStyle"))
-        pStyle.set(_w("val"), "a")
-        jc = ET.SubElement(pPr, _w("jc"))
-        jc.set(_w("val"), "right")
+    # 1. Build paragraph properties
+    pPr = ET.SubElement(p, _w("pPr"))
 
-    # 2. Build m:oMathPara
-    oMathPara = ET.SubElement(p, _m("oMathPara"))
+    # Keep paragraph style "a"
+    pStyle = ET.SubElement(pPr, _w("pStyle"))
+    pStyle.set(_w("val"), "a")
 
-    oMathParaPr = ET.SubElement(oMathPara, _m("oMathParaPr"))
-    jc = ET.SubElement(oMathParaPr, _m("jc"))
-    jc.set(_m("val"), "center")
+    # Left-align text so tab stops work predictably
+    jc = ET.SubElement(pPr, _w("jc"))
+    jc.set(_w("val"), "left")
 
-    # 3. Build m:oMath
-    oMath = ET.SubElement(oMathPara, _m("oMath"))
+    # Remove first-line indent (formula paragraphs should not be indented)
+    ind = ET.SubElement(pPr, _w("ind"))
+    ind.set(_w("firstLine"), "0")
 
-    # 4a. Run for the LaTeX formula text (math/italic style)
+    # Define center + right tab stops
+    tabs = ET.SubElement(pPr, _w("tabs"))
+    tab_c = ET.SubElement(tabs, _w("tab"))
+    tab_c.set(_w("val"), "center")
+    tab_c.set(_w("pos"), str(CENTER_TAB))
+    tab_r = ET.SubElement(tabs, _w("tab"))
+    tab_r.set(_w("val"), "right")
+    tab_r.set(_w("pos"), str(RIGHT_TAB))
+
+    # 2. Tab run → jumps to center position
+    r_tab1 = ET.SubElement(p, _w("r"))
+    ET.SubElement(r_tab1, _w("tab"))
+
+    # 3. Inline m:oMath with the LaTeX text (formula box, centered around 4960)
+    oMath = ET.SubElement(p, _m("oMath"))
     r_latex = ET.SubElement(oMath, _m("r"))
-    wrPr1 = ET.SubElement(r_latex, _w("rPr"))
-    fonts1 = ET.SubElement(wrPr1, _w("rFonts"))
-    fonts1.set(_w("ascii"), "Cambria Math")
-    fonts1.set(_w("hAnsi"), "Cambria Math")
-    t_latex = ET.SubElement(r_latex, _m("t"))
-    t_latex.set(f"{{{XML_NS}}}space", "preserve")
-    t_latex.text = latex
+    wrPr = ET.SubElement(r_latex, _w("rPr"))
+    fonts = ET.SubElement(wrPr, _w("rFonts"))
+    fonts.set(_w("ascii"), "Cambria Math")
+    fonts.set(_w("hAnsi"), "Cambria Math")
+    t_el = ET.SubElement(r_latex, _m("t"))
+    t_el.set(f"{{{XML_NS}}}space", "preserve")
+    t_el.text = latex
 
-    # 4b. Run for the formula number — plain/roman style, with leading spaces
-    #     Matches pattern of well-formed formulas (e.g. B354):
-    #       <m:rPr><m:sty m:val="p"/></m:rPr>  +  <m:t>    (4.x)</m:t>
-    r_num = ET.SubElement(oMath, _m("r"))
-    mrPr = ET.SubElement(r_num, _m("rPr"))
-    sty = ET.SubElement(mrPr, _m("sty"))
-    sty.set(_m("val"), "p")
-    wrPr2 = ET.SubElement(r_num, _w("rPr"))
-    fonts2 = ET.SubElement(wrPr2, _w("rFonts"))
-    fonts2.set(_w("ascii"), "Cambria Math")
-    fonts2.set(_w("hAnsi"), "Cambria Math")
-    t_num = ET.SubElement(r_num, _m("t"))
-    t_num.set(f"{{{XML_NS}}}space", "preserve")
-    t_num.text = f"    ({num})"
+    # 4. Tab run → jumps to right edge
+    r_tab2 = ET.SubElement(p, _w("r"))
+    ET.SubElement(r_tab2, _w("tab"))
+
+    # 5. Formula number as plain text — right-aligned at RIGHT_TAB
+    r_num = ET.SubElement(p, _w("r"))
+    t_num = ET.SubElement(r_num, _w("t"))
+    t_num.text = f"({num})"
 
     return p
 
