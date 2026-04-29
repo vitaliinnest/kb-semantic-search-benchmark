@@ -134,15 +134,30 @@ def make_latex_formula_para(old_para, latex, num):
     # 3. Build m:oMath
     oMath = ET.SubElement(oMathPara, _m("oMath"))
 
-    # 4. Single run with LaTeX text + formula number
-    r_el = ET.SubElement(oMath, _m("r"))
-    wrPr = ET.SubElement(r_el, _w("rPr"))
-    fonts = ET.SubElement(wrPr, _w("rFonts"))
-    fonts.set(_w("ascii"), "Cambria Math")
-    fonts.set(_w("hAnsi"), "Cambria Math")
-    t_el = ET.SubElement(r_el, _m("t"))
-    t_el.set(f"{{{XML_NS}}}space", "preserve")
-    t_el.text = f"{latex}     ({num})"
+    # 4a. Run for the LaTeX formula text (math/italic style)
+    r_latex = ET.SubElement(oMath, _m("r"))
+    wrPr1 = ET.SubElement(r_latex, _w("rPr"))
+    fonts1 = ET.SubElement(wrPr1, _w("rFonts"))
+    fonts1.set(_w("ascii"), "Cambria Math")
+    fonts1.set(_w("hAnsi"), "Cambria Math")
+    t_latex = ET.SubElement(r_latex, _m("t"))
+    t_latex.set(f"{{{XML_NS}}}space", "preserve")
+    t_latex.text = latex
+
+    # 4b. Run for the formula number — plain/roman style, with leading spaces
+    #     Matches pattern of well-formed formulas (e.g. B354):
+    #       <m:rPr><m:sty m:val="p"/></m:rPr>  +  <m:t>    (4.x)</m:t>
+    r_num = ET.SubElement(oMath, _m("r"))
+    mrPr = ET.SubElement(r_num, _m("rPr"))
+    sty = ET.SubElement(mrPr, _m("sty"))
+    sty.set(_m("val"), "p")
+    wrPr2 = ET.SubElement(r_num, _w("rPr"))
+    fonts2 = ET.SubElement(wrPr2, _w("rFonts"))
+    fonts2.set(_w("ascii"), "Cambria Math")
+    fonts2.set(_w("hAnsi"), "Cambria Math")
+    t_num = ET.SubElement(r_num, _m("t"))
+    t_num.set(f"{{{XML_NS}}}space", "preserve")
+    t_num.text = f"    ({num})"
 
     return p
 
