@@ -927,6 +927,12 @@ def benchmark_selection_compute():
 # 1) сам текст запиту, 2) ground-truth qrels (правильні чанки),
 # 3) top-k retrieved chunks для кожної моделі з підсвіткою попадань.
 
+def _natural_sort_key(s: str):
+    """Сортування з урахуванням числових частин: q1 < q2 < q10 < q100."""
+    import re
+    return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", s or "")]
+
+
 def _load_explorer_data(domain_id: str) -> dict | None:
     """Завантажує найновіший benchmark JSON і повертає індекс query_id → query+models.
 
@@ -1022,8 +1028,8 @@ def _load_explorer_data(domain_id: str) -> dict | None:
         qdata["all_zero"] = all(v < 0.001 for v in ndcg_vals)
         queries_list.append(qdata)
 
-    # Sort by query_id for stable output
-    queries_list.sort(key=lambda q: q["query_id"])
+    # Sort by query_id (natural order: q1, q2, ..., q10, q11, ..., q100)
+    queries_list.sort(key=lambda q: _natural_sort_key(q["query_id"]))
 
     return {
         "queries": queries_list,
@@ -1071,8 +1077,8 @@ def benchmark_explorer():
         queries.sort(key=lambda q: q["spread"], reverse=True)
     elif sort_by == "avg":
         queries.sort(key=lambda q: q["avg_ndcg"], reverse=True)
-    else:  # id
-        queries.sort(key=lambda q: q["query_id"])
+    else:  # id (natural sort)
+        queries.sort(key=lambda q: _natural_sort_key(q["query_id"]))
 
     explorer["filtered_queries"] = queries
     return render_template(
