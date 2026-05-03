@@ -71,10 +71,13 @@ def urlencode_filter(s: str) -> str:
 
 # ── Утиліти──────────────────────────────────────────────────────────────────
 _TYPE_TO_DISPLAY = {
-    "sbert":  "SBERT",
-    "e5":     "E5",
-    "nomic":  "Nomic",
-    "bm25":   "BM25",
+    "sbert":   "SBERT",
+    "e5":      "E5",
+    "e5-base": "E5-base",
+    "nomic":   "Nomic",
+    "bm25":    "BM25",
+    "bge-m3":  "BGE-M3",
+    "qwen3":   "Qwen3",
 }
 
 
@@ -82,8 +85,8 @@ _TYPE_TO_DISPLAY = {
 _MODEL_NAME_TO_TYPE: dict[str, str] = {
     "paraphrase-multilingual": "sbert",
     "sentence-transformers":   "sbert",
-    "bge-m3":                  "sbert",
-    "qwen3":                   "sbert",
+    "bge-m3":                  "bge-m3",
+    "qwen3":                   "qwen3",
 }
 
 

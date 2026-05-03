@@ -3,23 +3,6 @@
 
 {% block head %}
 <style>
-  .explorer-header {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 24px;
-    margin-bottom: 18px;
-    box-shadow: var(--shadow);
-  }
-  .explorer-header h1 {
-    font-size: 22px;
-    margin-bottom: 4px;
-    color: var(--text);
-  }
-  .explorer-header .subtitle {
-    color: var(--text-muted);
-    font-size: 13px;
-  }
   .stats-strip {
     display: flex;
     gap: 12px;
@@ -200,20 +183,6 @@
   {% endif %}
 </div>
 
-<div class="explorer-header">
-  <h1>🔬 Дослідник benchmark-запитів</h1>
-  <div class="subtitle">
-    {% if explorer %}
-      Домен: <strong>{{ current_domain }}</strong>
-      &nbsp;·&nbsp; Запитів: <strong>{{ explorer.queries|length }}</strong>
-      &nbsp;·&nbsp; Моделей: <strong>{{ explorer.model_names|length }}</strong>
-      &nbsp;·&nbsp; top_k: <strong>{{ explorer.top_k }}</strong>
-      {% if explorer.timestamp %}&nbsp;·&nbsp; <span style="opacity:.6">{{ explorer.timestamp[:19] }}</span>{% endif %}
-    {% else %}
-      Немає даних benchmark-у. Спершу запустіть бенчмарк.
-    {% endif %}
-  </div>
-</div>
 
 {% if not explorer %}
 <div class="empty-state">
@@ -315,7 +284,7 @@
       <th style="text-align:center;">qrels</th>
       <th style="text-align:center;">Найкр. nDCG</th>
       <th style="text-align:center;">Розкид</th>
-      <th>Лідер</th>
+      {% if not model_filter %}<th>Лідер</th>{% endif %}
     </tr>
   </thead>
   <tbody>
@@ -346,9 +315,11 @@
           <span style="color:var(--text-muted);font-size:12px;">{{ "%.3f"|format(q.spread) }}</span>
         {% endif %}
       </td>
+      {% if not model_filter %}
       <td>
         <span class="best-model">{{ q.best_model }}</span>
       </td>
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>

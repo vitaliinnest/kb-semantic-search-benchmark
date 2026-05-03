@@ -274,21 +274,41 @@
     -webkit-box-orient: vertical;
   }
 
-  .toggle-mode {
-    display: flex;
-    gap: 6px;
+  .seg-ctrl {
+    display: inline-flex;
+    background: #f1f3f4;
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
     margin-bottom: 14px;
+  }
+  .seg-btn {
+    padding: 6px 16px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background .15s, color .15s, box-shadow .15s;
+    white-space: nowrap;
+  }
+  .seg-btn.active {
+    background: #fff;
+    color: var(--text);
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
   }
 </style>
 {% endblock %}
 
 {% block content %}
-{%- set fqs = ('&file=' ~ active_file) if active_file else '' -%}
 <div class="breadcrumb" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-  <a href="/benchmark/explorer?domain={{ current_domain }}{{ fqs }}">← Усі запити</a>
+  <a href="/benchmark/explorer?domain={{ current_domain }}">← Усі запити</a>
   <div style="display:flex;align-items:center;gap:8px;">
     {% if prev_id %}
-      <a href="/benchmark/explorer/{{ prev_id }}?domain={{ current_domain }}{{ fqs }}"
+      <a href="/benchmark/explorer/{{ prev_id }}?domain={{ current_domain }}"
          class="pill" style="padding:5px 12px;font-size:12px;">← {{ prev_id }}</a>
     {% else %}
       <span class="pill" style="padding:5px 12px;font-size:12px;opacity:.4;cursor:not-allowed;">← попередній</span>
@@ -297,7 +317,7 @@
       {{ position }} / {{ total_queries }}
     </span>
     {% if next_id %}
-      <a href="/benchmark/explorer/{{ next_id }}?domain={{ current_domain }}{{ fqs }}"
+      <a href="/benchmark/explorer/{{ next_id }}?domain={{ current_domain }}"
          class="pill" style="padding:5px 12px;font-size:12px;">{{ next_id }} →</a>
     {% else %}
       <span class="pill" style="padding:5px 12px;font-size:12px;opacity:.4;cursor:not-allowed;">наступний →</span>
@@ -336,9 +356,9 @@
   {% endif %}
 </div>
 
-<div class="toggle-mode">
-  <button class="pill active" onclick="setMode('tabs', this)">Окремо по моделях</button>
-  <button class="pill" onclick="setMode('all', this)">Усі моделі поряд</button>
+<div class="seg-ctrl">
+  <button class="seg-btn active" onclick="setMode('tabs', this)">Окремо по моделях</button>
+  <button class="seg-btn" onclick="setMode('all', this)">Усі моделі поряд</button>
 </div>
 
 <div id="tabs-bar" class="models-tabs">
@@ -418,7 +438,7 @@
     document.querySelector('.model-section[data-model-idx="' + idx + '"]').classList.add('active');
   }
   function setMode(mode, btn) {
-    document.querySelectorAll('.toggle-mode .pill').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.seg-ctrl .seg-btn').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     if (mode === 'all') {
       document.getElementById('tabs-bar').style.display = 'none';
