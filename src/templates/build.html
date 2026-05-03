@@ -6,7 +6,6 @@
   .page-heading { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
   .page-sub     { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
 
-  /* ── WARNING BANNER ── */
   .chunks-banner {
     display: flex;
     align-items: center;
@@ -16,16 +15,16 @@
     margin-bottom: 24px;
     font-size: 14px;
   }
-  .chunks-banner.ok    { background:#e6f4ea; color:#1e6e3a; border:1px solid #b6dfc5; }
-  .chunks-banner.warn  { background:#fff3cd; color:#856404; border:1px solid #ffe082; }
+  .chunks-banner.ok   { background:#e6f4ea; color:#1e6e3a; border:1px solid #b6dfc5; }
+  .chunks-banner.warn { background:#fff3cd; color:#856404; border:1px solid #ffe082; }
   .chunks-banner .cb-icon { font-size: 20px; }
 
-  /* ── MODEL GRID ── */
+  /* ── MODEL CARDS ── */
   .models-grid {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 28px;
+    gap: 10px;
+    margin-bottom: 22px;
   }
 
   .model-card {
@@ -55,28 +54,77 @@
     accent-color: var(--primary);
     cursor: pointer;
     flex-shrink: 0;
+    margin-top: 2px;
+    align-self: flex-start;
   }
 
+  .mc-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mc-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
   .mc-label {
     font-size: 15px;
     font-weight: 700;
     color: var(--text);
     flex-shrink: 0;
-    min-width: 90px;
   }
   .mc-desc {
     font-size: 13px;
     color: var(--text-muted);
-    flex: 1;
+  }
+  .mc-artifact-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .mc-stats {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .art-sep { color: var(--border); }
+
+  .art-chip {
+    font-size: 11px;
+    font-family: "SF Mono", Consolas, monospace;
+    padding: 1px 7px;
+    border-radius: 4px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .art-chip.viewable {
+    background: #e8f5e9;
+    color: #1e6e3a;
+    border-color: #b6dfc5;
+    cursor: pointer;
+    text-decoration: underline dotted;
+  }
+  .art-chip.viewable:hover { background: #c8e6c9; }
+  .art-chip.binary {
+    background: #f1f3f4;
+    color: var(--text-muted);
+    border-color: var(--border);
   }
 
-  /* status badges on the card */
   .mc-status {
     flex-shrink: 0;
     font-size: 12px;
     font-weight: 600;
     padding: 3px 10px;
     border-radius: 20px;
+    white-space: nowrap;
+    align-self: flex-start;
+    margin-top: 2px;
   }
   .mc-status.built    { background: #e6f4ea; color: #1e6e3a; }
   .mc-status.notbuilt { background: #f1f3f4; color: var(--text-muted); }
@@ -93,7 +141,10 @@
     padding: 3px 10px;
     cursor: pointer;
     flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 2px;
     transition: background .15s, border-color .15s;
+    white-space: nowrap;
   }
   .mc-expand-btn:hover { background: #f1f3f4; border-color: var(--primary); }
 
@@ -105,11 +156,7 @@
     background: #f8f9fa;
   }
   .model-params.open { display: block; }
-  .params-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-  }
+  .params-row { display: flex; flex-wrap: wrap; gap: 14px; }
   .param-item label {
     display: block;
     font-size: 11px;
@@ -141,12 +188,11 @@
     margin-bottom: 28px;
     flex-wrap: wrap;
   }
-  .selected-count {
+  .selected-hint {
     font-size: 13px;
     color: var(--text-muted);
   }
-  .selected-count strong { color: var(--text); }
-
+  .selected-hint strong { color: var(--text); }
   #build-btn:disabled { opacity: .55; cursor: not-allowed; }
 
   /* ── LOG PANEL ── */
@@ -197,8 +243,8 @@
     transition: color .15s, border-color .15s;
     user-select: none;
   }
-  .log-tab:hover   { color: var(--text); }
-  .log-tab.active  { color: var(--primary); border-bottom-color: var(--primary); }
+  .log-tab:hover  { color: var(--text); }
+  .log-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
   .log-tab .tab-dot {
     display: inline-block;
     width: 7px; height: 7px;
@@ -230,7 +276,6 @@
   .log-line.ok   { color: #1e6e3a; }
   .log-empty { color: var(--text-muted); font-style: italic; font-size: 12px; text-align: center; padding-top: 60px; }
 
-  /* spinner inline */
   .spin {
     display: inline-block;
     width: 12px; height: 12px;
@@ -242,67 +287,6 @@
     margin-right: 4px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── ARTIFACTS TABLE ── */
-  .artifacts-section {
-    margin-bottom: 28px;
-  }
-  .artifacts-section h3 {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: var(--text);
-  }
-  .artifacts-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13.5px;
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-  }
-  .artifacts-table thead th {
-    background: #f1f3f4;
-    padding: 9px 14px;
-    text-align: left;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .4px;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
-  }
-  .artifacts-table tbody tr:not(:last-child) {
-    border-bottom: 1px solid var(--border);
-  }
-  .artifacts-table tbody td {
-    padding: 9px 14px;
-    color: var(--text);
-  }
-  .art-badge-built    { color: #1e6e3a; font-weight: 700; white-space: nowrap; }
-  .art-badge-notbuilt { color: var(--text-muted); white-space: nowrap; }
-  .art-files { display: flex; flex-wrap: wrap; gap: 5px; }
-  .art-file-tag {
-    font-size: 11px;
-    font-family: monospace;
-    background: #e8f5e9;
-    color: #1e6e3a;
-    border: 1px solid #b6dfc5;
-    border-radius: 4px;
-    padding: 1px 6px;
-  }
-  .art-file-tag.viewable {
-    cursor: pointer;
-    text-decoration: underline dotted;
-  }
-  .art-file-tag.viewable:hover { background: #c8e6c9; }
-  .art-file-tag.binary {
-    background: #f1f3f4;
-    color: var(--text-muted);
-    border-color: var(--border);
-  }
 
   /* ── ARTIFACT MODAL ── */
   .art-modal-backdrop {
@@ -338,18 +322,8 @@
     cursor: pointer; color: var(--text-muted); line-height: 1;
   }
   .art-modal-close:hover { color: var(--text); }
-  .art-modal-body {
-    overflow: auto;
-    padding: 16px 20px;
-    flex: 1;
-  }
-  .art-modal-body pre {
-    font-size: 12.5px;
-    font-family: monospace;
-    white-space: pre-wrap;
-    word-break: break-all;
-    margin: 0;
-  }
+  .art-modal-body { overflow: auto; padding: 16px 20px; flex: 1; }
+  .art-modal-body pre { font-size: 12.5px; font-family: monospace; white-space: pre-wrap; word-break: break-all; margin: 0; }
   .art-meta-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
   .art-meta-table th {
     text-align: left; padding: 6px 10px;
@@ -390,11 +364,10 @@
 </div>
 <div class="page-sub">Оберіть моделі, налаштуйте параметри та запустіть векторизацію чанків</div>
 
-<!-- CHUNKS STATUS -->
 {% if chunks_exist %}
 <div class="chunks-banner ok">
   <span class="cb-icon">✅</span>
-  <span>Знайдено <strong>{{ chunk_count }}</strong> чанків у <code>data/domains/{{ current_domain }}/chunks.jsonl</code> — готово до побудови індексів.</span>
+  <span>Знайдено <strong>{{ chunk_count }}</strong> чанків у <code>data/domains/{{ current_domain }}/chunks.jsonl</code></span>
 </div>
 {% else %}
 <div class="chunks-banner warn">
@@ -403,74 +376,43 @@
 </div>
 {% endif %}
 
-<!-- ARTIFACTS SUMMARY TABLE -->
-<div class="artifacts-section">
-  <h3>📦 Доступні індекси</h3>
-  <table class="artifacts-table">
-    <thead>
-      <tr>
-        <th>Модель</th>
-        <th>Статус</th>
-        <th>Векторів</th>
-        <th>Розмір індексу</th>
-        <th>Артефакти</th>
-        <th>Дата побудови</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for m in models %}
-      <tr>
-        <td><strong>{{ m.label }}</strong></td>
-        {% if m.artifact.exists %}
-        <td><span class="art-badge-built">✓ Побудовано</span></td>
-        <td>{{ m.artifact.chunk_count }}</td>
-        <td>{{ m.artifact.index_size_fmt }}</td>
-        <td>
-          <div class="art-files">
-            {% set viewable = ['model.json', 'meta.jsonl'] %}
-            {% for f in m.artifact.artifact_files %}
-            {% if f in viewable %}
-            <span class="art-file-tag viewable"
-                  onclick="viewArtifact('{{ current_domain }}','{{ m.id }}','{{ f }}','{{ m.label }}')">{{ f }}</span>
-            {% else %}
-            <span class="art-file-tag binary" title="бінарний файл">{{ f }}</span>
-            {% endif %}
-            {% endfor %}
-          </div>
-        </td>
-        <td>{{ m.artifact.mtime_fmt }}</td>
-        {% else %}
-        <td><span class="art-badge-notbuilt">— Не побудовано</span></td>
-        <td>—</td>
-        <td>—</td>
-        <td>—</td>
-        <td>—</td>
-        {% endif %}
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-
-<!-- MODEL CARDS -->
 <div class="models-grid" id="models-grid">
   {% for m in models %}
+  {% set viewable_names = ['model.json', 'meta.jsonl'] %}
   <div class="model-card" id="card-{{ m.id }}">
     <div class="model-card-header" onclick="toggleCard('{{ m.id }}', event)">
       <input class="mc-checkbox" type="checkbox" id="chk-{{ m.id }}"
              data-model="{{ m.id }}"
+             data-built="{{ 'true' if m.artifact.exists else 'false' }}"
              onclick="event.stopPropagation(); updateSelected()"
              {% if not chunks_exist %}disabled{% endif %}>
-      <span class="mc-label">{{ m.label }}</span>
-      <span class="mc-desc">{{ m.desc }}</span>
 
-      <!-- per-session job status (динамічно оновлюється JS) -->
+      <div class="mc-info">
+        <div class="mc-name-row">
+          <span class="mc-label">{{ m.label }}</span>
+          <span class="mc-desc">{{ m.desc }}</span>
+        </div>
+        {% if m.artifact.exists %}
+        <div class="mc-artifact-row">
+          <span class="mc-stats">{{ m.artifact.chunk_count }} векторів · {{ m.artifact.index_size_fmt }} · {{ m.artifact.mtime_fmt }}</span>
+          {% for f in m.artifact.artifact_files %}
+          {% if f in viewable_names %}
+          <span class="art-chip viewable"
+                onclick="event.stopPropagation(); viewArtifact('{{ current_domain }}','{{ m.id }}','{{ f }}','{{ m.label }}')">{{ f }}</span>
+          {% else %}
+          <span class="art-chip binary" title="бінарний файл">{{ f }}</span>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
       <span class="mc-status {{ 'running' if m.job.get('running') else ('done-ok' if m.job.get('done') and m.job.get('exit_code') == 0 else ('done-err' if m.job.get('done') else ('built' if m.artifact.exists else 'notbuilt'))) }}"
             id="jbadge-{{ m.id }}">
         {% if m.job.get('running') %}<span class="spin"></span>Будується…
         {% elif m.job.get('done') and m.job.get('exit_code') == 0 %}✓ Готово
         {% elif m.job.get('done') %}✗ Помилка
-        {% elif m.artifact.exists %}✓ {{ m.artifact.mtime_fmt }}
+        {% elif m.artifact.exists %}✓ Побудовано
         {% else %}Не побудовано{% endif %}
       </span>
 
@@ -480,7 +422,6 @@
       {% endif %}
     </div>
 
-    <!-- PARAMS -->
     {% if m.params %}
     <div class="model-params" id="params-{{ m.id }}">
       <div class="params-row">
@@ -499,15 +440,13 @@
   {% endfor %}
 </div>
 
-<!-- BUILD BUTTON -->
 <div class="build-bar">
   <button class="btn btn-primary" id="build-btn" onclick="startBuild()" disabled>
     ▶ Побудувати індекси
   </button>
-  <span class="selected-count" id="sel-count">Не вибрано жодної моделі</span>
+  <span class="selected-hint" id="sel-hint">Оберіть моделі вище</span>
 </div>
 
-<!-- LOG PANEL -->
 <div class="log-panel" id="log-panel" style="display:none;">
   <div class="log-panel-header">
     <span class="title">📋 Лог побудови</span>
@@ -518,13 +457,11 @@
 </div>
 
 <script>
-// ── State ────────────────────────────────────────────────────────────────────
 let _activeModels = new Set();
 let _pollTimer    = null;
 let _activeTab    = null;
-let _logCursors   = {};   // model_id -> how many lines we've already rendered
+let _logCursors   = {};
 
-// ── Card / Checkbox ──────────────────────────────────────────────────────────
 function toggleCard(id, e) {
   const chk = document.getElementById('chk-' + id);
   if (chk.disabled) return;
@@ -539,23 +476,38 @@ function toggleParams(id) {
 }
 
 function updateSelected() {
-  const checked = [...document.querySelectorAll('.mc-checkbox:checked')].map(c => c.dataset.model);
+  const boxes   = [...document.querySelectorAll('.mc-checkbox:checked')];
+  const checked = boxes.map(c => c.dataset.model);
+  const built   = boxes.filter(c => c.dataset.built === 'true').length;
+  const newOnes = checked.length - built;
+
   const btn  = document.getElementById('build-btn');
-  const info = document.getElementById('sel-count');
+  const hint = document.getElementById('sel-hint');
+
+  document.querySelectorAll('.model-card').forEach(card => {
+    const id = card.id.replace('card-', '');
+    card.classList.toggle('selected', checked.includes(id));
+  });
+
   if (checked.length === 0) {
     btn.disabled = true;
-    info.innerHTML = 'Не вибрано жодної моделі';
-  } else {
-    btn.disabled = false;
-    info.innerHTML = `Вибрано: <strong>${checked.length}</strong> модел${checked.length === 1 ? 'ь' : 'і'}`;
+    btn.textContent = '▶ Побудувати індекси';
+    hint.innerHTML = 'Оберіть моделі вище';
+    return;
   }
-  checked.forEach(id => document.getElementById('card-' + id).classList.add('selected'));
-  document.querySelectorAll('.model-card').forEach(c => {
-    if (!checked.includes(c.id.replace('card-', ''))) c.classList.remove('selected');
-  });
+  btn.disabled = false;
+  if (newOnes > 0 && built > 0) {
+    btn.textContent = `▶ Побудувати ${newOnes} нов${newOnes === 1 ? 'у' : 'і'} + перебудувати ${built}`;
+    hint.innerHTML = `Вибрано: <strong>${checked.length}</strong>`;
+  } else if (newOnes === 0) {
+    btn.textContent = `▶ Перебудувати ${checked.length}`;
+    hint.innerHTML = `Вибрано: <strong>${checked.length}</strong> (вже побудовано)`;
+  } else {
+    btn.textContent = `▶ Побудувати ${checked.length}`;
+    hint.innerHTML = `Вибрано: <strong>${checked.length}</strong>`;
+  }
 }
 
-// ── Build ────────────────────────────────────────────────────────────────────
 function collectModels() {
   const checked = [...document.querySelectorAll('.mc-checkbox:checked')].map(c => c.dataset.model);
   return checked.map(id => {
@@ -570,10 +522,7 @@ function collectModels() {
 function startBuild() {
   const models = collectModels();
   if (!models.length) return;
-
   document.getElementById('build-btn').disabled = true;
-
-  // init log panel for selected models
   const panel = document.getElementById('log-panel');
   panel.style.display = '';
   models.forEach(m => initLogTab(m.id));
@@ -593,21 +542,17 @@ function startBuild() {
   .catch(() => { alert('Мережева помилка'); document.getElementById('build-btn').disabled = false; });
 }
 
-// ── Log tabs ─────────────────────────────────────────────────────────────────
 function initLogTab(id) {
   if (document.getElementById('tab-' + id)) return;
   _logCursors[id] = 0;
-
   const tabs  = document.getElementById('log-tabs');
   const panes = document.getElementById('log-panes');
-
   const tab = document.createElement('div');
-  tab.className  = 'log-tab';
-  tab.id         = 'tab-' + id;
-  tab.innerHTML  = `<span class="tab-dot" id="dot-${id}"></span>${id}`;
-  tab.onclick    = () => switchTab(id);
+  tab.className = 'log-tab';
+  tab.id        = 'tab-' + id;
+  tab.innerHTML = `<span class="tab-dot" id="dot-${id}"></span>${id}`;
+  tab.onclick   = () => switchTab(id);
   tabs.appendChild(tab);
-
   const pane = document.createElement('div');
   pane.className = 'log-pane';
   pane.id        = 'pane-' + id;
@@ -626,10 +571,10 @@ function switchTab(id) {
 }
 
 function clearLogs() {
-  document.getElementById('log-tabs').innerHTML = '';
+  document.getElementById('log-tabs').innerHTML  = '';
   document.getElementById('log-panes').innerHTML = '';
-  _logCursors   = {};
-  _activeTab    = null;
+  _logCursors = {};
+  _activeTab  = null;
   _activeModels.clear();
   clearInterval(_pollTimer);
   _pollTimer = null;
@@ -638,15 +583,13 @@ function clearLogs() {
   updateSelected();
 }
 
-// ── Poll ──────────────────────────────────────────────────────────────────────
 function pollStatus() {
   fetch('/build/status')
     .then(r => r.json())
     .then(jobs => {
       let anyRunning = false;
       for (const [fullKey, job] of Object.entries(jobs)) {
-        const parts = fullKey.split('/');
-        const id = parts[parts.length - 1];
+        const id = fullKey.split('/').pop();
         if (!_activeModels.has(id)) continue;
         renderLog(id, job);
         updateBadge(id, job);
@@ -657,7 +600,6 @@ function pollStatus() {
         _pollTimer = null;
         document.getElementById('build-btn').disabled = false;
         updateSelected();
-        // invalidate cached models in the search page
         _activeModels.clear();
       }
     })
@@ -667,22 +609,21 @@ function pollStatus() {
 function renderLog(id, job) {
   const pane = document.getElementById('pane-' + id);
   if (!pane) return;
-  const lines = job.log || [];
+  const lines  = job.log || [];
   const cursor = _logCursors[id] || 0;
   if (lines.length === 0 && cursor === 0) return;
-
-  // first render — clear placeholder
   if (cursor === 0) pane.innerHTML = '';
-
   const newLines = lines.slice(cursor);
   _logCursors[id] = lines.length;
   newLines.forEach(line => {
     const div = document.createElement('div');
-    div.className = 'log-line' + (line.includes('ERROR') || line.includes('Помилка') ? ' err' : line.includes('WARNING') ? ' warn' : line.includes('Збережено') || line.includes('векторів') ? ' ok' : '');
+    div.className = 'log-line' + (
+      line.includes('ERROR') || line.includes('Помилка') ? ' err' :
+      line.includes('WARNING') ? ' warn' :
+      line.includes('Збережено') || line.includes('векторів') ? ' ok' : '');
     div.textContent = line;
     pane.appendChild(div);
   });
-  // auto-scroll if this tab is active
   if (_activeTab === id) pane.scrollTop = pane.scrollHeight;
 }
 
@@ -693,22 +634,21 @@ function updateBadge(id, job) {
   if (job.running) {
     badge.className = 'mc-status running';
     badge.innerHTML = '<span class="spin"></span>Будується…';
-    if (dot) { dot.className = 'tab-dot running'; }
+    if (dot) dot.className = 'tab-dot running';
   } else if (job.done && job.exit_code === 0) {
     badge.className = 'mc-status done-ok';
     badge.textContent = '✓ Готово';
-    if (dot) { dot.className = 'tab-dot ok'; }
+    if (dot) dot.className = 'tab-dot ok';
   } else if (job.done) {
     badge.className = 'mc-status done-err';
     badge.textContent = '✗ Помилка';
-    if (dot) { dot.className = 'tab-dot err'; }
+    if (dot) dot.className = 'tab-dot err';
   }
 }
 
-// ── Artifact viewer ──────────────────────────────────────────────────────────
 function viewArtifact(domain, modelId, filename, modelLabel) {
-  const title = document.getElementById('art-modal-title');
-  const body  = document.getElementById('art-modal-body');
+  const title  = document.getElementById('art-modal-title');
+  const body   = document.getElementById('art-modal-body');
   const footer = document.getElementById('art-modal-footer');
   title.textContent = modelLabel + ' / ' + filename;
   body.innerHTML = '<div style="color:var(--text-muted);padding:20px 0">Завантаження…</div>';
@@ -738,15 +678,12 @@ function viewArtifact(domain, modelId, filename, modelLabel) {
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-
 function closeArtModal() {
   document.getElementById('art-modal-backdrop').classList.remove('open');
 }
-
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeArtModal(); });
 </script>
 
-<!-- ARTIFACT VIEWER MODAL -->
 <div class="art-modal-backdrop" id="art-modal-backdrop" onclick="if(event.target===this)closeArtModal()">
   <div class="art-modal">
     <div class="art-modal-header">
