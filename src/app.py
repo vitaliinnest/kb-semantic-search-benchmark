@@ -141,17 +141,9 @@ def discover_models(domain_id: str = DEFAULT_DOMAIN) -> list[dict]:
             continue
         if not _dir_has_model(model_dir):
             continue
-        model_json = model_dir / "model.json"
-        label = model_dir.name
-        if model_json.exists():
-            try:
-                cfg = json.loads(model_json.read_text(encoding="utf-8"))
-                mt = cfg.get("model_type", label)
-                mn = cfg.get("model_name")
-                display = _TYPE_TO_DISPLAY.get(mt, mt.upper())
-                label = display + (f" ({mn})" if mn else "")
-            except Exception:
-                pass
+        dir_name = model_dir.name.lower()
+        # Use dir name as primary lookup key — same logic as _prettify_benchmark_data
+        label = _TYPE_TO_DISPLAY.get(dir_name, model_dir.name)
         models.append({"id": model_dir.name, "label": label})
     return models
 
@@ -290,6 +282,8 @@ def index():
         except Exception as exc:
             error = str(exc)
 
+    best_model_id = models[0]["id"] if (models and benchmark and benchmark.get("models")) else None
+
     return render_template(
         "index.html",
         models=models,
@@ -299,6 +293,7 @@ def index():
         results=results,
         error=error,
         benchmark=benchmark,
+        best_model_id=best_model_id,
         current_domain=domain,
         domains=DOMAINS_CONFIG,
     )
