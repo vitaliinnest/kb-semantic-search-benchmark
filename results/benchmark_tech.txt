@@ -1,11 +1,11 @@
 Оцінка benchmark retrieval
-Дата: 2026-04-27 13:55:12
+Дата: 2026-05-03 19:52:23
 Queries: 100 | top_k=10
 =============================================================================================================================================================================
 Model                                  Queries  Recall@k     MRR@k        nDCG@k       P@k          ms/query     Artifacts                                                   
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-BM25 (Okapi)                           100      0.7542       0.4808       0.4861       0.1340       1.5          D:\repos\kb-semantic-search-benchmark\artifacts\tech\bm25   
-E5 (intfloat/multilingual-e5-base)     100      0.7800       0.6340       0.6121       0.1360       225.1        D:\repos\kb-semantic-search-benchmark\artifacts\tech\e5-base
-Nomic (nomic-ai/nomic-embed-text-v1.5) 100      0.4725       0.4122       0.3765       0.0750       407.4        D:\repos\kb-semantic-search-benchmark\artifacts\tech\nomic  
-SBERT (BAAI/bge-m3)                    100      0.8150       0.6993       0.6722       0.1430       2959.8       D:\repos\kb-semantic-search-benchmark\artifacts\tech\bge-m3 
-SBERT (Qwen/Qwen3-Embedding-0.6B)      100      0.7792       0.6640       0.6325       0.1360       365.4        D:\repos\kb-semantic-search-benchmark\artifacts\tech\qwen3  
+BM25 (Okapi)                           100      0.7542       0.4808       0.4861       0.1340       0.4          D:\repos\kb-semantic-search-benchmark\artifacts\tech\bm25   
+E5 (intfloat/multilingual-e5-base)     100      0.7800       0.6340       0.6121       0.1360       70.9         D:\repos\kb-semantic-search-benchmark\artifacts\tech\e5-base
+Nomic (nomic-ai/nomic-embed-text-v1.5) 100      0.4725       0.4122       0.3765       0.0750       124.8        D:\repos\kb-semantic-search-benchmark\artifacts\tech\nomic  
+SBERT (BAAI/bge-m3)                    100      0.8150       0.6993       0.6722       0.1430       222.5        D:\repos\kb-semantic-search-benchmark\artifacts\tech\bge-m3 
+SBERT (Qwen/Qwen3-Embedding-0.6B)      100      0.7792       0.6640       0.6325       0.1360       463.4        D:\repos\kb-semantic-search-benchmark\artifacts\tech\qwen3  
