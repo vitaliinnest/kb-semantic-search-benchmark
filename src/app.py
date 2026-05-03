@@ -922,6 +922,197 @@ def benchmark_selection_compute():
     return jsonify(result)
 
 
+# ── Benchmark Explorer ──────────────────────────────────────────────────────
+# Перегляд тестових даних бенчмарку: для кожного запиту показує
+# 1) сам текст запиту, 2) ground-truth qrels (правильні чанки),
+# 3) top-k retrieved chunks для кожної моделі з підсвіткою попадань.
+
+def _load_explorer_data(domain_id: str) -> dict | None:
+    """Завантажує найновіший benchmark JSON і повертає індекс query_id → query+models.
+
+    Returns:
+        {
+            "queries": [
+                {
+                    "query_id": "q1",
+                    "query_text": "...",
+                    "qrel_targets": [{"chunk_id": ..., "doc_id": ..., "relevance": 1}, ...],
+                    "models": [
+                        {
+                            "model_name": "BGE-M3",
+                            "ndcg_at_k": 0.6722,
+                            "mrr_at_k": ...,
+                            "recall_at_k": ...,
+                            "precision_at_k": ...,
+                            "latency_ms": ...,
+                            "retrieved_chunks": [...],
+                        },
+                        ...
+                    ],
+                    "best_ndcg": 0.85,
+                    "worst_ndcg": 0.10,
+                    "spread": 0.75,
+                },
+                ...
+            ],
+            "model_names": [...],
+            "domain_id": "tech",
+            "timestamp": "...",
+        }
+    """
+    results = _load_benchmark_results(domain_id)
+    if not results:
+        return None
+    data = results[0]
+    models = data.get("models", [])
+    if not models:
+        return None
+
+    # Index queries: query_id → {query_text, qrels, models}
+    queries_index: dict[str, dict] = {}
+    model_names: list[str] = []
+
+    for model in models:
+        model_name = model.get("model_name", "?")
+        if model_name not in model_names:
+            model_names.append(model_name)
+        for q in model.get("query_results", []):
+            qid = q.get("query_id", "")
+            if not qid:
+                continue
+            if qid not in queries_index:
+                queries_index[qid] = {
+                    "query_id": qid,
+                    "query_text": q.get("query_text", ""),
+                    "qrel_targets": q.get("qrel_targets", []),
+                    "models": [],
+                }
+            else:
+                # Update query_text/qrels if missing
+                if not queries_index[qid]["query_text"]:
+                    queries_index[qid]["query_text"] = q.get("query_text", "")
+                if not queries_index[qid]["qrel_targets"]:
+                    queries_index[qid]["qrel_targets"] = q.get("qrel_targets", [])
+            queries_index[qid]["models"].append({
+                "model_name": model_name,
+                "ndcg_at_k": q.get("ndcg_at_k", 0.0),
+                "mrr_at_k": q.get("mrr_at_k", 0.0),
+                "recall_at_k": q.get("recall_at_k", 0.0),
+                "precision_at_k": q.get("precision_at_k", 0.0),
+                "latency_ms": q.get("latency_ms", 0.0),
+                "retrieved_chunks": q.get("retrieved_chunks", []),
+                "relevant_total": q.get("relevant_total", 0),
+            })
+
+    # Compute summary stats per query
+    queries_list: list[dict] = []
+    for qid, qdata in queries_index.items():
+        if not qdata["models"]:
+            continue
+        ndcg_vals = [m["ndcg_at_k"] for m in qdata["models"]]
+        # Sort models by nDCG desc to easily pick best
+        qdata["models"].sort(key=lambda m: m["ndcg_at_k"], reverse=True)
+        best = qdata["models"][0]
+        qdata["best_model"] = best["model_name"]
+        qdata["best_ndcg"] = best["ndcg_at_k"]
+        qdata["worst_ndcg"] = min(ndcg_vals)
+        qdata["spread"] = max(ndcg_vals) - min(ndcg_vals)
+        qdata["avg_ndcg"] = sum(ndcg_vals) / len(ndcg_vals)
+        qdata["any_perfect"] = any(v >= 0.999 for v in ndcg_vals)
+        qdata["all_zero"] = all(v < 0.001 for v in ndcg_vals)
+        queries_list.append(qdata)
+
+    # Sort by query_id for stable output
+    queries_list.sort(key=lambda q: q["query_id"])
+
+    return {
+        "queries": queries_list,
+        "model_names": model_names,
+        "domain_id": domain_id,
+        "timestamp": data.get("timestamp", ""),
+        "top_k": data.get("top_k", 10),
+    }
+
+
+@app.route("/benchmark/explorer")
+def benchmark_explorer():
+    """Сторінка зі списком усіх benchmark-запитів і per-query метриками."""
+    domain = get_domain()
+    explorer = _load_explorer_data(domain)
+    sort_by = request.args.get("sort", "id")
+    filter_mode = request.args.get("filter", "all")
+
+    if not explorer:
+        return render_template(
+            "benchmark_explorer.html",
+            explorer=None,
+            current_domain=domain,
+            domains=DOMAINS_CONFIG,
+            sort_by=sort_by,
+            filter_mode=filter_mode,
+        )
+
+    queries = list(explorer["queries"])
+
+    # Apply filter
+    if filter_mode == "perfect":
+        queries = [q for q in queries if q["any_perfect"]]
+    elif filter_mode == "failed":
+        queries = [q for q in queries if q["all_zero"]]
+    elif filter_mode == "spread":
+        queries = [q for q in queries if q["spread"] > 0.3]
+
+    # Apply sort
+    if sort_by == "best":
+        queries.sort(key=lambda q: q["best_ndcg"], reverse=True)
+    elif sort_by == "worst":
+        queries.sort(key=lambda q: q["best_ndcg"])
+    elif sort_by == "spread":
+        queries.sort(key=lambda q: q["spread"], reverse=True)
+    elif sort_by == "avg":
+        queries.sort(key=lambda q: q["avg_ndcg"], reverse=True)
+    else:  # id
+        queries.sort(key=lambda q: q["query_id"])
+
+    explorer["filtered_queries"] = queries
+    return render_template(
+        "benchmark_explorer.html",
+        explorer=explorer,
+        current_domain=domain,
+        domains=DOMAINS_CONFIG,
+        sort_by=sort_by,
+        filter_mode=filter_mode,
+    )
+
+
+@app.route("/benchmark/explorer/<query_id>")
+def benchmark_explorer_query(query_id: str):
+    """Деталі одного запиту: query, qrels, top-K від кожної моделі."""
+    domain = get_domain()
+    explorer = _load_explorer_data(domain)
+    if not explorer:
+        return "Benchmark data not found for domain '" + domain + "'", 404
+
+    qdata = next((q for q in explorer["queries"] if q["query_id"] == query_id), None)
+    if not qdata:
+        return f"Query '{query_id}' not found", 404
+
+    # Compute hit set for highlighting in retrieved_chunks
+    qrel_chunk_ids = {t.get("chunk_id", "") for t in qdata["qrel_targets"] if t.get("chunk_id")}
+    qrel_doc_ids = {t.get("doc_id", "") for t in qdata["qrel_targets"] if t.get("doc_id") and not t.get("chunk_id")}
+
+    # Sort models for consistent display
+    return render_template(
+        "benchmark_explorer_query.html",
+        explorer=explorer,
+        qdata=qdata,
+        qrel_chunk_ids=qrel_chunk_ids,
+        qrel_doc_ids=qrel_doc_ids,
+        current_domain=domain,
+        domains=DOMAINS_CONFIG,
+    )
+
+
 if __name__ == "__main__":
     print("Starting server at http://127.0.0.1:5000")
     app.run(debug=True, host="127.0.0.1", port=5000)

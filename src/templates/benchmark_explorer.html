@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% block title %}Дослідник benchmark-запитів — {{ current_domain }}{% endblock %}
+
+{% block head %}
+<style>
+  .explorer-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .explorer-header h1 {
+    font-size: 22px;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .explorer-header .subtitle {
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .stats-strip {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    flex: 1 1 140px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    box-shadow: var(--shadow);
+  }
+  .stat-card .v {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .stat-card .l {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: .3px;
+    margin-top: 2px;
+  }
+  .controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    align-items: center;
+  }
+  .control-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .pill {
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--surface);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background .15s, color .15s;
+  }
+  .pill:hover { background: #f1f3f4; color: var(--text); }
+  .pill.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  .queries-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    font-size: 13.5px;
+  }
+  .queries-table th {
+    background: #f6f8fb;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    border-bottom: 1px solid var(--border);
+  }
+  .queries-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .queries-table tr:last-child td { border-bottom: none; }
+  .queries-table tr:hover td { background: #f9fafb; }
+  .queries-table .qid {
+    font-family: "SF Mono", Consolas, monospace;
+    font-size: 12px;
+    color: var(--primary);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .queries-table .qtext {
+    color: var(--text);
+    max-width: 480px;
+  }
+  .queries-table .qtext a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .queries-table .qtext a:hover { color: var(--primary); }
+  .score {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .score.high { background: #d4f4dd; color: #1e6e3a; }
+  .score.med  { background: #fff4d6; color: #8a5d00; }
+  .score.low  { background: #fce8e6; color: #c5221f; }
+  .score.zero { background: #f1f3f4; color: #5f6368; }
+
+  .best-model {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    background: #e8f0fe;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--text-muted);
+  }
+  .empty-state .em {
+    font-size: 38px;
+    margin-bottom: 12px;
+  }
+
+  .qrel-count {
+    font-size: 11px;
+    color: var(--text-muted);
+    background: #f1f3f4;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: 500;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="explorer-header">
+  <h1>🔬 Дослідник benchmark-запитів</h1>
+  <div class="subtitle">
+    {% if explorer %}
+      Домен: <strong>{{ current_domain }}</strong>
+      &nbsp;·&nbsp; Запитів: <strong>{{ explorer.queries|length }}</strong>
+      &nbsp;·&nbsp; Моделей: <strong>{{ explorer.model_names|length }}</strong>
+      &nbsp;·&nbsp; top_k: <strong>{{ explorer.top_k }}</strong>
+      {% if explorer.timestamp %}&nbsp;·&nbsp; <span style="opacity:.6">{{ explorer.timestamp[:19] }}</span>{% endif %}
+    {% else %}
+      Немає даних benchmark-у. Спершу запустіть бенчмарк.
+    {% endif %}
+  </div>
+</div>
+
+{% if not explorer %}
+<div class="empty-state">
+  <div class="em">📊</div>
+  <p>Для цього домену ще немає результатів бенчмарку.</p>
+  <p style="margin-top:8px;font-size:13px;">
+    <a href="/benchmark?domain={{ current_domain }}" style="color:var(--primary);font-weight:600;">Перейти до Benchmark</a>
+  </p>
+</div>
+{% else %}
+
+{# Top stats strip #}
+{% set qs = explorer.queries %}
+{% set perfect = qs|selectattr('any_perfect')|list|length %}
+{% set failed = qs|selectattr('all_zero')|list|length %}
+{% set big_spread = qs|selectattr('spread','gt',0.3)|list|length %}
+{% set avg_best = qs|map(attribute='best_ndcg')|sum / qs|length %}
+<div class="stats-strip">
+  <div class="stat-card">
+    <div class="v">{{ qs|length }}</div>
+    <div class="l">Запитів усього</div>
+  </div>
+  <div class="stat-card" style="border-left:3px solid #16a34a;">
+    <div class="v" style="color:#16a34a;">{{ perfect }}</div>
+    <div class="l">Бодай 1 модель = 1.0</div>
+  </div>
+  <div class="stat-card" style="border-left:3px solid #c5221f;">
+    <div class="v" style="color:#c5221f;">{{ failed }}</div>
+    <div class="l">Усі моделі = 0.0</div>
+  </div>
+  <div class="stat-card" style="border-left:3px solid #f59e0b;">
+    <div class="v" style="color:#f59e0b;">{{ big_spread }}</div>
+    <div class="l">Розкид моделей &gt; 0.3</div>
+  </div>
+  <div class="stat-card">
+    <div class="v">{{ "%.3f"|format(avg_best) }}</div>
+    <div class="l">Середня nDCG найкр.</div>
+  </div>
+</div>
+
+{# Filter & sort controls #}
+<div class="controls">
+  <span class="control-label">Фільтр:</span>
+  <a class="pill {% if filter_mode == 'all' %}active{% endif %}"
+     href="?domain={{ current_domain }}&filter=all&sort={{ sort_by }}">Усі</a>
+  <a class="pill {% if filter_mode == 'perfect' %}active{% endif %}"
+     href="?domain={{ current_domain }}&filter=perfect&sort={{ sort_by }}">Ідеальні (1.0)</a>
+  <a class="pill {% if filter_mode == 'failed' %}active{% endif %}"
+     href="?domain={{ current_domain }}&filter=failed&sort={{ sort_by }}">Провальні (0.0)</a>
+  <a class="pill {% if filter_mode == 'spread' %}active{% endif %}"
+     href="?domain={{ current_domain }}&filter=spread&sort={{ sort_by }}">Великий розкид</a>
+  <span style="width:18px;"></span>
+  <span class="control-label">Сорт:</span>
+  <a class="pill {% if sort_by == 'id' %}active{% endif %}"
+     href="?domain={{ current_domain }}&sort=id&filter={{ filter_mode }}">ID</a>
+  <a class="pill {% if sort_by == 'best' %}active{% endif %}"
+     href="?domain={{ current_domain }}&sort=best&filter={{ filter_mode }}">Найкр. nDCG ↓</a>
+  <a class="pill {% if sort_by == 'worst' %}active{% endif %}"
+     href="?domain={{ current_domain }}&sort=worst&filter={{ filter_mode }}">Найкр. nDCG ↑</a>
+  <a class="pill {% if sort_by == 'spread' %}active{% endif %}"
+     href="?domain={{ current_domain }}&sort=spread&filter={{ filter_mode }}">Розкид ↓</a>
+  <a class="pill {% if sort_by == 'avg' %}active{% endif %}"
+     href="?domain={{ current_domain }}&sort=avg&filter={{ filter_mode }}">Сер. nDCG ↓</a>
+</div>
+
+{# Table #}
+{% set rows = explorer.filtered_queries %}
+{% if rows %}
+<table class="queries-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Запит</th>
+      <th style="text-align:center;">qrels</th>
+      <th style="text-align:center;">Найкр. nDCG</th>
+      <th style="text-align:center;">Розкид</th>
+      <th>Лідер</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for q in rows %}
+    {% set ndcg = q.best_ndcg %}
+    {% set cls = 'high' if ndcg >= 0.7 else ('med' if ndcg >= 0.3 else ('low' if ndcg > 0 else 'zero')) %}
+    <tr>
+      <td class="qid">
+        <a href="/benchmark/explorer/{{ q.query_id }}?domain={{ current_domain }}" style="color:inherit;text-decoration:none;">
+          {{ q.query_id }}
+        </a>
+      </td>
+      <td class="qtext">
+        <a href="/benchmark/explorer/{{ q.query_id }}?domain={{ current_domain }}">
+          {{ q.query_text }}
+        </a>
+      </td>
+      <td style="text-align:center;">
+        <span class="qrel-count">{{ q.qrel_targets|length }}</span>
+      </td>
+      <td style="text-align:center;">
+        <span class="score {{ cls }}">{{ "%.3f"|format(ndcg) }}</span>
+      </td>
+      <td style="text-align:center;">
+        {% if q.spread >= 0.3 %}
+          <span class="score med">{{ "%.3f"|format(q.spread) }}</span>
+        {% else %}
+          <span style="color:var(--text-muted);font-size:12px;">{{ "%.3f"|format(q.spread) }}</span>
+        {% endif %}
+      </td>
+      <td>
+        <span class="best-model">{{ q.best_model }}</span>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+  <div class="em">🔍</div>
+  <p>Жодного запиту не знайдено за цим фільтром.</p>
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

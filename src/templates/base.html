@@ -222,6 +222,7 @@
     <a href="/raw?domain={{ current_domain }}" {% if request.path == '/raw' %}class="active"{% endif %}>Файли</a>
     <a href="/build?domain={{ current_domain }}" {% if request.path == '/build' %}class="active"{% endif %}>Індекси</a>
     <a href="/benchmark?domain={{ current_domain }}" {% if request.path == '/benchmark' %}class="active"{% endif %}>Benchmark</a>
+    <a href="/benchmark/explorer?domain={{ current_domain }}" {% if request.path.startswith('/benchmark/explorer') %}class="active"{% endif %}>Дослідник</a>
     <a href="/benchmark/selection?domain={{ current_domain }}" {% if request.path == '/benchmark/selection' %}class="active"{% endif %}>Вибір моделі</a>
     <div class="domain-selector">
       <label for="domainSwitch">Домен:</label>

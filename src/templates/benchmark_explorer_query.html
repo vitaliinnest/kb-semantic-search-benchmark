@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+{% block title %}{{ qdata.query_id }} — Дослідник запитів{% endblock %}
+
+{% block head %}
+<style>
+  .breadcrumb {
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 500; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  .query-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 28px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary);
+  }
+  .query-header .qid-line {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-family: "SF Mono", Consolas, monospace;
+  }
+  .query-header .qtext {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .query-header .meta {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .gtruth-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid #16a34a;
+  }
+  .gtruth-card h3 {
+    font-size: 14px;
+    color: #16a34a;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .gtruth-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .gtruth-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 6px 10px;
+    background: #f0fdf4;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: "SF Mono", Consolas, monospace;
+  }
+  .gtruth-item .rel-badge {
+    background: #16a34a;
+    color: #fff;
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .gtruth-item .cid {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .gtruth-item .did {
+    color: var(--text-muted);
+  }
+
+  .models-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 14px;
+    overflow-x: auto;
+    flex-wrap: wrap;
+  }
+  .model-tab {
+    padding: 9px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all .15s;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .model-tab:hover { background: #f1f3f4; }
+  .model-tab.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .model-tab .mtab-score {
+    background: rgba(255,255,255,.25);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .model-tab:not(.active) .mtab-score {
+    background: var(--score-bg);
+    color: var(--primary);
+  }
+
+  .model-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    display: none;
+  }
+  .model-section.active { display: block; }
+
+  .model-metrics {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .metric {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .metric .lab {
+    font-size: 10.5px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: .3px;
+  }
+  .metric .val {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .metric .val.green { color: #16a34a; }
+  .metric .val.red { color: #c5221f; }
+  .metric .val.amber { color: #f59e0b; }
+
+  .chunks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .chunk-row {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: #fff;
+    transition: border-color .15s;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .chunk-row.hit {
+    border-color: #16a34a;
+    background: #f0fdf4;
+  }
+  .chunk-row.partial {
+    border-color: #84cc16;
+    background: #f7fee7;
+  }
+  .chunk-rank {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--score-bg);
+    color: var(--score-color);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .chunk-row.hit .chunk-rank {
+    background: #16a34a;
+    color: #fff;
+  }
+  .chunk-row.partial .chunk-rank {
+    background: #84cc16;
+    color: #fff;
+  }
+  .chunk-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .chunk-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .chunk-meta .cid {
+    font-family: "SF Mono", Consolas, monospace;
+    background: #f1f3f4;
+    padding: 1px 6px;
+    border-radius: 5px;
+    color: var(--text);
+  }
+  .chunk-meta .src {
+    font-family: "SF Mono", Consolas, monospace;
+  }
+  .chunk-meta .score {
+    background: var(--score-bg);
+    color: var(--score-color);
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .chunk-meta .rel {
+    background: #16a34a;
+    color: #fff;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 10.5px;
+    text-transform: uppercase;
+  }
+  .chunk-meta .miss {
+    background: #f1f3f4;
+    color: var(--text-muted);
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 10.5px;
+  }
+  .chunk-text {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+
+  .toggle-mode {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="/benchmark/explorer?domain={{ current_domain }}">← Усі запити</a>
+</div>
+
+<div class="query-header">
+  <div class="qid-line">{{ qdata.query_id }} · домен {{ current_domain }}</div>
+  <div class="qtext">«&nbsp;{{ qdata.query_text }}&nbsp;»</div>
+  <div class="meta">
+    Релевантних чанків (qrels): <strong>{{ qdata.qrel_targets|length }}</strong>
+    &nbsp;·&nbsp; Моделей оцінено: <strong>{{ qdata.models|length }}</strong>
+    &nbsp;·&nbsp; top_k: <strong>{{ explorer.top_k }}</strong>
+  </div>
+</div>
+
+<div class="gtruth-card">
+  <h3>✓ Ground truth — еталонна релевантність</h3>
+  {% if qdata.qrel_targets %}
+  <div class="gtruth-list">
+    {% for t in qdata.qrel_targets %}
+    <div class="gtruth-item">
+      <span class="rel-badge">rel = {{ t.relevance }}</span>
+      {% if t.chunk_id %}
+        <span class="cid">chunk_id: {{ t.chunk_id }}</span>
+      {% endif %}
+      {% if t.doc_id %}
+        <span class="did">📄 {{ t.doc_id }}</span>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="color:var(--text-muted);font-size:13px;">Немає визначених qrels.</div>
+  {% endif %}
+</div>
+
+<div class="toggle-mode">
+  <button class="pill active" onclick="setMode('tabs', this)">Окремо по моделях</button>
+  <button class="pill" onclick="setMode('all', this)">Усі моделі поряд</button>
+</div>
+
+<div id="tabs-bar" class="models-tabs">
+  {% for m in qdata.models %}
+  {% set ndcg = m.ndcg_at_k %}
+  {% set cls = 'green' if ndcg >= 0.7 else ('amber' if ndcg >= 0.3 else 'red') %}
+  <div class="model-tab {% if loop.first %}active{% endif %}"
+       data-model-idx="{{ loop.index0 }}"
+       onclick="selectModel({{ loop.index0 }})">
+    <span>{{ m.model_name }}</span>
+    <span class="mtab-score">{{ "%.3f"|format(ndcg) }}</span>
+  </div>
+  {% endfor %}
+</div>
+
+{% for m in qdata.models %}
+<div class="model-section {% if loop.first %}active{% endif %}" data-model-idx="{{ loop.index0 }}">
+  <div class="model-metrics">
+    <div class="metric">
+      <div class="lab">nDCG@10</div>
+      <div class="val {% if m.ndcg_at_k >= 0.7 %}green{% elif m.ndcg_at_k >= 0.3 %}amber{% else %}red{% endif %}">
+        {{ "%.4f"|format(m.ndcg_at_k) }}
+      </div>
+    </div>
+    <div class="metric">
+      <div class="lab">MRR@10</div>
+      <div class="val">{{ "%.4f"|format(m.mrr_at_k) }}</div>
+    </div>
+    <div class="metric">
+      <div class="lab">Recall@10</div>
+      <div class="val">{{ "%.4f"|format(m.recall_at_k) }}</div>
+    </div>
+    <div class="metric">
+      <div class="lab">P@10</div>
+      <div class="val">{{ "%.4f"|format(m.precision_at_k) }}</div>
+    </div>
+    <div class="metric">
+      <div class="lab">latency</div>
+      <div class="val">{{ "%.1f"|format(m.latency_ms) }} ms</div>
+    </div>
+    <div class="metric">
+      <div class="lab">retrieved</div>
+      <div class="val">{{ m.retrieved_chunks|length }}</div>
+    </div>
+  </div>
+
+  <div class="chunks-list">
+    {% for c in m.retrieved_chunks %}
+    {% set is_hit = (c.chunk_id in qrel_chunk_ids) or (c.doc_id in qrel_doc_ids) %}
+    {% set rel_v = c.relevance %}
+    <div class="chunk-row {% if is_hit %}hit{% elif rel_v > 0 %}partial{% endif %}">
+      <div class="chunk-rank">{{ c.rank }}</div>
+      <div class="chunk-body">
+        <div class="chunk-meta">
+          <span class="cid">{{ c.chunk_id }}</span>
+          <span class="src">📄 {{ c.doc_id }}</span>
+          <span class="score">{{ "%.4f"|format(c.score) }}</span>
+          {% if rel_v > 0 %}
+          <span class="rel">✓ rel={{ rel_v }}</span>
+          {% else %}
+          <span class="miss">не релевантний</span>
+          {% endif %}
+        </div>
+        <div class="chunk-text">{{ c.text }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endfor %}
+
+<script>
+  function selectModel(idx) {
+    document.querySelectorAll('.model-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.model-tab[data-model-idx="' + idx + '"]').classList.add('active');
+    document.querySelectorAll('.model-section').forEach(s => s.classList.remove('active'));
+    document.querySelector('.model-section[data-model-idx="' + idx + '"]').classList.add('active');
+  }
+  function setMode(mode, btn) {
+    document.querySelectorAll('.toggle-mode .pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    if (mode === 'all') {
+      document.getElementById('tabs-bar').style.display = 'none';
+      document.querySelectorAll('.model-section').forEach(s => s.classList.add('active'));
+    } else {
+      document.getElementById('tabs-bar').style.display = '';
+      document.querySelectorAll('.model-section').forEach((s, i) => {
+        s.classList.toggle('active', i === 0);
+      });
+      document.querySelectorAll('.model-tab').forEach((t, i) => {
+        t.classList.toggle('active', i === 0);
+      });
+    }
+  }
+</script>
+{% endblock %}
