@@ -1093,15 +1093,18 @@ def benchmark_explorer_query(query_id: str):
     if not explorer:
         return "Benchmark data not found for domain '" + domain + "'", 404
 
-    qdata = next((q for q in explorer["queries"] if q["query_id"] == query_id), None)
-    if not qdata:
+    queries = explorer["queries"]
+    idx = next((i for i, q in enumerate(queries) if q["query_id"] == query_id), -1)
+    if idx == -1:
         return f"Query '{query_id}' not found", 404
+    qdata = queries[idx]
+    prev_id = queries[idx - 1]["query_id"] if idx > 0 else None
+    next_id = queries[idx + 1]["query_id"] if idx + 1 < len(queries) else None
 
     # Compute hit set for highlighting in retrieved_chunks
     qrel_chunk_ids = {t.get("chunk_id", "") for t in qdata["qrel_targets"] if t.get("chunk_id")}
     qrel_doc_ids = {t.get("doc_id", "") for t in qdata["qrel_targets"] if t.get("doc_id") and not t.get("chunk_id")}
 
-    # Sort models for consistent display
     return render_template(
         "benchmark_explorer_query.html",
         explorer=explorer,
@@ -1110,6 +1113,10 @@ def benchmark_explorer_query(query_id: str):
         qrel_doc_ids=qrel_doc_ids,
         current_domain=domain,
         domains=DOMAINS_CONFIG,
+        prev_id=prev_id,
+        next_id=next_id,
+        position=idx + 1,
+        total_queries=len(queries),
     )
 
 
