@@ -43,9 +43,10 @@ SHOTS = [
         "q": "підстави обмеження цивільної дієздатності судом"
     }), 1500, "5.9  search legal bge"),
     # ── 5.10: search results medical, BGE-M3 ──────────────────────────────
+    # Query matches thesis text para 1049 (occlusion of internal carotid artery)
     ("image10.png", f"{BASE}/?" + urlencode({
         "domain": "medical", "model": "bge-m3", "top_k": 5,
-        "q": "механізм газообміну в легенях та транспорт кисню кров'ю"
+        "q": "оклюзія внутрішньої сонної артерії та ендоваскулярне лікування"
     }), 1500, "5.10 search medical bge"),
     # ── 5.12 / 5.21 (reused): benchmark tech (model overview) ─────────────
     ("image12.png", f"{BASE}/benchmark?domain=tech",                       1500, "5.12/5.21 benchmark tech"),
@@ -62,10 +63,11 @@ SHOTS = [
         "domain": "tech", "model": "bge-m3", "top_k": 5,
         "q": "machine learning algorithms overview"
     }), 1500, "5.18 search tech bge en"),
-    # ── 5.19: search results tech, nomic (contrast) ───────────────────────
+    # ── 5.19: search results tech, nomic (contrast — English query) ───────
+    # Query matches thesis text para 1169 ("sorting algorithms complexity")
     ("image16.png", f"{BASE}/?" + urlencode({
         "domain": "tech", "model": "nomic", "top_k": 5,
-        "q": "алгоритми сортування та їх складність"
+        "q": "sorting algorithms complexity"
     }), 1500, "5.19 search tech nomic"),
     # ── 5.20: search results medical, E5-base ─────────────────────────────
     ("image17.png", f"{BASE}/?" + urlencode({
