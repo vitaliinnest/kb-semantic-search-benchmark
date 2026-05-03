@@ -167,6 +167,20 @@
 {% endblock %}
 
 {% block content %}
+<div class="page-heading-row" style="display:flex;align-items:center;gap:0;margin-bottom:4px;">
+  <div style="font-size:24px;font-weight:700;">📊 Benchmark
+    {% for d in domains %}{% if d.id == current_domain %}
+    <span style="display:inline-flex;align-items:center;background:var(--primary);color:#fff;font-size:16px;font-weight:700;padding:5px 18px;border-radius:20px;vertical-align:middle;margin-left:14px;letter-spacing:.3px;">{{ d.label }}</span>
+    {% endif %}{% endfor %}
+  </div>
+</div>
+<div style="font-size:14px;color:var(--text-muted);margin-bottom:24px;">Порівняння якості retrieval між моделями за Recall, MRR, nDCG, Precision</div>
+
+<div class="bench-tabs">
+  <a href="/benchmark?domain={{ current_domain }}" class="bench-tab">📊 Огляд моделей</a>
+  <a href="/benchmark/explorer?domain={{ current_domain }}" class="bench-tab active">🔬 По запитах</a>
+</div>
+
 <div class="explorer-header">
   <h1>🔬 Дослідник benchmark-запитів</h1>
   <div class="subtitle">

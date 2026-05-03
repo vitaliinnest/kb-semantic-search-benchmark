@@ -193,6 +193,11 @@
 </div>
 <div class="page-sub">Порівняння якості retrieval між моделями за Recall, MRR, nDCG, Precision</div>
 
+<div class="bench-tabs">
+  <a href="/benchmark?domain={{ current_domain }}" class="bench-tab active">📊 Огляд моделей</a>
+  <a href="/benchmark/explorer?domain={{ current_domain }}" class="bench-tab">🔬 По запитах</a>
+</div>
+
 <!-- STATUS BANNERS -->
 {% if not queries_exist %}
 <div class="banner warn">
