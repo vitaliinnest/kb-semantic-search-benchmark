@@ -155,10 +155,22 @@
     font-size: 13px;
     cursor: pointer;
     transition: background .15s;
+    text-decoration: none;
+    color: inherit;
   }
   .history-row:last-child { border-bottom: none; }
   .history-row:hover { background: #f8f9fa; }
   .history-row.active { background: #e8f0fe; }
+
+  .drill-link {
+    margin-left: 8px;
+    font-size: 12px;
+    text-decoration: none;
+    opacity: .45;
+    transition: opacity .15s;
+    vertical-align: middle;
+  }
+  .drill-link:hover { opacity: 1; }
   .hr-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
   .hr-date { font-size: 13.5px; font-weight: 600; color: var(--text); flex: 1; }
   .hr-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
@@ -195,7 +207,7 @@
 
 <div class="bench-tabs">
   <a href="/benchmark?domain={{ current_domain }}" class="bench-tab active">📊 Огляд моделей</a>
-  <a href="/benchmark/explorer?domain={{ current_domain }}" class="bench-tab">🔬 По запитах</a>
+  <a href="/benchmark/explorer?domain={{ current_domain }}{% if active_file %}&file={{ active_file }}{% endif %}" class="bench-tab">🔬 По запитах</a>
 </div>
 
 <!-- STATUS BANNERS -->
@@ -282,7 +294,11 @@
           {{ loop_rank }}
         </span>
       </td>
-      <td class="model-name-cell">{{ m.model_name }}</td>
+      <td class="model-name-cell">
+        {{ m.model_name }}
+        <a href="/benchmark/explorer?domain={{ current_domain }}{% if active_file %}&file={{ active_file }}{% endif %}&model={{ m.model_name | urlencode }}"
+           class="drill-link" title="Запити де ця модель лідер">🔬</a>
+      </td>
 
       {% macro bar_cell(val, maxv) %}
       <td class="metric-cell">
@@ -315,12 +331,12 @@
   <div class="history-list">
     {% for r in all_results %}
     {% set dt = r.timestamp[:16].replace('T', ' ') %}
-    <div class="history-row {% if loop.first %}active{% endif %}"
-         onclick="loadResult('{{ r._filename }}', this)">
+    <a class="history-row {% if r._filename == active_file %}active{% endif %}"
+       href="/benchmark?domain={{ current_domain }}&file={{ r._filename }}">
       <span class="hr-dot"></span>
       <span class="hr-date">{{ dt }}</span>
       <span class="hr-meta">{{ r.models | length }} моделей &nbsp;·&nbsp; top_k={{ r.top_k }} &nbsp;·&nbsp; {{ r.queries_count }} запитів</span>
-    </div>
+    </a>
     {% endfor %}
   </div>
 </div>
@@ -463,33 +479,5 @@ function refreshTable(data) {
     </table>`;
 }
 
-// ── Load historical result ─────────────────────────────────────────────────
-function loadResult(filename, rowEl) {
-  document.querySelectorAll('.history-row').forEach(r => r.classList.remove('active'));
-  rowEl.classList.add('active');
-
-  const section = document.getElementById('results-section');
-  section.style.opacity = '0.4';
-
-  fetch(`/results/benchmark/${filename}?domain={{ current_domain }}`)
-    .then(r => {
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.json();
-    })
-    .then(data => {
-      section.style.opacity = '1';
-      if (data && data.models) {
-        refreshTable(data);
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        section.style.opacity = '1';
-        console.error('Unexpected response:', data);
-      }
-    })
-    .catch(err => {
-      section.style.opacity = '1';
-      alert('Помилка завантаження результату: ' + err.message);
-    });
-}
 </script>
 {% endblock %}

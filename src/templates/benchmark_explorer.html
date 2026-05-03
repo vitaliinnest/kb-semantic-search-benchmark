@@ -167,6 +167,9 @@
 {% endblock %}
 
 {% block content %}
+{%- set file_qs = ('&file=' ~ active_file) if active_file else '' -%}
+{%- set model_qs = ('&model=' ~ (model_filter | urlencode)) if model_filter else '' -%}
+
 <div class="page-heading-row" style="display:flex;align-items:center;gap:0;margin-bottom:4px;">
   <div style="font-size:24px;font-weight:700;">📊 Benchmark
     {% for d in domains %}{% if d.id == current_domain %}
@@ -176,9 +179,25 @@
 </div>
 <div style="font-size:14px;color:var(--text-muted);margin-bottom:24px;">Порівняння якості retrieval між моделями за Recall, MRR, nDCG, Precision</div>
 
-<div class="bench-tabs">
-  <a href="/benchmark?domain={{ current_domain }}" class="bench-tab">📊 Огляд моделей</a>
-  <a href="/benchmark/explorer?domain={{ current_domain }}" class="bench-tab active">🔬 По запитах</a>
+<div class="bench-tabs" style="justify-content:space-between;align-items:flex-end;">
+  <div style="display:flex;gap:4px;">
+    <a href="/benchmark?domain={{ current_domain }}{{ file_qs }}" class="bench-tab">📊 Огляд моделей</a>
+    <a href="/benchmark/explorer?domain={{ current_domain }}{{ file_qs }}" class="bench-tab active">🔬 По запитах</a>
+  </div>
+  {% if all_runs | length > 1 %}
+  <div style="display:flex;align-items:center;gap:6px;padding-bottom:6px;">
+    <label style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;">Прогін:</label>
+    <select onchange="window.location.href=this.value"
+            style="font-size:12px;font-weight:600;padding:4px 8px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;">
+      {% for r in all_runs %}
+      <option value="/benchmark/explorer?domain={{ current_domain }}&file={{ r.filename }}"
+              {% if r.filename == active_file %}selected{% endif %}>
+        {{ r.timestamp[:16].replace('T',' ') }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+  {% endif %}
 </div>
 
 <div class="explorer-header">
@@ -239,26 +258,51 @@
 <div class="controls">
   <span class="control-label">Фільтр:</span>
   <a class="pill {% if filter_mode == 'all' %}active{% endif %}"
-     href="?domain={{ current_domain }}&filter=all&sort={{ sort_by }}">Усі</a>
+     href="?domain={{ current_domain }}&filter=all&sort={{ sort_by }}{{ file_qs }}{{ model_qs }}">Усі</a>
   <a class="pill {% if filter_mode == 'perfect' %}active{% endif %}"
-     href="?domain={{ current_domain }}&filter=perfect&sort={{ sort_by }}">Ідеальні (1.0)</a>
+     href="?domain={{ current_domain }}&filter=perfect&sort={{ sort_by }}{{ file_qs }}{{ model_qs }}">Ідеальні (1.0)</a>
   <a class="pill {% if filter_mode == 'failed' %}active{% endif %}"
-     href="?domain={{ current_domain }}&filter=failed&sort={{ sort_by }}">Провальні (0.0)</a>
+     href="?domain={{ current_domain }}&filter=failed&sort={{ sort_by }}{{ file_qs }}{{ model_qs }}">Провальні (0.0)</a>
   <a class="pill {% if filter_mode == 'spread' %}active{% endif %}"
-     href="?domain={{ current_domain }}&filter=spread&sort={{ sort_by }}">Великий розкид</a>
+     href="?domain={{ current_domain }}&filter=spread&sort={{ sort_by }}{{ file_qs }}{{ model_qs }}">Великий розкид</a>
   <span style="width:18px;"></span>
   <span class="control-label">Сорт:</span>
   <a class="pill {% if sort_by == 'id' %}active{% endif %}"
-     href="?domain={{ current_domain }}&sort=id&filter={{ filter_mode }}">ID</a>
+     href="?domain={{ current_domain }}&sort=id&filter={{ filter_mode }}{{ file_qs }}{{ model_qs }}">ID</a>
   <a class="pill {% if sort_by == 'best' %}active{% endif %}"
-     href="?domain={{ current_domain }}&sort=best&filter={{ filter_mode }}">Найкр. nDCG ↓</a>
+     href="?domain={{ current_domain }}&sort=best&filter={{ filter_mode }}{{ file_qs }}{{ model_qs }}">Найкр. nDCG ↓</a>
   <a class="pill {% if sort_by == 'worst' %}active{% endif %}"
-     href="?domain={{ current_domain }}&sort=worst&filter={{ filter_mode }}">Найкр. nDCG ↑</a>
+     href="?domain={{ current_domain }}&sort=worst&filter={{ filter_mode }}{{ file_qs }}{{ model_qs }}">Найкр. nDCG ↑</a>
   <a class="pill {% if sort_by == 'spread' %}active{% endif %}"
-     href="?domain={{ current_domain }}&sort=spread&filter={{ filter_mode }}">Розкид ↓</a>
+     href="?domain={{ current_domain }}&sort=spread&filter={{ filter_mode }}{{ file_qs }}{{ model_qs }}">Розкид ↓</a>
   <a class="pill {% if sort_by == 'avg' %}active{% endif %}"
-     href="?domain={{ current_domain }}&sort=avg&filter={{ filter_mode }}">Сер. nDCG ↓</a>
+     href="?domain={{ current_domain }}&sort=avg&filter={{ filter_mode }}{{ file_qs }}{{ model_qs }}">Сер. nDCG ↓</a>
 </div>
+
+{# Model leader filter #}
+{% if explorer and explorer.model_names %}
+<div class="controls" style="margin-top:-4px;">
+  <span class="control-label">Модель:</span>
+  <a class="pill {% if not model_filter %}active{% endif %}"
+     href="?domain={{ current_domain }}&filter={{ filter_mode }}&sort={{ sort_by }}{{ file_qs }}">
+    Усі ({{ explorer.queries | length }})
+  </a>
+  {% for mn in explorer.model_names %}
+  <a class="pill {% if model_filter == mn %}active{% endif %}"
+     href="?domain={{ current_domain }}&filter={{ filter_mode }}&sort={{ sort_by }}{{ file_qs }}&model={{ mn | urlencode }}"
+     title="{{ mn }}">
+    {{ mn.split('(')[0].strip() }} ({{ model_counts.get(mn, 0) }})
+  </a>
+  {% endfor %}
+</div>
+{% if model_filter %}
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px 14px;background:#e8f0fe;border-radius:8px;font-size:13px;color:#174ea6;">
+  <span>🔬 Запити де лідер: <strong>{{ model_filter }}</strong> — показано {{ explorer.filtered_queries | length }}</span>
+  <a href="?domain={{ current_domain }}&filter={{ filter_mode }}&sort={{ sort_by }}{{ file_qs }}"
+     style="margin-left:auto;color:#174ea6;font-weight:700;text-decoration:none;">✕ скинути</a>
+</div>
+{% endif %}
+{% endif %}
 
 {# Table #}
 {% set rows = explorer.filtered_queries %}
@@ -280,12 +324,12 @@
     {% set cls = 'high' if ndcg >= 0.7 else ('med' if ndcg >= 0.3 else ('low' if ndcg > 0 else 'zero')) %}
     <tr>
       <td class="qid">
-        <a href="/benchmark/explorer/{{ q.query_id }}?domain={{ current_domain }}" style="color:inherit;text-decoration:none;">
+        <a href="/benchmark/explorer/{{ q.query_id }}?domain={{ current_domain }}{{ file_qs }}" style="color:inherit;text-decoration:none;">
           {{ q.query_id }}
         </a>
       </td>
       <td class="qtext">
-        <a href="/benchmark/explorer/{{ q.query_id }}?domain={{ current_domain }}">
+        <a href="/benchmark/explorer/{{ q.query_id }}?domain={{ current_domain }}{{ file_qs }}">
           {{ q.query_text }}
         </a>
       </td>

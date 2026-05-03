@@ -283,11 +283,12 @@
 {% endblock %}
 
 {% block content %}
+{%- set fqs = ('&file=' ~ active_file) if active_file else '' -%}
 <div class="breadcrumb" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-  <a href="/benchmark/explorer?domain={{ current_domain }}">← Усі запити</a>
+  <a href="/benchmark/explorer?domain={{ current_domain }}{{ fqs }}">← Усі запити</a>
   <div style="display:flex;align-items:center;gap:8px;">
     {% if prev_id %}
-      <a href="/benchmark/explorer/{{ prev_id }}?domain={{ current_domain }}"
+      <a href="/benchmark/explorer/{{ prev_id }}?domain={{ current_domain }}{{ fqs }}"
          class="pill" style="padding:5px 12px;font-size:12px;">← {{ prev_id }}</a>
     {% else %}
       <span class="pill" style="padding:5px 12px;font-size:12px;opacity:.4;cursor:not-allowed;">← попередній</span>
@@ -296,7 +297,7 @@
       {{ position }} / {{ total_queries }}
     </span>
     {% if next_id %}
-      <a href="/benchmark/explorer/{{ next_id }}?domain={{ current_domain }}"
+      <a href="/benchmark/explorer/{{ next_id }}?domain={{ current_domain }}{{ fqs }}"
          class="pill" style="padding:5px 12px;font-size:12px;">{{ next_id }} →</a>
     {% else %}
       <span class="pill" style="padding:5px 12px;font-size:12px;opacity:.4;cursor:not-allowed;">наступний →</span>

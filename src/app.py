@@ -63,6 +63,12 @@ def datetimeformat(ts):
     return _dt.datetime.fromtimestamp(float(ts)).strftime("%d.%m.%Y %H:%M")
 
 
+@app.template_filter("urlencode")
+def urlencode_filter(s: str) -> str:
+    from urllib.parse import quote
+    return quote(str(s), safe="")
+
+
 # ── Утиліти──────────────────────────────────────────────────────────────────
 _TYPE_TO_DISPLAY = {
     "sbert":  "SBERT",
@@ -727,7 +733,13 @@ def benchmark_page():
     domain = get_domain()
     dp = domain_paths(domain)
     all_results = _load_benchmark_results(domain)
-    latest = all_results[0] if all_results else None
+    file_param = request.args.get("file", "").strip()
+    if file_param and all_results:
+        matching = [r for r in all_results if r.get("_filename") == file_param]
+        latest = matching[0] if matching else all_results[0]
+    else:
+        latest = all_results[0] if all_results else None
+    active_file = (latest or {}).get("_filename", "")
     queries_exist = dp["benchmark_queries"].exists() and dp["benchmark_qrels"].exists()
     artifacts_exist = bool(discover_models(domain))
     with _bench_lock:
@@ -736,6 +748,7 @@ def benchmark_page():
         "benchmark.html",
         latest=latest,
         all_results=all_results,
+        active_file=active_file,
         queries_exist=queries_exist,
         artifacts_exist=artifacts_exist,
         job=job,
@@ -933,43 +946,16 @@ def _natural_sort_key(s: str):
     return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", s or "")]
 
 
-def _load_explorer_data(domain_id: str) -> dict | None:
-    """Завантажує найновіший benchmark JSON і повертає індекс query_id → query+models.
-
-    Returns:
-        {
-            "queries": [
-                {
-                    "query_id": "q1",
-                    "query_text": "...",
-                    "qrel_targets": [{"chunk_id": ..., "doc_id": ..., "relevance": 1}, ...],
-                    "models": [
-                        {
-                            "model_name": "BGE-M3",
-                            "ndcg_at_k": 0.6722,
-                            "mrr_at_k": ...,
-                            "recall_at_k": ...,
-                            "precision_at_k": ...,
-                            "latency_ms": ...,
-                            "retrieved_chunks": [...],
-                        },
-                        ...
-                    ],
-                    "best_ndcg": 0.85,
-                    "worst_ndcg": 0.10,
-                    "spread": 0.75,
-                },
-                ...
-            ],
-            "model_names": [...],
-            "domain_id": "tech",
-            "timestamp": "...",
-        }
-    """
+def _load_explorer_data(domain_id: str, file_param: str = "") -> dict | None:
+    """Завантажує benchmark JSON (конкретний або найновіший) і будує індекс запитів."""
     results = _load_benchmark_results(domain_id)
     if not results:
         return None
-    data = results[0]
+    if file_param:
+        matching = [r for r in results if r.get("_filename") == file_param]
+        data = matching[0] if matching else results[0]
+    else:
+        data = results[0]
     models = data.get("models", [])
     if not models:
         return None
@@ -1037,16 +1023,28 @@ def _load_explorer_data(domain_id: str) -> dict | None:
         "domain_id": domain_id,
         "timestamp": data.get("timestamp", ""),
         "top_k": data.get("top_k", 10),
+        "_filename": data.get("_filename", ""),
     }
 
 
 @app.route("/benchmark/explorer")
 def benchmark_explorer():
     """Сторінка зі списком усіх benchmark-запитів і per-query метриками."""
+    from collections import Counter
     domain = get_domain()
-    explorer = _load_explorer_data(domain)
+    file_param = request.args.get("file", "").strip()
+    model_filter = request.args.get("model", "").strip()
     sort_by = request.args.get("sort", "id")
     filter_mode = request.args.get("filter", "all")
+
+    all_runs = [
+        {"filename": r["_filename"], "timestamp": r.get("timestamp", "")}
+        for r in _load_benchmark_results(domain)
+    ]
+    explorer = _load_explorer_data(domain, file_param)
+    active_file = (explorer or {}).get("_filename", "")
+    if not active_file and all_runs:
+        active_file = all_runs[0]["filename"]
 
     if not explorer:
         return render_template(
@@ -1056,11 +1054,22 @@ def benchmark_explorer():
             domains=DOMAINS_CONFIG,
             sort_by=sort_by,
             filter_mode=filter_mode,
+            model_filter="",
+            model_counts={},
+            all_runs=all_runs,
+            active_file=active_file,
         )
+
+    # Count how many queries each model leads
+    model_counts = dict(Counter(q["best_model"] for q in explorer["queries"]))
 
     queries = list(explorer["queries"])
 
-    # Apply filter
+    # Apply model leader filter
+    if model_filter:
+        queries = [q for q in queries if q["best_model"] == model_filter]
+
+    # Apply category filter
     if filter_mode == "perfect":
         queries = [q for q in queries if q["any_perfect"]]
     elif filter_mode == "failed":
@@ -1077,7 +1086,7 @@ def benchmark_explorer():
         queries.sort(key=lambda q: q["spread"], reverse=True)
     elif sort_by == "avg":
         queries.sort(key=lambda q: q["avg_ndcg"], reverse=True)
-    else:  # id (natural sort)
+    else:
         queries.sort(key=lambda q: _natural_sort_key(q["query_id"]))
 
     explorer["filtered_queries"] = queries
@@ -1088,6 +1097,10 @@ def benchmark_explorer():
         domains=DOMAINS_CONFIG,
         sort_by=sort_by,
         filter_mode=filter_mode,
+        model_filter=model_filter,
+        model_counts=model_counts,
+        all_runs=all_runs,
+        active_file=active_file,
     )
 
 
@@ -1095,10 +1108,12 @@ def benchmark_explorer():
 def benchmark_explorer_query(query_id: str):
     """Деталі одного запиту: query, qrels, top-K від кожної моделі."""
     domain = get_domain()
-    explorer = _load_explorer_data(domain)
+    file_param = request.args.get("file", "").strip()
+    explorer = _load_explorer_data(domain, file_param)
     if not explorer:
         return "Benchmark data not found for domain '" + domain + "'", 404
 
+    active_file = explorer.get("_filename", "")
     queries = explorer["queries"]
     idx = next((i for i, q in enumerate(queries) if q["query_id"] == query_id), -1)
     if idx == -1:
@@ -1107,7 +1122,6 @@ def benchmark_explorer_query(query_id: str):
     prev_id = queries[idx - 1]["query_id"] if idx > 0 else None
     next_id = queries[idx + 1]["query_id"] if idx + 1 < len(queries) else None
 
-    # Compute hit set for highlighting in retrieved_chunks
     qrel_chunk_ids = {t.get("chunk_id", "") for t in qdata["qrel_targets"] if t.get("chunk_id")}
     qrel_doc_ids = {t.get("doc_id", "") for t in qdata["qrel_targets"] if t.get("doc_id") and not t.get("chunk_id")}
 
@@ -1123,6 +1137,7 @@ def benchmark_explorer_query(query_id: str):
         next_id=next_id,
         position=idx + 1,
         total_queries=len(queries),
+        active_file=active_file,
     )
 
 
