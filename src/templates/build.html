@@ -132,53 +132,6 @@
   .mc-status.done-ok  { background: #e6f4ea; color: #1e6e3a; }
   .mc-status.done-err { background: #fce8e6; color: #c5221f; }
 
-  .mc-expand-btn {
-    font-size: 11px;
-    color: var(--text-muted);
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 3px 10px;
-    cursor: pointer;
-    flex-shrink: 0;
-    align-self: flex-start;
-    margin-top: 2px;
-    transition: background .15s, border-color .15s;
-    white-space: nowrap;
-  }
-  .mc-expand-btn:hover { background: #f1f3f4; border-color: var(--primary); }
-
-  /* params panel */
-  .model-params {
-    display: none;
-    padding: 14px 20px 16px 48px;
-    border-top: 1px solid var(--border);
-    background: #f8f9fa;
-  }
-  .model-params.open { display: block; }
-  .params-row { display: flex; flex-wrap: wrap; gap: 14px; }
-  .param-item label {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .4px;
-    color: var(--text-muted);
-    margin-bottom: 5px;
-  }
-  .param-item input {
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 13.5px;
-    background: var(--surface);
-    color: var(--text);
-    outline: none;
-    width: 220px;
-    transition: border-color .15s;
-  }
-  .param-item input[type=number] { width: 120px; }
-  .param-item input:focus { border-color: var(--primary); }
 
   /* ── BUILD BUTTON ── */
   .build-bar {
@@ -416,26 +369,7 @@
         {% else %}Не побудовано{% endif %}
       </span>
 
-      {% if m.params %}
-      <button class="mc-expand-btn" id="exp-{{ m.id }}"
-              onclick="event.stopPropagation(); toggleParams('{{ m.id }}')">⚙ Параметри</button>
-      {% endif %}
     </div>
-
-    {% if m.params %}
-    <div class="model-params" id="params-{{ m.id }}">
-      <div class="params-row">
-        {% for p in m.params %}
-        <div class="param-item">
-          <label>{{ p.label }}</label>
-          <input type="{{ p.type }}" id="param-{{ m.id }}-{{ p.name }}"
-                 data-model="{{ m.id }}" data-param="{{ p.name }}"
-                 value="{{ p.default }}">
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-    {% endif %}
   </div>
   {% endfor %}
 </div>
@@ -467,12 +401,6 @@ function toggleCard(id, e) {
   if (chk.disabled) return;
   chk.checked = !chk.checked;
   updateSelected();
-}
-function toggleParams(id) {
-  const p   = document.getElementById('params-' + id);
-  const btn = document.getElementById('exp-' + id);
-  const open = p.classList.toggle('open');
-  btn.textContent = open ? '⚙ Сховати' : '⚙ Параметри';
 }
 
 function updateSelected() {
@@ -509,14 +437,7 @@ function updateSelected() {
 }
 
 function collectModels() {
-  const checked = [...document.querySelectorAll('.mc-checkbox:checked')].map(c => c.dataset.model);
-  return checked.map(id => {
-    const params = {};
-    document.querySelectorAll(`[data-model="${id}"][data-param]`).forEach(inp => {
-      params[inp.dataset.param] = inp.value;
-    });
-    return { id, params };
-  });
+  return [...document.querySelectorAll('.mc-checkbox:checked')].map(c => ({ id: c.dataset.model, params: {} }));
 }
 
 function startBuild() {
