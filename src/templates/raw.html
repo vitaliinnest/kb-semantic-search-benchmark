@@ -4,37 +4,51 @@
 {% block head %}
 <style>
   .page-heading { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-  .page-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+  .page-sub     { font-size: 14px; color: var(--text-muted); margin-bottom: 20px; }
 
-  /* ── FLASH ── */
   .flash-success { background: #e6f4ea; color: #1e6e3a; border: 1px solid #b6dfc5; }
   .flash-error   { background: #fce8e6; color: #c5221f; border: 1px solid #f5c6c4; }
 
-  /* ── UPLOAD ZONE ── */
+  /* ── UPLOAD TOGGLE ── */
+  .upload-details { margin-bottom: 20px; }
+  .upload-details summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    list-style: none;
+    padding: 7px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--surface);
+    user-select: none;
+    transition: background .15s, border-color .15s;
+    margin-bottom: 12px;
+  }
+  .upload-details summary::-webkit-details-marker { display: none; }
+  .upload-details summary:hover { background: #e8f0fe; border-color: var(--primary); }
+  .upload-details[open] summary .ut-arrow { transform: rotate(180deg); }
+  .ut-arrow { font-size: 10px; transition: transform .2s; display: inline-block; }
+
   .upload-zone {
     border: 2px dashed var(--border);
     border-radius: var(--radius);
-    padding: 28px 20px;
+    padding: 22px 20px;
     text-align: center;
     cursor: pointer;
     transition: border-color .2s, background .2s;
     background: var(--surface);
-    margin-bottom: 24px;
   }
   .upload-zone.dragover { border-color: var(--primary); background: #e8f0fe; }
-  .upload-zone .uz-icon { font-size: 36px; margin-bottom: 8px; }
-  .upload-zone .uz-title { font-size: 15px; font-weight: 600; color: var(--text); }
-  .upload-zone .uz-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .upload-zone .uz-icon  { font-size: 28px; margin-bottom: 6px; }
+  .upload-zone .uz-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .upload-zone .uz-sub   { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
   .upload-zone input[type=file] { display: none; }
-  .upload-zone .uz-filelist {
-    margin-top: 12px;
-    font-size: 12.5px;
-    color: var(--text-muted);
-    text-align: left;
-    max-height: 100px;
-    overflow-y: auto;
-    padding: 0 8px;
-  }
+  .uz-filelist { margin-top: 10px; font-size: 12px; color: var(--text-muted); text-align: left; max-height: 80px; overflow-y: auto; padding: 0 8px; }
+  .upload-submit { text-align: center; margin-top: 10px; }
 
   /* ── FILE TABLE ── */
   .files-card {
@@ -43,23 +57,24 @@
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     overflow: hidden;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
   }
   .files-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 18px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border);
     background: #f8f9fa;
   }
   .files-card-header .title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--text);
+    font-family: "SF Mono", Consolas, monospace;
   }
-  .files-card-header .count-badge {
-    font-size: 12px;
+  .count-badge {
+    font-size: 11.5px;
     font-weight: 600;
     background: #e8f0fe;
     color: var(--primary);
@@ -73,46 +88,49 @@
   }
   .files-table th {
     background: #f8f9fa;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .5px;
     color: var(--text-muted);
-    padding: 8px 16px;
+    padding: 7px 14px;
     text-align: left;
     border-bottom: 1px solid var(--border);
   }
   .files-table td {
-    padding: 10px 16px;
+    padding: 9px 14px;
     border-bottom: 1px solid #f0f0f0;
     vertical-align: middle;
   }
   .files-table tr:last-child td { border-bottom: none; }
   .files-table tr:hover td { background: #f8f9fa; }
-  .file-icon { margin-right: 6px; }
   .file-name { font-weight: 500; color: var(--text); word-break: break-all; }
   .file-size { color: var(--text-muted); white-space: nowrap; }
-  .file-date { color: var(--text-muted); white-space: nowrap; font-size: 12.5px; }
-  .btn-delete {
-    background: none;
-    border: 1px solid #f5c6c4;
-    color: #c5221f;
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background .15s, border-color .15s;
-  }
-  .btn-delete:hover { background: #fce8e6; border-color: #c5221f; }
+  .file-date { color: var(--text-muted); white-space: nowrap; font-size: 12px; }
 
-  /* ── EMPTY ── */
+  .btn-del {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+    flex-shrink: 0;
+  }
+  .btn-del:hover { background: #fce8e6; border-color: #c5221f; color: #c5221f; }
+  .btn-del:disabled { opacity: .4; cursor: not-allowed; }
+
   .empty-state {
-    padding: 40px 20px;
+    padding: 36px 20px;
     text-align: center;
     color: var(--text-muted);
   }
-  .empty-state .es-icon { font-size: 40px; margin-bottom: 10px; }
+  .empty-state .es-icon { font-size: 36px; margin-bottom: 8px; }
   .empty-state p { font-size: 14px; }
 
   /* ── CHUNK PANEL ── */
@@ -121,34 +139,65 @@
     border: 1.5px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 20px 24px;
+    padding: 18px 22px;
   }
-  .chunk-panel h2 {
-    font-size: 16px;
-    font-weight: 700;
+  .chunk-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .chunk-panel-header h2 { font-size: 15px; font-weight: 700; margin: 0; }
+  .chunks-badge {
+    font-size: 12px;
+    font-weight: 600;
+    background: #e6f4ea;
+    color: #1e6e3a;
+    padding: 2px 10px;
+    border-radius: 20px;
+    margin-left: auto;
+  }
+  .chunks-badge.none {
+    background: #f1f3f4;
+    color: var(--text-muted);
+  }
+
+  .params-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
     margin-bottom: 16px;
-    color: var(--text);
+    align-items: flex-end;
   }
-  .params-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
-  }
+  .param-field { display: flex; flex-direction: column; gap: 4px; }
   .param-field label {
-    display: block;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .4px;
     color: var(--text-muted);
-    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .param-tip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #e8f0fe;
+    color: var(--primary);
+    font-size: 9px;
+    font-weight: 700;
+    cursor: default;
+    flex-shrink: 0;
   }
   .param-field input[type=number] {
-    width: 100%;
+    width: 110px;
     border: 1.5px solid var(--border);
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 7px 10px;
     font-size: 14px;
     background: var(--surface);
     color: var(--text);
@@ -156,37 +205,31 @@
     transition: border-color .15s;
   }
   .param-field input[type=number]:focus { border-color: var(--primary); }
-  .chunk-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 
-  /* ── PROGRESS / RESULT ── */
+  .chunk-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
   #chunk-status {
-    font-size: 13.5px;
-    padding: 10px 16px;
+    font-size: 13px;
+    padding: 8px 14px;
     border-radius: 8px;
     display: none;
   }
-  #chunk-status.running  { background: #fff3cd; color: #856404; border: 1px solid #ffe082; }
-  #chunk-status.success  { background: #e6f4ea; color: #1e6e3a; border: 1px solid #b6dfc5; }
-  #chunk-status.error    { background: #fce8e6; color: #c5221f; border: 1px solid #f5c6c4; }
+  #chunk-status.running { background: #fff3cd; color: #856404; border: 1px solid #ffe082; }
+  #chunk-status.success { background: #e6f4ea; color: #1e6e3a; border: 1px solid #b6dfc5; }
+  #chunk-status.error   { background: #fce8e6; color: #c5221f; border: 1px solid #f5c6c4; }
 
   .spinner {
     display: inline-block;
-    width: 14px; height: 14px;
+    width: 12px; height: 12px;
     border: 2px solid #856404;
     border-top-color: transparent;
     border-radius: 50%;
     animation: spin .7s linear infinite;
     vertical-align: middle;
-    margin-right: 6px;
+    margin-right: 5px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .existing-chunks {
-    font-size: 12.5px;
-    color: var(--text-muted);
-    margin-left: auto;
-  }
-  .existing-chunks strong { color: var(--text); }
   .domain-badge {
     display: inline-flex; align-items: center;
     background: var(--primary); color: #fff;
@@ -211,32 +254,32 @@
 
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% for category, message in messages %}
-  <div class="alert flash-{{ category }}" style="margin-bottom:18px;">{{ message }}</div>
+  <div class="alert flash-{{ category }}" style="margin-bottom:16px;">{{ message }}</div>
   {% endfor %}
 {% endwith %}
 
-<!-- ── UPLOAD ZONE ── -->
+<!-- ── UPLOAD ── -->
 <form id="upload-form" action="/raw/upload?domain={{ current_domain }}" method="POST" enctype="multipart/form-data">
-  <div class="upload-zone" id="upload-zone">
-    <div class="uz-icon">📤</div>
-    <div class="uz-title">Перетягніть файли сюди або натисніть для вибору</div>
-    <div class="uz-sub">Підтримуються: .txt .md .rst .pdf .docx</div>
-    <input type="file" id="file-input" name="files" multiple
-           accept=".txt,.md,.rst,.pdf,.docx">
-    <div class="uz-filelist" id="uz-filelist"></div>
-  </div>
-  <div style="text-align:center;margin-top:-12px;margin-bottom:24px;">
-    <button type="submit" class="btn btn-primary" id="upload-btn" style="display:none;">
-      ⬆ Завантажити
-    </button>
-  </div>
+  <details class="upload-details" id="upload-details" {% if not files %}open{% endif %}>
+    <summary>📤 Додати файли <span class="ut-arrow">▼</span></summary>
+    <div class="upload-zone" id="upload-zone">
+      <div class="uz-icon">📤</div>
+      <div class="uz-title">Перетягніть файли сюди або натисніть для вибору</div>
+      <div class="uz-sub">Підтримуються: .txt .md .rst .pdf .docx</div>
+      <input type="file" id="file-input" name="files" multiple accept=".txt,.md,.rst,.pdf,.docx">
+      <div class="uz-filelist" id="uz-filelist"></div>
+    </div>
+    <div class="upload-submit">
+      <button type="submit" class="btn btn-primary" id="upload-btn" style="display:none;">⬆ Завантажити</button>
+    </div>
+  </details>
 </form>
 
 <!-- ── FILES TABLE ── -->
 <div class="files-card">
   <div class="files-card-header">
-    <span class="title">Файли у data/domains/{{ current_domain }}/raw/</span>
-    <span class="count-badge">{{ files|length }} файл(ів)</span>
+    <span class="title">data/domains/{{ current_domain }}/raw/</span>
+    <span class="count-badge" id="file-count">{{ files|length }} файл{% if files|length == 1 %}{% elif files|length < 5 %}и{% else %}ів{% endif %}</span>
   </div>
   {% if files %}
   <table class="files-table">
@@ -245,7 +288,7 @@
         <th>Назва</th>
         <th>Розмір</th>
         <th>Змінено</th>
-        <th></th>
+        <th style="width:40px;"></th>
       </tr>
     </thead>
     <tbody id="files-tbody">
@@ -253,10 +296,10 @@
       {% set ext = f.name.rsplit('.', 1)[-1].lower() if '.' in f.name else '' %}
       <tr id="row-{{ loop.index }}">
         <td>
-          <span class="file-icon">
+          <span style="margin-right:6px;">
             {% if ext == 'pdf' %}📕
-            {% elif ext in ('doc', 'docx') %}📘
-            {% elif ext in ('txt', 'md', 'rst') %}📄
+            {% elif ext in ('doc','docx') %}📘
+            {% elif ext in ('txt','md','rst') %}📄
             {% else %}📎{% endif %}
           </span>
           <span class="file-name">{{ f.name }}</span>
@@ -264,10 +307,9 @@
         <td class="file-size">{{ (f.size / 1024)|round(1) }} KB</td>
         <td class="file-date">{{ f.mtime|int | datetimeformat }}</td>
         <td>
-          <button class="btn-delete"
-                  data-name="{{ f.name }}"
-                  data-row="row-{{ loop.index }}"
-                  onclick="deleteFile(this)">🗑 Видалити</button>
+          <button class="btn-del" title="Видалити {{ f.name }}"
+                  data-name="{{ f.name }}" data-row="row-{{ loop.index }}"
+                  onclick="deleteFile(this)">🗑</button>
         </td>
       </tr>
       {% endfor %}
@@ -276,51 +318,62 @@
   {% else %}
   <div class="empty-state">
     <div class="es-icon">🗂</div>
-    <p>Папка <code>data/domains/{{ current_domain }}/raw/</code> порожня.<br>Завантажте файли вище.</p>
+    <p>Папка порожня. Завантажте файли вище.</p>
   </div>
   {% endif %}
 </div>
 
 <!-- ── CHUNK PANEL ── -->
 <div class="chunk-panel">
-  <h2>⚙️ Розбиття на чанки</h2>
-  <div class="params-grid">
+  <div class="chunk-panel-header">
+    <h2>✂️ Розбиття на чанки</h2>
+    {% if chunk_exists %}
+    <span class="chunks-badge" id="chunks-badge">{{ chunk_count }} чанків</span>
+    {% else %}
+    <span class="chunks-badge none" id="chunks-badge">chunks.jsonl відсутній</span>
+    {% endif %}
+  </div>
+
+  <div class="params-row">
     <div class="param-field">
-      <label>Мін. слів</label>
+      <label>
+        Мін. слів
+        <span class="param-tip" title="Чанки коротші за цю межу відкидаються. Збільшуйте, якщо результати надто фрагментовані.">?</span>
+      </label>
       <input type="number" id="min-words" value="300" min="10" max="2000">
     </div>
     <div class="param-field">
-      <label>Макс. слів</label>
+      <label>
+        Макс. слів
+        <span class="param-tip" title="Максимальна довжина чанку. Більше = більше контексту, але менш точний пошук.">?</span>
+      </label>
       <input type="number" id="max-words" value="800" min="50" max="5000">
     </div>
     <div class="param-field">
-      <label>Перекриття</label>
+      <label>
+        Перекриття
+        <span class="param-tip" title="Кількість слів з кінця попереднього чанку, що повторюються на початку наступного. Запобігає втраті контексту на межах.">?</span>
+      </label>
       <input type="number" id="overlap" value="80" min="0" max="500">
     </div>
   </div>
 
   <div class="chunk-actions">
-    <button class="btn btn-primary" id="chunk-btn" onclick="runChunk()">
+    <button class="btn btn-primary" id="chunk-btn" onclick="runChunk()" {% if not files %}disabled{% endif %}>
       ▶ Запустити чанкінг
     </button>
     <div id="chunk-status"></div>
-    {% if chunk_exists %}
-    <span class="existing-chunks">
-      Поточний chunks.jsonl: <strong>{{ chunk_count }}</strong> чанків
-    </span>
-    {% endif %}
   </div>
 </div>
 
 <script>
-// ── Upload zone DnD ──────────────────────────────────────────────────────────
+// ── Upload ───────────────────────────────────────────────────────────────────
 const zone      = document.getElementById('upload-zone');
 const fileInput = document.getElementById('file-input');
 const fileList  = document.getElementById('uz-filelist');
 const uploadBtn = document.getElementById('upload-btn');
 
 zone.addEventListener('click', () => fileInput.click());
-
 zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
 zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
 zone.addEventListener('drop', e => {
@@ -328,100 +381,77 @@ zone.addEventListener('drop', e => {
   zone.classList.remove('dragover');
   fileInput.files = e.dataTransfer.files;
   showFiles(fileInput.files);
+  document.getElementById('upload-details').open = true;
 });
-
 fileInput.addEventListener('change', () => showFiles(fileInput.files));
 
 function showFiles(files) {
   if (!files || files.length === 0) { fileList.innerHTML = ''; uploadBtn.style.display = 'none'; return; }
-  const names = Array.from(files).map(f => `• ${f.name}`).join('<br>');
-  fileList.innerHTML = names;
+  fileList.innerHTML = Array.from(files).map(f => `• ${f.name}`).join('<br>');
   uploadBtn.style.display = 'inline-flex';
 }
 
 // ── Delete ───────────────────────────────────────────────────────────────────
 function deleteFile(btn) {
   const name = btn.dataset.name;
-  if (!confirm(`Видалити файл «${name}»?`)) return;
+  if (!confirm(`Видалити «${name}»?`)) return;
   btn.disabled = true;
-  btn.textContent = '…';
-
   const fd = new FormData();
   fd.append('name', name);
   fd.append('domain', '{{ current_domain }}');
-
   fetch('/raw/delete?domain={{ current_domain }}', { method: 'POST', body: fd })
     .then(r => r.json())
     .then(data => {
       if (data.ok) {
-        const row = document.getElementById(btn.dataset.row);
-        if (row) row.remove();
-        // оновлюємо лічильник
-        const badge = document.querySelector('.count-badge');
+        document.getElementById(btn.dataset.row)?.remove();
+        const badge = document.getElementById('file-count');
         if (badge) {
-          const cur = parseInt(badge.textContent) || 0;
-          badge.textContent = `${Math.max(0, cur - 1)} файл(ів)`;
+          const n = Math.max(0, (parseInt(badge.textContent) || 1) - 1);
+          badge.textContent = n + (n === 1 ? ' файл' : n < 5 ? ' файли' : ' файлів');
         }
-        // If table is empty show empty state
         const tbody = document.getElementById('files-tbody');
         if (tbody && tbody.rows.length === 0) {
-          const card = document.querySelector('.files-card');
-          card.innerHTML = `<div class="files-card-header"><span class="title">Файли у data/domains/{{ current_domain }}/raw/</span><span class="count-badge">0 файл(ів)</span></div>
-            <div class="empty-state"><div class="es-icon">🗂</div><p>Папка <code>data/domains/{{ current_domain }}/raw/</code> порожня.</p></div>`;
+          tbody.closest('table').replaceWith(Object.assign(document.createElement('div'), {
+            className: 'empty-state',
+            innerHTML: '<div class="es-icon">🗂</div><p>Папка порожня.</p>'
+          }));
         }
       } else {
         alert('Помилка: ' + data.error);
         btn.disabled = false;
-        btn.textContent = '🗑 Видалити';
       }
     })
-    .catch(() => {
-      alert('Мережева помилка');
-      btn.disabled = false;
-      btn.textContent = '🗑 Видалити';
-    });
+    .catch(() => { alert('Мережева помилка'); btn.disabled = false; });
 }
 
 // ── Chunk ────────────────────────────────────────────────────────────────────
 let _pollTimer = null;
 
 function runChunk() {
-  const minW = document.getElementById('min-words').value;
-  const maxW = document.getElementById('max-words').value;
-  const ov   = document.getElementById('overlap').value;
-  const btn  = document.getElementById('chunk-btn');
-  const st   = document.getElementById('chunk-status');
-
+  const btn = document.getElementById('chunk-btn');
   btn.disabled = true;
-  setStatus('running', '<span class="spinner"></span> Чанкінг виконується…');
+  setStatus('running', '<span class="spinner"></span>Чанкінг виконується…');
 
   const fd = new FormData();
-  fd.append('min_words', minW);
-  fd.append('max_words', maxW);
-  fd.append('overlap',   ov);
+  fd.append('min_words', document.getElementById('min-words').value);
+  fd.append('max_words', document.getElementById('max-words').value);
+  fd.append('overlap',   document.getElementById('overlap').value);
   fd.append('domain', '{{ current_domain }}');
 
   fetch('/raw/chunk?domain={{ current_domain }}', { method: 'POST', body: fd })
     .then(r => r.json())
     .then(data => {
-      if (!data.ok) {
-        setStatus('error', '❌ ' + data.error);
-        btn.disabled = false;
-        return;
-      }
+      if (!data.ok) { setStatus('error', '❌ ' + data.error); btn.disabled = false; return; }
       _pollTimer = setInterval(pollStatus, 1500);
     })
-    .catch(() => {
-      setStatus('error', '❌ Мережева помилка');
-      btn.disabled = false;
-    });
+    .catch(() => { setStatus('error', '❌ Мережева помилка'); btn.disabled = false; });
 }
 
 function pollStatus() {
   fetch('/raw/chunk/status')
     .then(r => r.json())
     .then(data => {
-      if (data.running) return; // still running
+      if (data.running) return;
       clearInterval(_pollTimer);
       _pollTimer = null;
       document.getElementById('chunk-btn').disabled = false;
@@ -429,17 +459,9 @@ function pollStatus() {
         setStatus('error', '❌ ' + data.error);
       } else {
         const count = data.result;
-        setStatus('success', `✅ Готово! Створено <strong>${count}</strong> чанків. Файл <code>data/domains/{{ current_domain }}/chunks.jsonl</code> оновлено.`);
-        // оновлюємо лічильник
-        const ex = document.querySelector('.existing-chunks');
-        if (ex) ex.innerHTML = `Поточний chunks.jsonl: <strong>${count}</strong> чанків`;
-        else {
-          const ca = document.querySelector('.chunk-actions');
-          const sp = document.createElement('span');
-          sp.className = 'existing-chunks';
-          sp.innerHTML = `Поточний chunks.jsonl: <strong>${count}</strong> чанків`;
-          ca.appendChild(sp);
-        }
+        setStatus('success', `✅ Готово! Створено <strong>${count}</strong> чанків.`);
+        const badge = document.getElementById('chunks-badge');
+        if (badge) { badge.textContent = count + ' чанків'; badge.className = 'chunks-badge'; }
       }
     })
     .catch(() => {});
