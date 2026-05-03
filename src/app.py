@@ -900,19 +900,47 @@ def build_artifact_view():
         return jsonify({"type": "text", "content": raw})
 
 
+# Доменно-специфічні профілі ваг (з рисунків 5.24–5.26 магістерської роботи)
+DOMAIN_WEIGHT_PROFILES: dict[str, dict[str, float]] = {
+    "tech": {
+        "ndcg_at_k": 0.30, "mrr_at_k": 0.20, "recall_at_k": 0.25,
+        "precision_at_k": 0.05, "avg_latency_ms": 0.20,
+    },
+    "legal": {
+        "ndcg_at_k": 0.30, "mrr_at_k": 0.30, "recall_at_k": 0.20,
+        "precision_at_k": 0.10, "avg_latency_ms": 0.10,
+    },
+    "medical": {
+        "ndcg_at_k": 0.25, "mrr_at_k": 0.15, "recall_at_k": 0.35,
+        "precision_at_k": 0.10, "avg_latency_ms": 0.15,
+    },
+}
+
+DOMAIN_WEIGHT_RATIONALE: dict[str, str] = {
+    "tech":    "Збалансований профіль для технічного пошуку: важлива якість ранжування, повнота і швидкодія.",
+    "legal":   "Для юридичного пошуку — пріоритет MRR і nDCG: критично швидко знайти перший релевантний фрагмент і правильно впорядкувати верхівку видачі.",
+    "medical": "Для медичного пошуку — найбільша вага у Recall: небажано пропускати релевантні документи, навіть ціною більшої затримки.",
+    "default": "Базовий профіль із збалансованими вагами для загального використання.",
+}
+
+
 @app.route("/benchmark/selection")
 def benchmark_selection():
     domain = get_domain()
     data = load_latest_benchmark(domain)
     selection = None
+    initial_weights = DOMAIN_WEIGHT_PROFILES.get(domain, DEFAULT_WEIGHTS)
     if data and data.get("models"):
-        selection = run_selection(data["models"])
+        selection = run_selection(data["models"], initial_weights)
     return render_template(
         "selection.html",
         selection=selection,
         benchmark_meta=data,
         criteria=CRITERIA,
         default_weights=DEFAULT_WEIGHTS,
+        domain_profiles=DOMAIN_WEIGHT_PROFILES,
+        profile_rationale=DOMAIN_WEIGHT_RATIONALE,
+        active_profile=domain if domain in DOMAIN_WEIGHT_PROFILES else "default",
         current_domain=domain,
         domains=DOMAINS_CONFIG,
     )

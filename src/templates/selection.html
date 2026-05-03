@@ -16,19 +16,42 @@
 
   /* ── BEST MODEL ── */
   .best-card {
-    display: flex; align-items: center; gap: 20px;
+    display: flex; align-items: center; gap: 28px;
     background: linear-gradient(135deg, #e8f5e9 0%, #f0fdf4 100%);
     border: 2px solid #81c784;
-    border-radius: var(--radius);
-    padding: 18px 24px;
-    margin-bottom: 16px;
-    box-shadow: var(--shadow);
+    border-radius: 14px;
+    padding: 26px 32px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 14px rgba(76, 175, 80, 0.18);
   }
-  .best-icon  { font-size: 36px; flex-shrink: 0; }
-  .best-label { font-size: 12px; font-weight: 700; color: #2e7d32;
-                text-transform: uppercase; letter-spacing: .6px; }
-  .best-name  { font-size: 20px; font-weight: 800; color: #1b5e20; margin-top: 3px; }
-  .best-score { font-size: 13px; color: #388e3c; margin-top: 2px; }
+  .best-icon  { font-size: 56px; flex-shrink: 0; line-height: 1; }
+  .best-info  { flex: 1; min-width: 0; }
+  .best-label { font-size: 11px; font-weight: 800; color: #2e7d32;
+                text-transform: uppercase; letter-spacing: 1.1px; }
+  .best-name  { font-size: 34px; font-weight: 800; color: #1b5e20;
+                margin: 4px 0 10px; line-height: 1.05; }
+  .best-meta  { display: flex; align-items: center; gap: 14px;
+                flex-wrap: wrap; margin-bottom: 8px; }
+  .best-score-pill {
+    display: inline-flex; align-items: baseline; gap: 8px;
+    background: #fff; border: 1.5px solid #81c784;
+    padding: 5px 14px; border-radius: 22px;
+  }
+  .best-score-pill .lab { font-size: 11px; font-weight: 700;
+                          color: #2e7d32; text-transform: uppercase; letter-spacing: .4px; }
+  .best-score-pill .val { font-size: 19px; font-weight: 800; color: #1b5e20;
+                          font-variant-numeric: tabular-nums; }
+  .best-pareto-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(46, 125, 50, 0.15);
+    padding: 6px 14px; border-radius: 22px;
+    font-size: 12.5px; font-weight: 700; color: #1b5e20;
+  }
+  .best-context {
+    font-size: 13px; color: #2e7d32; font-weight: 500;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .best-context strong { color: #1b5e20; font-weight: 700; }
 
   /* ── PARETO SET ── */
   .pareto-card {
@@ -48,13 +71,80 @@
   }
   .pareto-badge.is-best { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
 
+  /* ── PROFILE PRESETS ── */
+  .presets-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 12px 16px; background: #f6f8fb;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    margin-bottom: 16px;
+  }
+  .presets-label {
+    font-size: 11.5px; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: .6px; white-space: nowrap;
+  }
+  .preset-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 22px;
+    background: var(--surface); color: var(--text);
+    font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer;
+    transition: all .15s; white-space: nowrap;
+  }
+  .preset-btn:hover { border-color: var(--primary); color: var(--primary); background: #f1f5fc; }
+  .preset-btn.active {
+    background: var(--primary); color: #fff; border-color: var(--primary);
+    box-shadow: 0 2px 6px rgba(26,115,232,0.3);
+  }
+  .preset-rationale {
+    margin-top: 10px;
+    font-size: 12.5px; color: var(--text-muted);
+    background: #fff8e1; border: 1px dashed #ffe082;
+    border-radius: 6px; padding: 8px 12px; font-style: italic;
+    line-height: 1.45;
+  }
+
+  /* ── TOOLTIP ── */
+  .tip {
+    position: relative; display: inline-flex; align-items: center;
+    cursor: help;
+  }
+  .tip-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; margin-left: 6px;
+    background: #e8eaed; color: var(--text-muted);
+    border-radius: 50%; font-size: 11px; font-weight: 700;
+    font-family: Georgia, serif; font-style: italic;
+    transition: background .15s, color .15s;
+  }
+  .tip:hover .tip-icon { background: var(--primary); color: #fff; }
+  .tip::after {
+    content: attr(data-tip); position: absolute;
+    bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    background: rgba(33, 33, 33, 0.96); color: #fff;
+    padding: 8px 12px; border-radius: 6px; font-size: 12px;
+    white-space: pre-line; width: max-content; max-width: 320px;
+    text-align: left; z-index: 100; opacity: 0; pointer-events: none;
+    transition: opacity .15s; font-weight: 400; line-height: 1.5;
+    font-family: -apple-system, "Segoe UI", sans-serif; font-style: normal;
+  }
+  .tip:hover::after { opacity: 1; }
+  .tip::before {
+    content: ""; position: absolute;
+    bottom: calc(100% + 2px); left: 50%; transform: translateX(-50%);
+    border: 6px solid transparent; border-top-color: rgba(33, 33, 33, 0.96);
+    z-index: 100; opacity: 0; pointer-events: none; transition: opacity .15s;
+  }
+  .tip:hover::before { opacity: 1; }
+
   /* ── WEIGHTS PANEL ── */
   .weights-card {
     background: var(--surface); border: 1.5px solid var(--border);
     border-radius: var(--radius); box-shadow: var(--shadow);
     padding: 18px 24px; margin-bottom: 24px;
   }
-  .weights-card h2 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+  .weights-card h2 {
+    font-size: 15px; font-weight: 700; margin-bottom: 14px;
+    display: inline-flex; align-items: center;
+  }
   .weight-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -72,8 +162,28 @@
   .meta-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
 
   /* ── TABLE ── */
-  .section-title { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .section-title-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 4px; flex-wrap: wrap; gap: 10px;
+  }
+  .section-title { font-size: 17px; font-weight: 700; }
   .section-sub   { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+
+  /* ── SEGMENTED CONTROL (Raw / Norm) ── */
+  .seg-ctrl {
+    display: inline-flex; background: #f1f3f4; border-radius: 10px;
+    padding: 3px; gap: 2px;
+  }
+  .seg-btn {
+    padding: 6px 14px; border: none; border-radius: 8px;
+    background: transparent; color: var(--text-muted);
+    font-size: 12.5px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: all .15s; white-space: nowrap;
+  }
+  .seg-btn.active {
+    background: #fff; color: var(--text);
+    box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  }
 
   .metrics-table {
     width: 100%; border-collapse: collapse;
@@ -136,34 +246,23 @@
   }
   .cb-seg { display: block; height: 100%; transition: width .3s ease; }
 
-  /* ── VIEW TOGGLE + FORMULA ── */
-  .view-row {
+  /* ── FORMULA ── */
+  .formula-row {
     display: flex; align-items: center; gap: 14px;
     margin-bottom: 12px; flex-wrap: wrap;
   }
-  .toggle-btn {
-    font-size: 12px; font-weight: 600; padding: 4px 13px;
-    border: 1.5px solid var(--border); border-radius: 20px;
-    cursor: pointer; background: var(--surface); color: var(--text-muted);
-    transition: all .15s; white-space: nowrap;
-  }
-  .toggle-btn:hover { border-color: var(--primary); color: var(--primary); }
-  .toggle-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
   .formula-note {
-    font-size: 15px; color: var(--text);
+    font-size: 14px; color: var(--text);
     font-family: "Consolas", "Fira Code", monospace;
     line-height: 1.9;
   }
-  .legend-row {
-    display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px;
-  }
+  .legend-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
   .legend-item {
     display: flex; align-items: center; gap: 6px;
     font-size: 13px; color: var(--text-muted);
   }
-  .legend-dot {
-    width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0;
-  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
   .domain-badge {
     display: inline-flex; align-items: center;
     background: var(--primary); color: #fff;
@@ -197,20 +296,33 @@
 {# ── BEST MODEL ─────────────────────────────────────── #}
 <div class="best-card" id="best-card">
   <div class="best-icon">🏆</div>
-  <div>
+  <div class="best-info">
     <div class="best-label">Рекомендована модель</div>
     <div class="best-name" id="best-name">{{ selection.best_model }}</div>
-    <div class="best-score" id="best-score">
-      Score: {{ "%.4f"|format(selection.ranked[0].score) }}
-      &nbsp;·&nbsp;
-      Pareto-оптимальна: {{ '✓' if selection.ranked[0].pareto else '✗' }}
+    <div class="best-meta">
+      <span class="best-score-pill">
+        <span class="lab">Score</span>
+        <span class="val" id="best-score-val">{{ "%.4f"|format(selection.ranked[0].score) }}</span>
+      </span>
+      <span class="best-pareto-pill" id="best-pareto-pill">
+        {% if selection.ranked[0].pareto %}✓ Pareto-оптимальна{% else %}✗ Не у Pareto-множині{% endif %}
+      </span>
+    </div>
+    <div class="best-context">
+      <span>Профіль:</span><strong id="best-profile-label">—</strong>
+      <span>·</span>
+      {% for d in domains %}{% if d.id == current_domain %}
+      <span>Домен:</span><strong>{{ d.label }}</strong>
+      {% endif %}{% endfor %}
     </div>
   </div>
 </div>
 
 {# ── PARETO SET ─────────────────────────────────────── #}
 <div class="pareto-card">
-  <span class="pareto-label">Pareto-множина:</span>
+  <span class="pareto-label tip" data-tip="Pareto-множина — це моделі, кожну з яких неможливо покращити за одним критерієм без погіршення хоча б одного іншого. Тобто всі вони — недоміновані альтернативи (жодна не «явно гірша»). Підсумкова рекомендація обирається серед них.">
+    Pareto-множина:<span class="tip-icon">i</span>
+  </span>
   <div class="pareto-badges" id="pareto-badges">
     {% for name in selection.pareto_set %}
     <span class="pareto-badge {% if name == selection.best_model %}is-best{% endif %}">
@@ -220,10 +332,24 @@
   </div>
 </div>
 
-{# ── WEIGHTS ─────────────────────────────────────────── #}
+{# ── PROFILE PRESETS ─────────────────────────────────── #}
 <div class="weights-card">
-  <h2>⚖️ Ваги критеріїв</h2>
-  <div class="weight-grid">
+  <h2>⚖️ Ваги критеріїв
+    <span class="tip" data-tip="Ваги визначають відносну важливість кожного критерію в інтегральному score. Сума ваг нормалізується. Профілі нижче — попередньо налаштовані ваги для кожного домену з тексту магістерської роботи (рис. 5.24–5.26).">
+      <span class="tip-icon">i</span>
+    </span>
+  </h2>
+
+  <div class="presets-row">
+    <span class="presets-label">Профіль:</span>
+    <button type="button" class="preset-btn" data-profile="tech">🔧 Технічний</button>
+    <button type="button" class="preset-btn" data-profile="legal">⚖️ Юридичний</button>
+    <button type="button" class="preset-btn" data-profile="medical">🏥 Медичний</button>
+    <button type="button" class="preset-btn" data-profile="default">⚙️ За замовчуванням</button>
+  </div>
+  <div class="preset-rationale" id="preset-rationale"></div>
+
+  <div class="weight-grid" style="margin-top:14px;">
     {% for c in selection.criteria %}
     <div class="weight-row">
       <div class="weight-header">
@@ -252,10 +378,16 @@
 </div>
 
 {# ── RANKING TABLE ───────────────────────────────────── #}
-<div class="section-title">📊 Ранжування моделей</div>
-<div class="view-row">
-  <button class="toggle-btn" id="norm-toggle-btn" onclick="toggleNorm()">Показати норм.</button>
-  <div class="formula-note" id="formula-line"></div>
+<div class="section-title-row">
+  <div class="section-title">📊 Ранжування моделей</div>
+  <div class="seg-ctrl" role="group" aria-label="Перегляд значень">
+    <button type="button" class="seg-btn active" id="seg-raw"  onclick="setView('raw')">Сирі</button>
+    <button type="button" class="seg-btn"        id="seg-norm" onclick="setView('norm')">Нормалізовані</button>
+  </div>
+</div>
+<div class="formula-row">
+  <div class="formula-note tip" id="formula-line"
+       data-tip="Сирі значення метрик нормалізуються в [0; 1] методом min-max (для Latency інверсно: менше = краще). Інтегральний score — зважена сума нормалізованих значень, поділена на суму ваг. Найвищий score визначає рекомендовану модель серед Pareto-оптимальних."></div>
 </div>
 <div class="legend-row" id="legend-row"></div>
 
@@ -329,10 +461,25 @@
   // ── Constants from server ────────────────────────────────────────────────
   var CRITERIA_META    = {{ criteria | tojson }};
   var INITIAL_WEIGHTS  = {{ (selection.weights if selection else default_weights) | tojson }};
+  var DOMAIN_PROFILES  = {{ domain_profiles | tojson if domain_profiles else '{}' }};
+  var DEFAULT_WEIGHTS  = {{ default_weights | tojson }};
+  var PROFILE_RATIONALE = {{ profile_rationale | tojson if profile_rationale else '{}' }};
+  var ACTIVE_PROFILE   = {{ active_profile | tojson if active_profile else '"default"' }};
+  var PROFILE_LABELS   = {
+    tech:    "🔧 Технічний",
+    legal:   "⚖️ Юридичний",
+    medical: "🏥 Медичний",
+    default: "⚙️ За замовчуванням",
+    custom:  "✏️ Користувацький",
+  };
+
+  var ALL_PROFILES = Object.assign({}, DOMAIN_PROFILES, { "default": DEFAULT_WEIGHTS });
+
   var _currentWeights  = Object.assign({}, INITIAL_WEIGHTS);
   var _currentCriteria = CRITERIA_META;
+  var _currentProfile  = ACTIVE_PROFILE;
   var _timer    = null;
-  var _showNorm = false;
+  var _view     = 'raw';   // 'raw' | 'norm'
 
   var CRIT_COLORS = {
     ndcg_at_k:      '#4285f4',
@@ -346,25 +493,88 @@
   buildContribBars(_currentCriteria, _currentWeights);
   updateFormulaLine(_currentCriteria, _currentWeights);
   buildLegend(_currentCriteria);
+  highlightActivePreset(_currentProfile);
+  updateProfileLabel(_currentProfile);
+  updateRationale(_currentProfile);
 
-  // ── Weight sliders ────────────────────────────────────────────────────────
+  // ── Profile presets ───────────────────────────────────────────────────────
+  document.querySelectorAll('.preset-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var pid = btn.dataset.profile;
+      var profile = ALL_PROFILES[pid];
+      if (!profile) return;
+      applyProfile(pid, profile);
+    });
+  });
+
+  function applyProfile(pid, profile) {
+    _currentProfile = pid;
+    _currentWeights = Object.assign({}, profile);
+    // Update sliders + value displays
+    Object.keys(profile).forEach(function (key) {
+      var sl = document.getElementById('w-' + key);
+      if (sl) sl.value = profile[key];
+      var vEl = document.getElementById('wval-' + key);
+      if (vEl) vEl.textContent = parseFloat(profile[key]).toFixed(2);
+    });
+    highlightActivePreset(pid);
+    updateProfileLabel(pid);
+    updateRationale(pid);
+    updateFormulaLine(_currentCriteria, _currentWeights);
+    recompute();
+  }
+
+  function highlightActivePreset(pid) {
+    document.querySelectorAll('.preset-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.profile === pid);
+    });
+  }
+
+  function updateProfileLabel(pid) {
+    var el = document.getElementById('best-profile-label');
+    if (el) el.textContent = PROFILE_LABELS[pid] || PROFILE_LABELS.custom;
+  }
+
+  function updateRationale(pid) {
+    var el = document.getElementById('preset-rationale');
+    if (!el) return;
+    var text = PROFILE_RATIONALE[pid] || '';
+    if (text) {
+      el.innerHTML = '💡 ' + esc(text);
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
+  }
+
+  // ── Weight sliders (manual fine-tune) ─────────────────────────────────────
   document.querySelectorAll('.weight-slider').forEach(function (sl) {
     sl.addEventListener('input', function () {
       var key = sl.dataset.key;
       document.getElementById('wval-' + key).textContent =
         parseFloat(sl.value).toFixed(2);
       _currentWeights[key] = parseFloat(sl.value);
+      // Manual edit → switch to "custom" profile
+      _currentProfile = 'custom';
+      highlightActivePreset('custom');
+      updateProfileLabel('custom');
+      updateRationale('custom');
       updateFormulaLine(_currentCriteria, _currentWeights);
       clearTimeout(_timer);
       _timer = setTimeout(recompute, 450);
     });
   });
 
-  // ── Raw / Norm toggle ──────────────────────────────────────────────────────
-  window.toggleNorm = function () {
-    _showNorm = !_showNorm;
+  // ── Raw / Norm segmented control ──────────────────────────────────────────
+  window.setView = function (mode) {
+    _view = mode;
+    var rawBtn  = document.getElementById('seg-raw');
+    var normBtn = document.getElementById('seg-norm');
+    if (rawBtn)  rawBtn.classList.toggle('active', mode === 'raw');
+    if (normBtn) normBtn.classList.toggle('active', mode === 'norm');
+
     document.querySelectorAll('td.metric-cell').forEach(function (td) {
-      if (_showNorm) {
+      if (mode === 'norm') {
         var n = parseFloat(td.dataset.norm || '0');
         td.textContent = n.toFixed(4);
         td.className = 'tc mono metric-cell ' + normClass(n);
@@ -374,11 +584,6 @@
         td.className = 'tc mono metric-cell' + (lc ? ' ' + lc : '');
       }
     });
-    var btn = document.getElementById('norm-toggle-btn');
-    if (btn) {
-      btn.textContent = _showNorm ? 'Показати raw' : 'Показати норм.';
-      btn.classList.toggle('active', _showNorm);
-    }
   };
 
   function normClass(v) {
@@ -404,7 +609,7 @@
         var color   = CRIT_COLORS[c.key] || '#aaa';
         var tip     = c.label + ': ' + contrib.toFixed(3) +
                       ' (w=' + (weights[c.key] || 0).toFixed(2) +
-                      ' \u00d7 norm=' + (normData[c.key] || 0).toFixed(3) + ')';
+                      ' × norm=' + (normData[c.key] || 0).toFixed(3) + ')';
         return '<span class="cb-seg" title="' + tip +
                '" style="width:' + pct + '%;background:' + color + '"></span>';
       }).join('');
@@ -418,13 +623,13 @@
       var color = CRIT_COLORS[c.key] || '#555';
       var label = c.label.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       return '<span style="color:' + color + ';font-weight:700">' + w +
-             '</span>\u00b7' + label + (c.maximize ? '' : '<sup style="font-size:11px">inv</sup>');
+             '</span>·' + label + (c.maximize ? '' : '<sup style="font-size:11px">inv</sup>');
     });
     var sumW = criteria.reduce(function (s, c) { return s + (weights[c.key] || 0); }, 0);
     var el = document.getElementById('formula-line');
     if (el) {
-      el.innerHTML = 'Score\u00a0=\u00a0(' + parts.join('\u00a0+\u00a0') +
-                     ')\u00a0/\u00a0' + sumW.toFixed(2);
+      el.innerHTML = 'Score = (' + parts.join(' + ') +
+                     ') / ' + sumW.toFixed(2);
     }
   }
 
@@ -436,7 +641,7 @@
       var color = CRIT_COLORS[c.key] || '#aaa';
       return '<span class="legend-item">' +
              '<span class="legend-dot" style="background:' + color + '"></span>' +
-             c.label + (c.maximize ? '' : ' \u2193min') +
+             c.label + (c.maximize ? '' : ' ↓min') +
              '</span>';
     }).join('');
   }
@@ -478,9 +683,14 @@
     var best = data.ranked[0];
     if (best) {
       document.getElementById('best-name').textContent = best.model_name;
-      document.getElementById('best-score').textContent =
-        'Score: ' + best.score.toFixed(4) +
-        ' \u00b7 Pareto-оптимальна: ' + (best.pareto ? '✓' : '✗');
+      var sv = document.getElementById('best-score-val');
+      if (sv) sv.textContent = best.score.toFixed(4);
+      var pp = document.getElementById('best-pareto-pill');
+      if (pp) {
+        pp.textContent = best.pareto ? '✓ Pareto-оптимальна' : '✗ Не у Pareto-множині';
+        pp.style.background = best.pareto ? 'rgba(46, 125, 50, 0.15)' : 'rgba(197, 34, 31, 0.12)';
+        pp.style.color      = best.pareto ? '#1b5e20' : '#c5221f';
+      }
     }
 
     var badgesEl = document.getElementById('pareto-badges');
@@ -499,7 +709,7 @@
         var v  = m.raw[c.key];
         var nv = m.normalized ? (m.normalized[c.key] || 0) : 0;
         if (v == null) {
-          return '<td class="tc mono metric-cell" data-raw="\u2014" data-norm="0">\u2014</td>';
+          return '<td class="tc mono metric-cell" data-raw="—" data-norm="0">—</td>';
         }
         var rawFmt  = c.key === 'avg_latency_ms' ? v.toFixed(1) : v.toFixed(4);
         var normFmt = nv.toFixed(4);
@@ -507,8 +717,8 @@
         if (c.key === 'avg_latency_ms') {
           latcls = v < 20 ? 'latency-good' : v > 100 ? 'latency-slow' : '';
         }
-        var displayVal = _showNorm ? normFmt : rawFmt;
-        var displayCls = _showNorm
+        var displayVal = _view === 'norm' ? normFmt : rawFmt;
+        var displayCls = _view === 'norm'
           ? ('tc mono metric-cell ' + normClass(nv))
           : ('tc mono metric-cell' + (latcls ? ' ' + latcls : ''));
         var latclsAttr = latcls ? (' data-latcls="' + latcls + '"') : '';
@@ -530,8 +740,8 @@
         '</td>';
 
       var paretoCell = m.pareto
-        ? '<span class="pareto-mark">Pareto \u2713</span>'
-        : '<span class="no-pareto">\u2014</span>';
+        ? '<span class="pareto-mark">Pareto ✓</span>'
+        : '<span class="no-pareto">—</span>';
 
       return '<tr' + bestRow + '>' +
         '<td><span class="rank-badge ' + rc + '">' + m.rank + '</span></td>' +
