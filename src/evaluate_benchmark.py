@@ -56,6 +56,16 @@ class QrelItem:
 
 
 @dataclass
+class RetrievedChunk:
+	rank: int
+	chunk_id: str
+	doc_id: str
+	score: float
+	relevance: int
+	text: str
+
+
+@dataclass
 class QueryEvalResult:
 	query_id: str
 	recall_at_k: float
@@ -65,6 +75,16 @@ class QueryEvalResult:
 	latency_ms: float
 	retrieved: int
 	relevant_total: int
+	# Optional, for benchmark-explorer UI
+	query_text: str = ""
+	retrieved_chunks: list = None  # list[RetrievedChunk]
+	qrel_targets: list = None  # list[dict] — ground-truth chunks/docs
+
+	def __post_init__(self):
+		if self.retrieved_chunks is None:
+			self.retrieved_chunks = []
+		if self.qrel_targets is None:
+			self.qrel_targets = []
 
 
 @dataclass
@@ -284,11 +304,13 @@ def evaluate_bm25_model(
 
 		retrieved_meta: list[dict] = []
 		retrieved_rels: list[int] = []
-		for idx, _score in ranked:
+		retrieved_scores: list[float] = []
+		for idx, score in ranked:
 			if idx < 0 or idx >= len(meta):
 				continue
 			record = meta[idx]
 			retrieved_meta.append(record)
+			retrieved_scores.append(float(score))
 			chunk_id = str(record.get("chunk_id", ""))
 			doc_id = str(record.get("source", ""))
 			retrieved_rels.append(match_relevance(qrels, chunk_id=chunk_id, doc_id=doc_id))
@@ -331,6 +353,27 @@ def evaluate_bm25_model(
 		relevant_in_top_k = sum(1 for rel in retrieved_rels[:top_k] if rel > 0)
 		precision_at_k = relevant_in_top_k / top_k
 
+		# Build retrieved chunks list for explorer UI
+		retrieved_chunks_ui: list[RetrievedChunk] = []
+		for rank, (record, score, rel) in enumerate(zip(retrieved_meta, retrieved_scores, retrieved_rels), start=1):
+			retrieved_chunks_ui.append(RetrievedChunk(
+				rank=rank,
+				chunk_id=str(record.get("chunk_id", "")),
+				doc_id=str(record.get("source", "")),
+				score=score,
+				relevance=rel,
+				text=str(record.get("text", ""))[:600],
+			))
+		# Build qrel targets list
+		qrel_targets_ui = [
+			{
+				"chunk_id": item.chunk_id or "",
+				"doc_id": item.doc_id or "",
+				"relevance": item.relevance,
+			}
+			for item in qrels if item.relevance > 0
+		]
+
 		query_results.append(
 			QueryEvalResult(
 				query_id=query_item.query_id,
@@ -341,6 +384,9 @@ def evaluate_bm25_model(
 				latency_ms=latency_ms,
 				retrieved=len(retrieved_meta),
 				relevant_total=relevant_total,
+				query_text=query_item.query,
+				retrieved_chunks=retrieved_chunks_ui,
+				qrel_targets=qrel_targets_ui,
 			)
 		)
 
@@ -400,11 +446,13 @@ def evaluate_model(
 
 		retrieved_meta: list[dict] = []
 		retrieved_rels: list[int] = []
-		for idx in indices[0]:
+		retrieved_scores: list[float] = []
+		for col, idx in enumerate(indices[0]):
 			if idx < 0 or idx >= len(meta):
 				continue
 			record = meta[idx]
 			retrieved_meta.append(record)
+			retrieved_scores.append(float(scores[0][col]))
 			chunk_id = str(record.get("chunk_id", ""))
 			doc_id = str(record.get("source", ""))
 			retrieved_rels.append(match_relevance(qrels, chunk_id=chunk_id, doc_id=doc_id))
@@ -451,6 +499,27 @@ def evaluate_model(
 		relevant_in_top_k = sum(1 for rel in retrieved_rels[:top_k] if rel > 0)
 		precision_at_k = relevant_in_top_k / top_k
 
+		# Build retrieved chunks list for explorer UI
+		retrieved_chunks_ui: list[RetrievedChunk] = []
+		for rank, (record, score, rel) in enumerate(zip(retrieved_meta, retrieved_scores, retrieved_rels), start=1):
+			retrieved_chunks_ui.append(RetrievedChunk(
+				rank=rank,
+				chunk_id=str(record.get("chunk_id", "")),
+				doc_id=str(record.get("source", "")),
+				score=score,
+				relevance=rel,
+				text=str(record.get("text", ""))[:600],
+			))
+		# Build qrel targets
+		qrel_targets_ui = [
+			{
+				"chunk_id": item.chunk_id or "",
+				"doc_id": item.doc_id or "",
+				"relevance": item.relevance,
+			}
+			for item in qrels if item.relevance > 0
+		]
+
 		query_results.append(
 			QueryEvalResult(
 				query_id=query_item.query_id,
@@ -461,6 +530,9 @@ def evaluate_model(
 				latency_ms=latency_ms,
 				retrieved=len(retrieved_meta),
 				relevant_total=relevant_total,
+				query_text=query_item.query,
+				retrieved_chunks=retrieved_chunks_ui,
+				qrel_targets=qrel_targets_ui,
 			)
 		)
 
@@ -612,6 +684,7 @@ def main() -> None:
 				"query_results": [
 					{
 						"query_id": q.query_id,
+						"query_text": q.query_text,
 						"recall_at_k": q.recall_at_k,
 						"mrr_at_k": q.mrr_at_k,
 						"ndcg_at_k": q.ndcg_at_k,
@@ -619,6 +692,18 @@ def main() -> None:
 						"latency_ms": q.latency_ms,
 						"retrieved": q.retrieved,
 						"relevant_total": q.relevant_total,
+						"qrel_targets": q.qrel_targets,
+						"retrieved_chunks": [
+							{
+								"rank": rc.rank,
+								"chunk_id": rc.chunk_id,
+								"doc_id": rc.doc_id,
+								"score": rc.score,
+								"relevance": rc.relevance,
+								"text": rc.text,
+							}
+							for rc in q.retrieved_chunks
+						],
 					}
 					for q in row.query_results
 				],
