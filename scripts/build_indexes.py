@@ -1,5 +1,5 @@
 """
-Build FAISS indexes for all 5 new embedding models across all 3 domains.
+Build FAISS indexes for all embedding models across all 3 domains.
 Runs sequentially to avoid memory issues on CPU-only machine.
 """
 import subprocess
@@ -64,7 +64,7 @@ def run_build(domain, artifact_id, model_type, model_name, batch_size, max_seq_l
 
 def main():
     print("=" * 60)
-    print("Building new model indexes")
+    print("Building model indexes")
     print("=" * 60)
     results = {}
 

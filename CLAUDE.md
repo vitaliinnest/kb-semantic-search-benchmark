@@ -30,7 +30,7 @@ RESULTS.md              Auto-generated markdown summary (run_all_benchmarks.py)
 
 scripts/                Benchmark-level scripts only
   run_all_benchmarks.py     Runs eval for all domains → RESULTS.md
-  build_all_new_models.py   Builds FAISS indexes for all models
+  build_indexes.py          Builds FAISS indexes for all models
 
 thesis/                 Master's thesis documents + editing scripts
   2026_M_PI_Nesterenko_VV.docx
