@@ -610,7 +610,7 @@ def fill_slide_metrics_formulas(slide):
         ("nDCG@k",
          "DCG@k  /  IDCG@k",
          "Нормалізована якість ранжування",
-         "де DCG@k = Σᵢ relᵢ / log₂(i+1),\nIDCG@k — DCG ідеального ранжування",
+         "де DCG@k = Σᵢ (2^relᵢ − 1) / log₂(i+1),\nIDCG@k — DCG ідеального ранжування",
          PRIMARY),
         ("MRR",
          "(1/|Q|) · Σ (1 / rankq)",
@@ -1125,8 +1125,8 @@ def fill_slide_detailed_metrics(slide):
     r = p.add_run(); r.text = "Швидкодія (ms/query): "
     r.font.size = Pt(10); r.font.bold = True; r.font.color.rgb = ACCENT; r.font.name = "Calibri"
     r = p.add_run()
-    r.text = ("BM25 ≈ 0.6–2.9   ◇   E5-base ≈ 67–225   ◇   nomic ≈ 131–407   "
-              "◇   Qwen3 ≈ 365–466   ◇   BGE-M3 ≈ 203–2960")
+    r.text = ("BM25 ≈ 0.4–3.1   ◇   E5-base ≈ 63–83   ◇   nomic ≈ 125–168   "
+              "◇   BGE-M3 ≈ 208–255   ◇   Qwen3 ≈ 436–463")
     r.font.size = Pt(10); r.font.color.rgb = GRAY_DARK; r.font.name = "Calibri"
 
 
@@ -1143,6 +1143,9 @@ def add_chart_helper(slide, chart_data, title, x, y, w, h):
     chart.legend.position = XL_LEGEND_POSITION.BOTTOM
     chart.legend.include_in_layout = False
     chart.legend.font.size = Pt(8)
+    # Tick labels would otherwise be auto-sized to fit and end up huge
+    chart.category_axis.tick_labels.font.size = Pt(9)
+    chart.value_axis.tick_labels.font.size = Pt(8)
     series_colors = [SUCCESS, ACCENT, PRIMARY_LT, GRAY_MED, DANGER]
     for i, series in enumerate(chart.plots[0].series):
         fill = series.format.fill
@@ -1171,8 +1174,8 @@ def fill_slide_analysis(slide):
 
     findings = [
         ("BGE-M3", "лідер у всіх 3 доменах за nDCG / MRR / Recall", SUCCESS),
-        ("E5-base", "швидка альтернатива (~225 мс vs ~2960 мс у BGE-M3)", PRIMARY_LT),
-        ("Qwen3", "конкурентна якість, але ~1500 мс на CPU — потрібен GPU", ACCENT),
+        ("E5-base", "швидка альтернатива (~70 мс vs ~228 мс у BGE-M3)", PRIMARY_LT),
+        ("Qwen3", "лідер на юридичному домені (nDCG@10=0.320), але ~2× повільніший за BGE-M3", ACCENT),
         ("nomic", "найслабші результати; в окремих доменах поступається BM25", DANGER),
     ]
     f_top = CY + IN(1.25)
@@ -1215,6 +1218,8 @@ def fill_slide_analysis(slide):
     chart.legend.position = XL_LEGEND_POSITION.BOTTOM
     chart.legend.include_in_layout = False
     chart.legend.font.size = Pt(10)
+    chart.category_axis.tick_labels.font.size = Pt(11)
+    chart.value_axis.tick_labels.font.size = Pt(9)
     series_colors = [SUCCESS, PRIMARY_LT, ACCENT, GRAY_MED, DANGER]
     for i, series in enumerate(chart.plots[0].series):
         fill = series.format.fill
@@ -1235,30 +1240,31 @@ def fill_slide_quality_speed(slide):
     chart_data = XyChartData()
 
     # Series per model (5 series)
+    # Latency values are real avg_latency_ms from results/benchmark_*.json
     bge_series = chart_data.add_series("BGE-M3")
-    bge_series.add_data_point(2960, 0.6722)
-    bge_series.add_data_point(202.9, 0.3065)
-    bge_series.add_data_point(236.3, 0.4339)
+    bge_series.add_data_point(222.5, 0.6722)
+    bge_series.add_data_point(208.2, 0.3065)
+    bge_series.add_data_point(254.9, 0.4339)
 
     e5_series = chart_data.add_series("E5-base")
-    e5_series.add_data_point(225.1, 0.6121)
-    e5_series.add_data_point(67.0, 0.2567)
-    e5_series.add_data_point(80.3, 0.3909)
+    e5_series.add_data_point(70.9, 0.6121)
+    e5_series.add_data_point(62.5, 0.2567)
+    e5_series.add_data_point(83.3, 0.3909)
 
     qwen_series = chart_data.add_series("Qwen3")
-    qwen_series.add_data_point(365.4, 0.6325)
-    qwen_series.add_data_point(399.1, 0.3199)
-    qwen_series.add_data_point(465.9, 0.3629)
+    qwen_series.add_data_point(463.4, 0.6325)
+    qwen_series.add_data_point(436.7, 0.3199)
+    qwen_series.add_data_point(436.2, 0.3629)
 
     bm25_series = chart_data.add_series("BM25")
-    bm25_series.add_data_point(1.5, 0.4861)
-    bm25_series.add_data_point(2.9, 0.1875)
+    bm25_series.add_data_point(0.4, 0.4861)
+    bm25_series.add_data_point(3.1, 0.1875)
     bm25_series.add_data_point(0.6, 0.3222)
 
     nomic_series = chart_data.add_series("nomic")
-    nomic_series.add_data_point(407.4, 0.3765)
-    nomic_series.add_data_point(131.6, 0.0951)
-    nomic_series.add_data_point(150.4, 0.1668)
+    nomic_series.add_data_point(124.8, 0.3765)
+    nomic_series.add_data_point(131.5, 0.0951)
+    nomic_series.add_data_point(167.9, 0.1668)
 
     # Chart on left, takeaways on right
     chart_w = IN(6.0)
@@ -1315,10 +1321,10 @@ def fill_slide_quality_speed(slide):
              font_size=12, bold=True, color=PRIMARY, align=PP_ALIGN.LEFT)
 
     takeaways = [
-        ("Лідер якості:", "BGE-M3", "найвища nDCG, але повільний", SUCCESS),
+        ("Лідер якості:", "BGE-M3", "найвища nDCG, ~228 мс", SUCCESS),
         ("Найшвидший:", "BM25", "<3 мс, але якість обмежена", GRAY_MED),
-        ("Оптимум:", "E5-base", "Парето-frontier, ~225 мс", PRIMARY_LT),
-        ("Без GPU:", "Qwen3", "повільний, конкурентний", ACCENT),
+        ("Альтернатива:", "E5-base", "~3× швидше за BGE-M3, ~70 мс", PRIMARY_LT),
+        ("Лідер на Legal:", "Qwen3", "nDCG@10=0.32, але ~2× повільніший", ACCENT),
         ("Найслабший:", "nomic", "поступається навіть BM25", DANGER),
     ]
     tk_top = CY + IN(0.35)
@@ -1427,8 +1433,8 @@ def fill_slide_summary(slide):
 
     recs = [
         ("BGE-M3", "основна модель для впровадження", "Найкраща якість, стабільність у різних доменах", SUCCESS),
-        ("E5-base", "швидка альтернатива", "Прийнятна якість + ~13× швидше за BGE-M3", PRIMARY_LT),
-        ("Qwen3", "лише з GPU", "Висока якість, але непрактична на CPU", ACCENT),
+        ("E5-base", "швидка альтернатива", "Прийнятна якість + ~3× швидше за BGE-M3", PRIMARY_LT),
+        ("Qwen3", "лідер на юридичному домені", "Найвища nDCG@10 на Legal (0.32), але ~2× повільніший за BGE-M3", ACCENT),
         ("BM25", "конкурентний baseline", "Залишається сильним у певних доменах", GRAY_MED),
     ]
     r_top = CY + IN(0.7)
