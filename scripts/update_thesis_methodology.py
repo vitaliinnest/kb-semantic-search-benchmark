@@ -17,9 +17,9 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).parent.parent
-XML_PATH = ROOT / "unpacked_docx" / "word" / "document.xml"
-DOCX_PATH = ROOT / "2026_М_ПІ_ПРАКТИКА_ІПЗм_24_1_Нестеренко_В_В.docx"
-UNPACKED = ROOT / "unpacked_docx"
+XML_PATH = ROOT / "thesis" / "unpacked_docx" / "word" / "document.xml"
+DOCX_PATH = ROOT / "thesis" / "2026_М_ПІ_ПРАКТИКА_ІПЗм_24_1_Нестеренко_В_В.docx"
+UNPACKED = ROOT / "thesis" / "unpacked_docx"
 
 NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 ET.register_namespace("", NS)

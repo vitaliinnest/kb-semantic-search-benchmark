@@ -9,8 +9,8 @@ import sys, shutil, zipfile, pathlib, xml.etree.ElementTree as ET
 sys.stdout.reconfigure(encoding='utf-8')
 
 ROOT     = pathlib.Path("D:/repos/kb-semantic-search-benchmark")
-DOCX     = ROOT / "2026_M_PI_Nesterenko_VV.docx"
-UNPACKED = ROOT / "unpacked_docx"
+DOCX     = ROOT / "thesis" / "2026_M_PI_Nesterenko_VV.docx"
+UNPACKED = ROOT / "thesis" / "unpacked_docx"
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M = "http://schemas.openxmlformats.org/officeDocument/2006/math"

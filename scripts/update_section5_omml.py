@@ -196,7 +196,7 @@ def norm_E_sub(letter: str):
 # ════════════════════════════════════════════════════════════════════════════════
 # Load document
 # ════════════════════════════════════════════════════════════════════════════════
-DOC_XML = Path("D:/repos/kb-semantic-search-benchmark/unpacked_docx/word/document.xml")
+DOC_XML = Path("D:/repos/kb-semantic-search-benchmark/thesis/unpacked_docx/word/document.xml")
 tree = ET.parse(str(DOC_XML))
 root = tree.getroot()
 paras = root.findall(f".//{W}p")

@@ -29,9 +29,9 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='repla
 # Paths
 # ---------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parent.parent
-XML_PATH = ROOT / "unpacked_docx" / "word" / "document.xml"
-UNPACKED = ROOT / "unpacked_docx"
-DOCX_PATH = next(ROOT.glob("2026_*.docx"))
+XML_PATH = ROOT / "thesis" / "unpacked_docx" / "word" / "document.xml"
+UNPACKED = ROOT / "thesis" / "unpacked_docx"
+DOCX_PATH = next((ROOT / "thesis").glob("2026_*.docx"))
 
 # ---------------------------------------------------------------------------
 # Namespace constants

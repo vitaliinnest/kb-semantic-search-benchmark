@@ -19,8 +19,8 @@ from urllib.parse import quote, urlencode
 sys.stdout.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parent.parent
-DOCX_PATH = ROOT / "2026_M_PI_Nesterenko_VV.docx"
-UNPACKED  = ROOT / "unpacked_docx"
+DOCX_PATH = ROOT / "thesis" / "2026_M_PI_Nesterenko_VV.docx"
+UNPACKED  = ROOT / "thesis" / "unpacked_docx"
 MEDIA_DIR = UNPACKED / "word" / "media"
 BASE = "http://127.0.0.1:5000"
 

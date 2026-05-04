@@ -12,7 +12,7 @@ from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
-DOC_XML = Path("D:/repos/kb-semantic-search-benchmark/unpacked_docx/word/document.xml")
+DOC_XML = Path("D:/repos/kb-semantic-search-benchmark/thesis/unpacked_docx/word/document.xml")
 NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 W = f"{{{NS}}}"
 

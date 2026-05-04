@@ -19,7 +19,7 @@ def all_text(p):
             parts.append(t.text or "")
     return "".join(parts)
 
-UNPACKED = pathlib.Path("D:/repos/kb-semantic-search-benchmark/unpacked_docx")
+UNPACKED = pathlib.Path("D:/repos/kb-semantic-search-benchmark/thesis/unpacked_docx")
 tree = ET.parse(UNPACKED / "word" / "document.xml")
 body = tree.getroot().find(_w("body"))
 

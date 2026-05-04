@@ -20,7 +20,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 ROOT = pathlib.Path("D:/repos/kb-semantic-search-benchmark")
 DOCX = next(p for p in ROOT.glob("2026_*.docx") if "bak" not in p.name)
-UNPACKED = ROOT / "unpacked_docx"
+UNPACKED = ROOT / "thesis" / "unpacked_docx"
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 M = "http://schemas.openxmlformats.org/officeDocument/2006/math"

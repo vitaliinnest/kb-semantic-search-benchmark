@@ -14,7 +14,7 @@ from copy import deepcopy
 sys.stdout.reconfigure(encoding='utf-8')
 
 ROOT = pathlib.Path("D:/repos/kb-semantic-search-benchmark")
-DOCX_PATH = ROOT / "2026_M_PI_Nesterenko_VV.docx"
+DOCX_PATH = ROOT / "thesis" / "2026_M_PI_Nesterenko_VV.docx"
 SHOTS_DIR = ROOT / "docs" / "screenshots"
 
 doc = Document(str(DOCX_PATH))

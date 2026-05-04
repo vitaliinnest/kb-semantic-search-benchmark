@@ -35,7 +35,7 @@ from lxml import etree
 sys.stdout.reconfigure(encoding='utf-8')
 
 ROOT = pathlib.Path("D:/repos/kb-semantic-search-benchmark")
-PPTX = ROOT / "Nesterenko_Presentation.pptx"
+PPTX = ROOT / "thesis" / "Nesterenko_Presentation.pptx"
 
 # ── Кольорова палітра ─────────────────────────────────────────────────
 PRIMARY    = RGBColor(0x1E, 0x3A, 0x8A)
