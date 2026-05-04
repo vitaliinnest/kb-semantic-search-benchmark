@@ -22,7 +22,7 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding='utf-8')
     sys.stderr.reconfigure(encoding='utf-8')
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 BASE_URL = "http://127.0.0.1:5000"
 OUT_DIR = ROOT_DIR / "screenshots"
 

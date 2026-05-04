@@ -27,6 +27,16 @@ results/
   benchmark_{domain}.json   Full per-query metrics JSON
   benchmark_{domain}.txt    Human-readable summary
 RESULTS.md              Auto-generated markdown summary (run_all_benchmarks.py)
+
+scripts/                Benchmark-level scripts only
+  run_all_benchmarks.py     Runs eval for all domains → RESULTS.md
+  build_all_new_models.py   Builds FAISS indexes for all models
+
+thesis/                 Master's thesis documents + editing scripts
+  2026_M_PI_Nesterenko_VV.docx
+  Nesterenko_Presentation.pptx
+  unpacked_docx/            Working dir (docx unzipped for XML edits)
+  scripts/                  One-off thesis editing scripts (docx/pptx)
 ```
 
 ## Models evaluated
@@ -62,7 +72,7 @@ RESULTS.md              Auto-generated markdown summary (run_all_benchmarks.py)
 
 ## Thesis document
 
-The Word document `2026_М_ПІ_ПРАКТИКА_ІПЗм_24_1_Нестеренко_В_В.docx` is the master's thesis. Edits are done by unpacking to `unpacked_docx/word/document.xml` (via zipfile), editing with ElementTree, then repacking. One-off migration scripts live in `scripts/update_*.py`.
+The Word document lives at `thesis/2026_M_PI_Nesterenko_VV.docx`. Edits are done by unpacking to `thesis/unpacked_docx/word/document.xml` (via zipfile), editing with ElementTree, then repacking. One-off editing scripts live in `thesis/scripts/`.
 
 ## Current benchmark results (as of 2026-04-27)
 
