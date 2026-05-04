@@ -70,9 +70,30 @@ thesis/                 Master's thesis documents + editing scripts
   --top-k 10 --output results/benchmark_tech.txt
 ```
 
+## Flask web UI — routes
+
+| Route | Template | Purpose |
+|-------|----------|---------|
+| `GET /` | `index.html` | Semantic search (model pill selector, top-k, query chips) |
+| `GET /documents` | `documents.html` | Browse all chunks grouped by source document |
+| `GET /raw` | `raw.html` | Upload raw files, chunk them, manage uploads |
+| `GET /build` | `build.html` | Build / rebuild FAISS indexes per model |
+| `GET /benchmark` | `benchmark.html` | nDCG/MRR/Recall/P@10 results table per domain |
+| `GET /benchmark/selection` | `selection.html` | Multi-criteria model selection (Pareto + linear additive) |
+| `GET /benchmark/explorer` | `explorer.html` | Per-query result browser |
+| `GET /benchmark/explorer/<qid>` | `explorer_detail.html` | Single-query drill-down |
+
+All routes accept `?domain=tech|legal|medical`. Templates extend `base.html` (tab nav, CSS vars, dark-mode toggle).
+
 ## Thesis document
 
 The Word document lives at `thesis/2026_M_PI_Nesterenko_VV.docx`. Edits are done by unpacking to `thesis/unpacked_docx/word/document.xml` (via zipfile), editing with ElementTree, then repacking. One-off editing scripts live in `thesis/scripts/`.
+
+To retake all thesis screenshots and embed them into the docx (Flask must be running on :5000):
+
+```bash
+.venv/Scripts/python.exe thesis/scripts/update_thesis_screenshots.py
+```
 
 ## Current benchmark results (as of 2026-04-27)
 
@@ -86,3 +107,10 @@ The Word document lives at `thesis/2026_M_PI_Nesterenko_VV.docx`. Edits are done
 | OAI text-3-large | — | — | — (no API key) |
 
 Bootstrap 95% CI (nDCG@10, n=2000): BGE-M3 Tech [0.6059, 0.7367] vs BM25 [0.4312, 0.5412] — non-overlapping (statistically significant).
+
+## Conventions
+
+- **Language:** UI text and thesis are in Ukrainian; code, variable names, and comments are in English.
+- **Git:** all commits go directly to `main` — no feature branches, no PRs.
+- **Python env:** `.venv/Scripts/python.exe` (Windows, CPU-only machine).
+- **Worktree:** Claude Code opens the repo in `.claude/worktrees/<name>/`; the actual repo root is `D:/repos/kb-semantic-search-benchmark/`.
