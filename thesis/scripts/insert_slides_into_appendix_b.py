@@ -35,6 +35,7 @@ from docx.text.paragraph import Paragraph
 ROOT = pathlib.Path("D:/repos/kb-semantic-search-benchmark")
 DOCX = ROOT / "thesis" / "2026_M_PI_Nesterenko_VV.docx"
 SLIDES_DIR = ROOT / "thesis" / "scripts" / "_slide_imgs"
+BACKUPS_DIR = ROOT / "thesis" / "_backups"
 
 IMG_WIDTH_MM = 170  # final width on the page
 SLIDES_PER_PAGE = 2
@@ -51,9 +52,14 @@ def insert_paragraph_after(paragraph, style=None):
 
 
 def next_backup_path(docx_path: pathlib.Path) -> pathlib.Path:
-    """Find next free .bakNN.docx slot to keep history of edits."""
+    """Next free thesis/_backups/<stem>.bakNN.docx slot.
+
+    Backups live in a sibling directory rather than next to the docx itself
+    so the working folder stays uncluttered.
+    """
+    BACKUPS_DIR.mkdir(parents=True, exist_ok=True)
     for n in range(1, 100):
-        p = docx_path.with_suffix(f".bak{n}.docx")
+        p = BACKUPS_DIR / f"{docx_path.stem}.bak{n}.docx"
         if not p.exists():
             return p
     raise RuntimeError("Too many backups already.")
