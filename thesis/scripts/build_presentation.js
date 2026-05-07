@@ -254,49 +254,51 @@ async function build() {
   };
 
   // ==========================================================================
-  // SLIDE 1 — TITLE
+  // SLIDE 1 — TITLE  (light background, modern academic feel)
   // ==========================================================================
   {
     const s = pres.addSlide();
-    s.background = { color: C.bgDark };
+    s.background = { color: C.bgWhite };
 
-    // Decorative geometric pattern: 3 large concentric circles top-right
+    // Subtle decorative motif on the right edge: layered translucent circles
+    // in brand colours so the page has personality without feeling busy.
     s.addShape("ellipse", {
-      x: 7.6, y: -1.4, w: 4.2, h: 4.2,
-      fill: { color: C.primaryDark, transparency: 30 }, line: { type: "none" },
+      x: 7.7, y: -1.4, w: 4.4, h: 4.4,
+      fill: { color: C.surfaceCool }, line: { type: "none" },
     });
     s.addShape("ellipse", {
-      x: 8.2, y: -0.8, w: 3.0, h: 3.0,
-      fill: { color: C.primary, transparency: 50 }, line: { type: "none" },
+      x: 8.4, y: -0.7, w: 2.9, h: 2.9,
+      fill: { color: C.primary, transparency: 88 }, line: { type: "none" },
     });
     s.addShape("ellipse", {
-      x: 8.6, y: -0.4, w: 1.8, h: 1.8,
-      fill: { color: C.gold, transparency: 60 }, line: { type: "none" },
+      x: 8.9, y: -0.2, w: 1.6, h: 1.6,
+      fill: { color: C.gold, transparency: 78 }, line: { type: "none" },
     });
 
-    // Bottom-left accent square
+    // Slim navy bar down the left margin — anchors the composition without
+    // a full-width header bar.
     s.addShape("rect", {
-      x: -0.4, y: 4.2, w: 1.4, h: 1.4,
-      fill: { color: C.secondary, transparency: 50 }, line: { type: "none" },
+      x: 0, y: 0, w: 0.18, h: H,
+      fill: { color: C.primary }, line: { type: "none" },
     });
 
-    // Tag chip ("Магістерська кваліфікаційна робота")
+    // Tag chip ("Магістерська кваліфікаційна робота") — soft amber pill
     s.addShape("roundRect", {
       x: M_LEFT, y: 0.50, w: 4.20, h: 0.34,
-      fill: { color: C.bgDark }, line: { color: C.gold, width: 1.0 },
+      fill: { color: C.surfaceGold }, line: { color: C.gold, width: 0.75 },
       rectRadius: 0.16,
     });
     s.addText("МАГІСТЕРСЬКА КВАЛІФІКАЦІЙНА РОБОТА", {
       x: M_LEFT, y: 0.50, w: 4.20, h: 0.34,
       fontFace: F.sans, fontSize: 10, bold: true, charSpacing: 2,
-      color: C.gold, align: "center", valign: "middle", margin: 0,
+      color: C.goldDark, align: "center", valign: "middle", margin: 0,
     });
 
-    // Main title
+    // Main title — deep navy on white
     s.addText("Дослідження моделей векторних ембеддінгів для семантичного пошуку текстових даних у корпоративних базах знань", {
       x: M_LEFT, y: 1.05, w: 8.6, h: 1.95,
       fontFace: F.sans, fontSize: 26, bold: true,
-      color: C.textOnDark, align: "left", valign: "top", margin: 0,
+      color: C.text, align: "left", valign: "top", margin: 0,
     });
 
     // Thin gold separator
@@ -307,28 +309,29 @@ async function build() {
 
     // Author block
     s.addText([
-      { text: "Виконав:  ", options: { color: C.textOnDarkMuted, fontSize: 13 } },
-      { text: "Нестеренко Віталій Вячеславович", options: { color: C.textOnDark, fontSize: 14, bold: true, breakLine: true } },
-      { text: "Група:  ", options: { color: C.textOnDarkMuted, fontSize: 13 } },
-      { text: "ІПЗм-24-1", options: { color: C.textOnDark, fontSize: 14, bold: true } },
+      { text: "Виконав:  ", options: { color: C.textMuted, fontSize: 13 } },
+      { text: "Нестеренко Віталій Вячеславович", options: { color: C.text, fontSize: 14, bold: true, breakLine: true } },
+      { text: "Група:  ", options: { color: C.textMuted, fontSize: 13 } },
+      { text: "ІПЗм-24-1", options: { color: C.text, fontSize: 14, bold: true } },
     ], {
       x: M_LEFT, y: 3.30, w: 5.0, h: 0.95,
       fontFace: F.sans, valign: "top", margin: 0, paraSpaceAfter: 4,
     });
 
     s.addText([
-      { text: "Науковий керівник:  ", options: { color: C.textOnDarkMuted, fontSize: 13, breakLine: true } },
-      { text: "к.т.н., доцент Русакова Наталія Євгенівна", options: { color: C.textOnDark, fontSize: 14, bold: true } },
+      { text: "Науковий керівник:  ", options: { color: C.textMuted, fontSize: 13, breakLine: true } },
+      { text: "к.т.н., доцент Русакова Наталія Євгенівна", options: { color: C.text, fontSize: 14, bold: true } },
     ], {
       x: M_LEFT, y: 4.25, w: 6.0, h: 0.85,
       fontFace: F.sans, valign: "top", margin: 0,
     });
 
-    // Date + venue (bottom right)
-    s.addImage({ data: I.calendar, x: 7.85, y: 4.45, w: 0.20, h: 0.20 });
+    // Date + venue (bottom right) — calendar icon recoloured to brand navy
+    const calIconNavy = await iconPng(fa.FaCalendarAlt, hash(C.primary));
+    s.addImage({ data: calIconNavy, x: 7.85, y: 4.45, w: 0.20, h: 0.20 });
     s.addText("15 травня 2026   ·   Харків", {
       x: 8.10, y: 4.40, w: 1.85, h: 0.30,
-      fontFace: F.sans, fontSize: 11, color: C.textOnDarkMuted,
+      fontFace: F.sans, fontSize: 11, color: C.textMid,
       align: "left", valign: "middle", margin: 0,
     });
 
@@ -2066,26 +2069,25 @@ async function build() {
   }
 
   // ==========================================================================
-  // SLIDE 18 — Висновки та "Дякую"
+  // SLIDE 18 — Висновки та "Дякую"  (light background to match the deck)
   // ==========================================================================
   {
     const s = pres.addSlide();
-    s.background = { color: C.bgDark };
+    s.background = { color: C.bgWhite };
 
-    // Decorative shapes
+    // Subtle decorative motif so the slide doesn't read as a blank page
     s.addShape("ellipse", {
       x: -1.0, y: -1.0, w: 4.0, h: 4.0,
-      fill: { color: C.primary, transparency: 70 }, line: { type: "none" },
+      fill: { color: C.surfaceCool }, line: { type: "none" },
     });
     s.addShape("ellipse", {
       x: 8.0, y: 4.0, w: 3.5, h: 3.5,
-      fill: { color: C.gold, transparency: 75 }, line: { type: "none" },
+      fill: { color: C.gold, transparency: 80 }, line: { type: "none" },
     });
 
-    addTitleAdv(s, "Підсумки та практичні рекомендації",
-      { color: C.textOnDark, dotColor: C.gold, section: SEC.S11 });
+    addTitleAdv(s, "Підсумки та практичні рекомендації", { section: SEC.S11 });
 
-    // Goal achieved banner
+    // Goal achieved banner (gold band, dark text)
     addCard(s, M_LEFT, CONTENT_TOP, W - M_LEFT - M_RIGHT, 0.55, {
       fill: C.gold, borderColor: C.gold,
     });
@@ -2098,10 +2100,10 @@ async function build() {
 
     // 4 recommendation cards in 2×2
     const recs = [
-      { t: "BGE-M3", sub: "Основна модель для впровадження", note: "Найкраща якість, стабільність у різних доменах",  color: C.gold,      icon: I.trophy },
-      { t: "E5-base",sub: "Швидка альтернатива",              note: "Прийнятна якість + ~3× швидше за BGE-M3",         color: C.secondaryLight, icon: I.speed },
-      { t: "Qwen3",  sub: "Лідер на юридичному домені",       note: "Найвища nDCG@10 на Legal (0.320), ~2× повільніший", color: C.primaryLight, icon: I.medal },
-      { t: "BM25",   sub: "Конкурентний baseline",            note: "Залишається сильним у певних доменах",            color: C.textOnDarkMuted, icon: I.layers },
+      { t: "BGE-M3", sub: "Основна модель для впровадження", note: "Найкраща якість, стабільність у різних доменах",  color: C.gold,      iconCmp: fa.FaTrophy },
+      { t: "E5-base",sub: "Швидка альтернатива",              note: "Прийнятна якість + ~3× швидше за BGE-M3",         color: C.secondary, iconCmp: fa.FaTachometerAlt },
+      { t: "Qwen3",  sub: "Лідер на юридичному домені",       note: "Найвища nDCG@10 на Legal (0.320), ~2× повільніший", color: C.primary,   iconCmp: fa.FaMedal },
+      { t: "BM25",   sub: "Конкурентний baseline",            note: "Залишається сильним у певних доменах",            color: C.textMuted, iconCmp: fa.FaLayerGroup },
     ];
     const recW = (W - M_LEFT - M_RIGHT - 0.20) / 2;
     const recH = (CONTENT_H - 0.55 - 0.10 - 0.55 - 0.20) / 2;
@@ -2110,45 +2112,48 @@ async function build() {
       const cx = M_LEFT + col * (recW + 0.20);
       const cy = CONTENT_TOP + 0.55 + 0.20 + row * (recH + 0.15);
       addCard(s, cx, cy, recW, recH, {
-        fill: "1E293B",   // slightly lighter than bg for contrast
-        borderColor: recs[i].color, borderWidth: 1.0, shadow: false,
+        fill: C.bgWhite,
+        borderColor: recs[i].color, borderWidth: 1.25, shadow: false,
       });
-      // Icon circle
-      s.addShape("ellipse", {
-        x: cx + 0.20, y: cy + 0.18, w: 0.55, h: 0.55,
+      // Side accent stripe
+      s.addShape("rect", {
+        x: cx, y: cy, w: 0.10, h: recH,
         fill: { color: recs[i].color }, line: { type: "none" },
       });
-      s.addImage({ data: await iconPng(
-        i === 0 ? fa.FaTrophy : i === 1 ? fa.FaTachometerAlt : i === 2 ? fa.FaMedal : fa.FaLayerGroup,
-        hash("0F172A"),
-      ), x: cx + 0.31, y: cy + 0.29, w: 0.32, h: 0.32 });
+      // Icon in tinted circle
+      s.addShape("ellipse", {
+        x: cx + 0.25, y: cy + 0.18, w: 0.55, h: 0.55,
+        fill: { color: recs[i].color }, line: { type: "none" },
+      });
+      s.addImage({ data: await iconPng(recs[i].iconCmp, hash("FFFFFF")),
+        x: cx + 0.36, y: cy + 0.29, w: 0.32, h: 0.32 });
 
       s.addText(recs[i].t, {
-        x: cx + 0.85, y: cy + 0.10, w: recW - 1.0, h: 0.35,
+        x: cx + 0.90, y: cy + 0.10, w: recW - 1.05, h: 0.35,
         fontFace: F.sans, fontSize: 16, bold: true, color: recs[i].color,
         align: "left", valign: "middle", margin: 0,
       });
       s.addText(recs[i].sub, {
-        x: cx + 0.85, y: cy + 0.46, w: recW - 1.0, h: 0.25,
-        fontFace: F.sans, fontSize: 10, bold: true, color: C.textOnDark,
+        x: cx + 0.90, y: cy + 0.46, w: recW - 1.05, h: 0.25,
+        fontFace: F.sans, fontSize: 10, bold: true, color: C.textStrong,
         align: "left", valign: "middle", margin: 0,
       });
       s.addText(recs[i].note, {
-        x: cx + 0.20, y: cy + 0.85, w: recW - 0.40, h: recH - 0.95,
-        fontFace: F.sans, fontSize: 10, color: C.textOnDarkMuted,
+        x: cx + 0.25, y: cy + 0.85, w: recW - 0.45, h: recH - 0.95,
+        fontFace: F.sans, fontSize: 10, color: C.textMid,
         align: "left", valign: "top", margin: 0,
       });
     }
 
-    // Final "Дякую за увагу!"
+    // Final "Дякую за увагу!" — gold serif italic on white
     s.addText("Дякую за увагу!", {
       x: 0, y: H - 0.85, w: W, h: 0.55,
-      fontFace: F.serif, fontSize: 24, bold: true, italic: true, color: C.gold,
+      fontFace: F.serif, fontSize: 24, bold: true, italic: true, color: C.goldDark,
       align: "center", valign: "middle", margin: 0,
     });
 
     addKafedraLogo(s);
-    addPageNumber(s, 18, TOTAL, true);
+    addPageNumber(s, 18, TOTAL);
   }
 
   // ==========================================================================
