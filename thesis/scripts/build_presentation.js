@@ -326,13 +326,29 @@ async function build() {
       fontFace: F.sans, valign: "top", margin: 0,
     });
 
-    // Date + venue (bottom right) — calendar icon recoloured to brand navy
-    const calIconNavy = await iconPng(fa.FaCalendarAlt, hash(C.primary));
-    s.addImage({ data: calIconNavy, x: 7.85, y: 4.45, w: 0.20, h: 0.20 });
-    s.addText("15 травня 2026   ·   Харків", {
-      x: 8.10, y: 4.40, w: 1.85, h: 0.30,
-      fontFace: F.sans, fontSize: 11, color: C.textMid,
-      align: "left", valign: "middle", margin: 0,
+    // Date / venue stamp on the right, mirroring the author/supervisor
+    // info block on the left. Replaces the lone calendar icon + inline text
+    // that previously floated in white space without a clear visual anchor.
+    s.addText("ДАТА ЗАХИСТУ", {
+      x: 7.20, y: 4.25, w: 2.35, h: 0.22,
+      fontFace: F.sans, fontSize: 9, bold: true, charSpacing: 2, color: C.textMuted,
+      align: "right", valign: "middle", margin: 0,
+    });
+    s.addText("15 травня 2026", {
+      x: 7.20, y: 4.48, w: 2.35, h: 0.32,
+      fontFace: F.sans, fontSize: 17, bold: true, color: C.text,
+      align: "right", valign: "middle", margin: 0,
+    });
+    s.addText("Харків", {
+      x: 7.20, y: 4.82, w: 2.35, h: 0.22,
+      fontFace: F.sans, fontSize: 11, italic: true, color: C.textMuted,
+      align: "right", valign: "middle", margin: 0,
+    });
+    // Thin gold accent line under the date — visually balances the small
+    // gold separator under the title on the left.
+    s.addShape("rect", {
+      x: 9.05, y: 4.21, w: 0.50, h: 0.04,
+      fill: { color: C.gold }, line: { type: "none" },
     });
 
     // Logos in bottom row
