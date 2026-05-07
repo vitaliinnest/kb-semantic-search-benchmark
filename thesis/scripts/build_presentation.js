@@ -1927,24 +1927,28 @@ async function build() {
     const cy0 = ry + 0.32, cH = (CONTENT_H - 0.40) / 5;
     for (let i = 0; i < cards.length; i++) {
       const cy = cy0 + i * cH;
-      addCard(s, rx, cy + 0.04, rw, cH - 0.08, { fill: C.bgWhite, borderColor: C.borderSoft });
+      const bodyH = cH - 0.08;
+      addCard(s, rx, cy + 0.04, rw, bodyH, { fill: C.bgWhite, borderColor: C.borderSoft });
       s.addShape("rect", {
-        x: rx, y: cy + 0.04, w: 0.08, h: cH - 0.08,
+        x: rx, y: cy + 0.04, w: 0.08, h: bodyH,
         fill: { color: cards[i].color }, line: { type: "none" },
       });
+      // Tight three-row layout that fits within bodyH (~0.67"). Earlier we
+      // gave the note a 0.10" container which was too small for 9.5 pt text
+      // and let the description spill below the card edge.
       s.addText(cards[i].t, {
-        x: rx + 0.18, y: cy + 0.08, w: rw - 0.30, h: 0.22,
-        fontFace: F.sans, fontSize: 9, bold: true, charSpacing: 1.5, color: C.textMuted,
+        x: rx + 0.18, y: cy + 0.07, w: rw - 0.30, h: 0.18,
+        fontFace: F.sans, fontSize: 8.5, bold: true, charSpacing: 1.5, color: C.textMuted,
         align: "left", valign: "top", margin: 0,
       });
       s.addText(cards[i].model, {
-        x: rx + 0.18, y: cy + 0.30, w: rw - 0.30, h: 0.28,
-        fontFace: F.sans, fontSize: 13, bold: true, color: cards[i].color,
+        x: rx + 0.18, y: cy + 0.24, w: rw - 0.30, h: 0.24,
+        fontFace: F.sans, fontSize: 12, bold: true, color: cards[i].color,
         align: "left", valign: "top", margin: 0,
       });
       s.addText(cards[i].note, {
-        x: rx + 0.18, y: cy + 0.58, w: rw - 0.30, h: cH - 0.65,
-        fontFace: F.sans, fontSize: 9.5, color: C.textMid,
+        x: rx + 0.18, y: cy + 0.48, w: rw - 0.30, h: 0.20,
+        fontFace: F.sans, fontSize: 9, color: C.textMid,
         align: "left", valign: "top", margin: 0,
       });
     }
