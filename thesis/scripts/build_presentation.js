@@ -969,7 +969,7 @@ async function build() {
     s.background = { color: C.bgWhite };
     addTitleAdv(s, "Багатокритеріальний вибір моделі (МКВ)", { section: SEC.S4 });
 
-    // 3 method cards (left 60%)
+    // 3 method cards (left ~50%)
     const methods = [
       {
         n: "1",
@@ -993,7 +993,9 @@ async function build() {
         color: C.gold,
       },
     ];
-    const lx = M_LEFT, lw = 5.30;
+    // Slightly narrower method panel so the right-hand weights table can fit
+    // its 6 columns without wrapping headers or values.
+    const lx = M_LEFT, lw = 4.80;
     let ly = CONTENT_TOP;
     const mh = 1.20;
     const mGap = 0.12;
@@ -1038,24 +1040,28 @@ async function build() {
     const rx = lx + lw + 0.20, rw = W - rx - M_RIGHT;
     const ry = CONTENT_TOP, rh = CONTENT_H - 0.10;
     addCard(s, rx, ry, rw, rh, { fill: C.surfaceSoft, borderColor: C.borderSoft });
-    s.addText("ПРОФІЛІ ВАГ КРИТЕРІЇВ ЗА ДОМЕНАМИ", {
+    s.addText("ПРОФІЛІ ВАГ КРИТЕРІЇВ ЗА ДОМЕНАМИ  (k = 10)", {
       x: rx + 0.15, y: ry + 0.10, w: rw - 0.30, h: 0.30,
       fontFace: F.sans, fontSize: 9, bold: true, charSpacing: 1.5, color: C.textMuted,
       align: "left", valign: "middle", margin: 0,
     });
 
+    // Header @k suffix lifted into the section title so the column labels can
+    // stay on one line and the table no longer overflows the parent card.
     const wRows = [
-      [{ text: "Домен",     opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "left",   fill: { color: C.bgDark } } },
-       { text: "nDCG@k",    opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } },
-       { text: "MRR@k",     opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } },
-       { text: "Recall@k",  opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } },
-       { text: "P@k",       opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } },
-       { text: "Latency",   opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } }],
+      [{ text: "Домен",   opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "left",   fill: { color: C.bgDark } } },
+       { text: "nDCG",    opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } },
+       { text: "MRR",     opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } },
+       { text: "Recall",  opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } },
+       { text: "P",       opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } },
+       { text: "Latency", opts: { bold: true, color: C.bgWhite, fontSize: 10, align: "center", fill: { color: C.bgDark } } }],
       ["Технічний",  "0.30", "0.20", "0.25", "0.05", "0.20"],
       ["Юридичний",  "0.30", "0.30", "0.20", "0.10", "0.10"],
       ["Медичний",   "0.25", "0.15", "0.35", "0.10", "0.15"],
     ];
 
+    // Column widths sum to 3.85" — fits inside the now wider right card
+    // (rw - 0.30 ≈ 4.20"). pptxgenjs sizes a table by sum(colW), not by `w`.
     s.addTable(wRows, {
       x: rx + 0.15, y: ry + 0.45, w: rw - 0.30,
       colW: [0.95, 0.55, 0.55, 0.65, 0.50, 0.65],
