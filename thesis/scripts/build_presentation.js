@@ -1713,19 +1713,19 @@ async function build() {
     // Pareto card
     addCard(s, lx, ly, lw, 1.05, { fill: C.bgDark, borderColor: C.bgDark });
     s.addText("ПАРЕТО-ОПТИМАЛЬНА МНОЖИНА", {
-      x: lx + 0.20, y: ly + 0.10, w: lw - 0.40, h: 0.25,
+      x: lx + 0.20, y: ly + 0.08, w: lw - 0.40, h: 0.22,
       fontFace: F.sans, fontSize: 9, bold: true, charSpacing: 2, color: C.gold,
       align: "left", valign: "middle", margin: 0,
     });
     s.addText("P = { BGE-M3,  E5-base,  BM25 }", {
-      x: lx + 0.20, y: ly + 0.36, w: lw - 0.40, h: 0.40,
+      x: lx + 0.20, y: ly + 0.30, w: lw - 0.40, h: 0.36,
       fontFace: F.serif, fontSize: 18, italic: true, bold: true, color: C.textOnDark,
       align: "left", valign: "middle", margin: 0,
     });
     s.addText("3 з 5 альтернатив не домінуються жодною іншою за усіма критеріями одночасно", {
-      x: lx + 0.20, y: ly + 0.78, w: lw - 0.40, h: 0.25,
+      x: lx + 0.20, y: ly + 0.66, w: lw - 0.40, h: 0.34,
       fontFace: F.sans, fontSize: 9.5, italic: true, color: C.textOnDarkMuted,
-      align: "left", valign: "middle", margin: 0,
+      align: "left", valign: "top", margin: 0,
     });
 
     // 4 insight rows
