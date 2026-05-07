@@ -1746,12 +1746,12 @@ async function build() {
         fill: { color: insights[i].c }, line: { type: "none" },
       });
       s.addText(insights[i].t, {
-        x: lx + 0.25, y: cy + 0.10, w: lw - 0.40, h: 0.35,
+        x: lx + 0.25, y: cy + 0.10, w: lw - 0.40, h: 0.24,
         fontFace: F.sans, fontSize: 13, bold: true, color: C.textStrong,
         align: "left", valign: "top", margin: 0,
       });
       s.addText(insights[i].d, {
-        x: lx + 0.25, y: cy + 0.45, w: lw - 0.40, h: iH - 0.50,
+        x: lx + 0.25, y: cy + 0.34, w: lw - 0.40, h: iH - 0.42,
         fontFace: F.sans, fontSize: 10, color: C.textMid,
         align: "left", valign: "top", margin: 0,
       });
