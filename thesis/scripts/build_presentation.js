@@ -1325,12 +1325,14 @@ async function build() {
       { name: "Медичний",    docs: 9,  queries: 100, color: C.rose,      icon: I.medical, desc: "клінічні протоколи, медичні рекомендації" },
     ];
 
-    // 3 domain cards (left), balanced-evaluation callout (right)
+    // 3 full-width domain cards. The right-hand "100/100/100" callout was
+    // dropped — it duplicated the per-card "100 запитів" and visually drew
+    // attention to the symmetry the slide is now communicating in one place.
     const cardX = M_LEFT, cardY = CONTENT_TOP + 0.45;
-    const cardW = 4.50;
-    const cardH = (CONTENT_H - 0.55 - 2 * 0.10) / 3;
+    const cardW = W - M_LEFT - M_RIGHT;
+    const cardH = (CONTENT_H - 0.55 - 2 * 0.12) / 3;
     for (let i = 0; i < domains.length; i++) {
-      const cy = cardY + i * (cardH + 0.10);
+      const cy = cardY + i * (cardH + 0.12);
       const d = domains[i];
       addCard(s, cardX, cy, cardW, cardH, { fill: C.bgWhite, borderColor: C.borderSoft });
 
@@ -1339,103 +1341,51 @@ async function build() {
         x: cardX, y: cy, w: 0.10, h: cardH,
         fill: { color: d.color }, line: { type: "none" },
       });
-      // Icon circle
+      // Icon circle (vertically centred)
+      const iconCY = cy + cardH / 2;
       s.addShape("ellipse", {
-        x: cardX + 0.30, y: cy + 0.20, w: 0.55, h: 0.55,
+        x: cardX + 0.30, y: iconCY - 0.30, w: 0.60, h: 0.60,
         fill: { color: C.surfaceSoft }, line: { color: d.color, width: 1.5 },
       });
-      s.addImage({ data: d.icon, x: cardX + 0.40, y: cy + 0.30, w: 0.35, h: 0.35 });
+      s.addImage({ data: d.icon, x: cardX + 0.42, y: iconCY - 0.18, w: 0.36, h: 0.36 });
 
-      // Domain name
+      // Domain name + description block (centre column)
       s.addText(d.name, {
-        x: cardX + 1.00, y: cy + 0.10, w: cardW - 1.20, h: 0.30,
-        fontFace: F.sans, fontSize: 13, bold: true, color: C.textStrong,
+        x: cardX + 1.10, y: cy + 0.20, w: 5.30, h: 0.36,
+        fontFace: F.sans, fontSize: 16, bold: true, color: C.textStrong,
         align: "left", valign: "middle", margin: 0,
       });
-      // Description
       s.addText(d.desc, {
-        x: cardX + 1.00, y: cy + 0.35, w: cardW - 1.20, h: 0.30,
-        fontFace: F.sans, fontSize: 9.5, italic: true, color: C.textMid,
-        align: "left", valign: "middle", margin: 0,
+        x: cardX + 1.10, y: cy + 0.60, w: 5.30, h: 0.40,
+        fontFace: F.sans, fontSize: 11, italic: true, color: C.textMid,
+        align: "left", valign: "top", margin: 0,
       });
 
-      // Two stats per card: documents + queries (chunks omitted intentionally
-      // to keep the slide focused on the balanced-evaluation budget).
-      const stats = [
-        { v: d.docs,    l: "документи" },
-        { v: d.queries, l: "запити" },
+      // Stats column on the right — documents · queries
+      const statsY = cy + 0.20;
+      const statsH = cardH - 0.40;
+      const statsCols = [
+        { v: d.docs,    l: "документи", x: cardX + cardW - 2.85 },
+        { v: d.queries, l: "запити",    x: cardX + cardW - 1.40 },
       ];
-      const sgx = cardX + 1.00, sgy = cy + cardH - 0.55;
-      const sgw = (cardW - 1.20) / 2;
-      for (let k = 0; k < stats.length; k++) {
-        s.addText(String(stats[k].v), {
-          x: sgx + k * sgw, y: sgy, w: sgw, h: 0.30,
-          fontFace: F.sans, fontSize: 22, bold: true, color: d.color,
-          align: "left", valign: "middle", margin: 0,
+      // Subtle vertical separator before the stats column
+      s.addShape("rect", {
+        x: cardX + cardW - 3.00, y: cy + 0.25, w: 0.015, h: cardH - 0.50,
+        fill: { color: C.borderSoft }, line: { type: "none" },
+      });
+      for (const st of statsCols) {
+        s.addText(String(st.v), {
+          x: st.x, y: statsY, w: 1.30, h: statsH * 0.70,
+          fontFace: F.sans, fontSize: 30, bold: true, color: d.color,
+          align: "center", valign: "bottom", margin: 0,
         });
-        s.addText(stats[k].l, {
-          x: sgx + k * sgw, y: sgy + 0.30, w: sgw, h: 0.20,
-          fontFace: F.sans, fontSize: 9, color: C.textMuted,
-          align: "left", valign: "middle", margin: 0,
+        s.addText(st.l, {
+          x: st.x, y: statsY + statsH * 0.70 + 0.02, w: 1.30, h: statsH * 0.30,
+          fontFace: F.sans, fontSize: 10, color: C.textMuted,
+          align: "center", valign: "top", margin: 0,
         });
       }
     }
-
-    // Right column: balanced-evaluation callout
-    const dx = M_LEFT + cardW + 0.20, dw = W - dx - M_RIGHT;
-    const dy = CONTENT_TOP + 0.45, dh = CONTENT_H - 0.55;
-    addCard(s, dx, dy, dw, dh, { fill: C.surfaceSoft, borderColor: C.borderSoft });
-    s.addText("ЗБАЛАНСОВАНА ОЦІНКА", {
-      x: dx + 0.20, y: dy + 0.15, w: dw - 0.40, h: 0.25,
-      fontFace: F.sans, fontSize: 9, bold: true, charSpacing: 2, color: C.textMuted,
-      align: "left", valign: "middle", margin: 0,
-    });
-
-    // Big "100 / 100 / 100" stat callout — three equal numbers visually
-    // emphasise the symmetric per-domain query budget.
-    const eqLabels = [
-      { name: "Технічний", color: C.primary },
-      { name: "Юридичний", color: C.violet },
-      { name: "Медичний",  color: C.rose },
-    ];
-    const eqY = dy + 0.55;
-    const eqH = 1.80;
-    const eqW = (dw - 0.40) / 3;
-    for (let i = 0; i < 3; i++) {
-      const ex = dx + 0.20 + i * eqW;
-      // Number
-      s.addText("100", {
-        x: ex, y: eqY, w: eqW, h: 1.20,
-        fontFace: F.sans, fontSize: 60, bold: true, color: eqLabels[i].color,
-        align: "center", valign: "middle", margin: 0,
-      });
-      // Domain label
-      s.addText(eqLabels[i].name, {
-        x: ex, y: eqY + 1.20, w: eqW, h: 0.30,
-        fontFace: F.sans, fontSize: 11, bold: true, color: C.textStrong,
-        align: "center", valign: "middle", margin: 0,
-      });
-      // "запитів" sublabel
-      s.addText("запитів", {
-        x: ex, y: eqY + 1.48, w: eqW, h: 0.22,
-        fontFace: F.sans, fontSize: 9, color: C.textMuted,
-        align: "center", valign: "middle", margin: 0,
-      });
-    }
-
-    // Total below
-    s.addShape("rect", {
-      x: dx + 0.40, y: eqY + eqH + 0.12, w: dw - 0.80, h: 0.025,
-      fill: { color: C.borderSoft }, line: { type: "none" },
-    });
-    s.addText([
-      { text: "300", options: { fontSize: 24, bold: true, color: C.gold } },
-      { text: "  запитів усього  ·  на яких рахуються per-query метрики",
-        options: { fontSize: 10, color: C.textMid } },
-    ], {
-      x: dx + 0.20, y: eqY + eqH + 0.20, w: dw - 0.40, h: 0.50,
-      fontFace: F.sans, align: "center", valign: "middle", margin: 0,
-    });
 
     addKafedraLogo(s); addPageNumber(s,11, TOTAL);
   }
