@@ -1871,6 +1871,31 @@ async function build() {
       });
     }
 
+    // Pareto-frontier line — connects the 3 Pareto-optimal points
+    // (BM25 → E5-base → BGE-M3). pptxgenjs `addShape("line")` requires
+    // positive width/height; for an upward-going segment we use a positive
+    // bounding box and toggle `flipV` so the line still runs bottom-left to
+    // top-right.
+    const paretoPts = [
+      { x: 0.4,   y: 0.4861 },  // BM25
+      { x: 70.9,  y: 0.6121 },  // E5-base
+      { x: 222.5, y: 0.6722 },  // BGE-M3
+    ];
+    for (let i = 0; i < paretoPts.length - 1; i++) {
+      const a = paretoPts[i], b = paretoPts[i + 1];
+      const ax = xToPx(a.x), ay = yToPx(a.y);
+      const bx = xToPx(b.x), by = yToPx(b.y);
+      const goingUp = ay > by;
+      s.addShape("line", {
+        x: ax,
+        y: Math.min(ay, by),
+        w: bx - ax,
+        h: Math.abs(by - ay),
+        flipV: goingUp,
+        line: { color: C.gold, width: 1.5, dashType: "dash" },
+      });
+    }
+
     // Pareto-frontier annotation (top-left of plot, away from axis labels)
     s.addText("⟵ Парето-фронт", {
       x: chX + 0.85, y: chY + 0.38, w: 1.80, h: 0.25,
@@ -1885,12 +1910,27 @@ async function build() {
       fontFace: F.sans, fontSize: 10, bold: true, charSpacing: 2, color: C.textMuted,
       align: "left", valign: "middle", margin: 0,
     });
+    // Insight cards aligned with what the scatter chart actually shows.
+    // The 3 Pareto-optimal points (BM25 → E5 → BGE-M3) are highlighted as
+    // the practical recommendation set; Qwen3 is honestly described as
+    // domain-specialised (its niche is Legal, where BGE-M3 is not best);
+    // nomic is flagged as dominated.
     const cards = [
-      { t: "Лідер якості", model: "BGE-M3", note: "найвища nDCG (0.672 на Tech), ~228 мс", color: C.gold,      icon: I.trophy },
-      { t: "Найшвидший", model: "BM25",   note: "<3 мс, але якість обмежена",          color: C.textMuted,  icon: I.speed },
-      { t: "Альтернатива", model: "E5-base", note: "~3× швидше за BGE-M3, ~70 мс",      color: C.secondary,  icon: I.flag },
-      { t: "Лідер на Legal", model: "Qwen3", note: "nDCG=0.320, але ~2× повільніший", color: C.primary,    icon: I.medal },
-      { t: "Найслабший", model: "nomic",   note: "поступається навіть BM25",           color: C.violet,     icon: I.network },
+      { t: "Парето-оптимальна  ·  лідер якості", model: "BGE-M3",
+        note: "найвища nDCG (0.672 на Tech), ~228 мс — основний вибір",
+        color: C.gold, icon: I.trophy },
+      { t: "Парето-оптимальна  ·  sweet spot",   model: "E5-base",
+        note: "~70 мс  ·  3× швидше за BGE-M3 з мінімальною втратою якості",
+        color: C.secondary, icon: I.flag },
+      { t: "Парето-оптимальна  ·  baseline",     model: "BM25",
+        note: "<3 мс  ·  найшвидший, але стеля якості ~0.49 nDCG",
+        color: C.textMuted, icon: I.speed },
+      { t: "Спеціалізована  ·  лідер на Legal",  model: "Qwen3",
+        note: "виграє лише на юридичному (nDCG=0.320), на Tech домінується BGE-M3",
+        color: C.primary, icon: I.medal },
+      { t: "Не рекомендується  ·  домінується",  model: "nomic",
+        note: "поступається BM25 за якістю при більшій latency — ані швидко, ані точно",
+        color: C.violet, icon: I.network },
     ];
     const cy0 = ry + 0.32, cH = (CONTENT_H - 0.40) / 5;
     for (let i = 0; i < cards.length; i++) {
