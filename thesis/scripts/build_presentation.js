@@ -1910,26 +1910,24 @@ async function build() {
       fontFace: F.sans, fontSize: 10, bold: true, charSpacing: 2, color: C.textMuted,
       align: "left", valign: "middle", margin: 0,
     });
-    // Insight cards aligned with what the scatter chart actually shows.
-    // The 3 Pareto-optimal points (BM25 → E5 → BGE-M3) are highlighted as
-    // the practical recommendation set; Qwen3 is honestly described as
-    // domain-specialised (its niche is Legal, where BGE-M3 is not best);
-    // nomic is flagged as dominated.
+    // Insight cards aligned with the scatter chart. Notes are kept to one
+    // visible line each — the 0.20" container at 9 pt only fits one line,
+    // and earlier 2-line notes overflowed the card body.
     const cards = [
       { t: "Парето-оптимальна  ·  лідер якості", model: "BGE-M3",
-        note: "найвища nDCG (0.672 на Tech), ~228 мс — основний вибір",
+        note: "nDCG = 0.672  ·  ~228 мс  ·  основний вибір",
         color: C.gold, icon: I.trophy },
       { t: "Парето-оптимальна  ·  sweet spot",   model: "E5-base",
-        note: "~70 мс  ·  3× швидше за BGE-M3 з мінімальною втратою якості",
+        note: "~70 мс  ·  3× швидше за BGE-M3",
         color: C.secondary, icon: I.flag },
       { t: "Парето-оптимальна  ·  baseline",     model: "BM25",
-        note: "<3 мс  ·  найшвидший, але стеля якості ~0.49 nDCG",
+        note: "<3 мс  ·  стеля якості ~0.49 nDCG",
         color: C.textMuted, icon: I.speed },
       { t: "Спеціалізована  ·  лідер на Legal",  model: "Qwen3",
-        note: "виграє лише на юридичному (nDCG=0.320), на Tech домінується BGE-M3",
+        note: "0.320 на Legal  ·  на Tech домінується",
         color: C.primary, icon: I.medal },
       { t: "Не рекомендується  ·  домінується",  model: "nomic",
-        note: "поступається BM25 за якістю при більшій latency — ані швидко, ані точно",
+        note: "поступається BM25 за якістю",
         color: C.violet, icon: I.network },
     ];
     const cy0 = ry + 0.32, cH = (CONTENT_H - 0.40) / 5;
@@ -1941,23 +1939,24 @@ async function build() {
         x: rx, y: cy + 0.04, w: 0.08, h: bodyH,
         fill: { color: cards[i].color }, line: { type: "none" },
       });
-      // Tight three-row layout that fits within bodyH (~0.67"). Earlier we
-      // gave the note a 0.10" container which was too small for 9.5 pt text
-      // and let the description spill below the card edge.
+      // Three-row layout inside bodyH (~0.67"): kicker label, model name,
+      // single-line note. Reduced label charSpacing so the longest titles
+      // ("Парето-оптимальна · sweet spot") never wrap to two lines on the
+      // narrow ~2.7" usable width.
       s.addText(cards[i].t, {
         x: rx + 0.18, y: cy + 0.07, w: rw - 0.30, h: 0.18,
-        fontFace: F.sans, fontSize: 8.5, bold: true, charSpacing: 1.5, color: C.textMuted,
+        fontFace: F.sans, fontSize: 8.5, bold: true, charSpacing: 1.0, color: C.textMuted,
         align: "left", valign: "top", margin: 0,
       });
       s.addText(cards[i].model, {
-        x: rx + 0.18, y: cy + 0.24, w: rw - 0.30, h: 0.24,
+        x: rx + 0.18, y: cy + 0.26, w: rw - 0.30, h: 0.22,
         fontFace: F.sans, fontSize: 12, bold: true, color: cards[i].color,
         align: "left", valign: "top", margin: 0,
       });
       s.addText(cards[i].note, {
         x: rx + 0.18, y: cy + 0.48, w: rw - 0.30, h: 0.20,
         fontFace: F.sans, fontSize: 9, color: C.textMid,
-        align: "left", valign: "top", margin: 0,
+        align: "left", valign: "middle", margin: 0,
       });
     }
 
