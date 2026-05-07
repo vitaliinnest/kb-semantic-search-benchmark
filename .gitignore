@@ -43,7 +43,9 @@ dist/
 
 # Thesis document working files
 *.bak*.docx
+*.bak*.pptx
 unpacked_docx/
+unpacked_pptx/
 doc_text.txt
 thesis/slides_png/
 thesis/Nesterenko_Presentation.pdf
