@@ -439,8 +439,10 @@ async function build() {
     s.background = { color: C.bgWhite };
     addTitleAdv(s, "Огляд літератури: еволюція embedding-моделей", { section: SEC.S2 });
 
-    // Timeline track
-    const trackY = 2.55;
+    // Timeline track. y=2.95 leaves a clear ~0.25" gap below the top
+    // research-gap callout (which ends near y=2.00) and lets the description
+    // boxes underneath the dots breathe down to the bottom info band.
+    const trackY = 2.95;
     s.addShape("rect", {
       x: M_LEFT + 0.40, y: trackY, w: W - M_LEFT - M_RIGHT - 0.80, h: 0.025,
       fill: { color: C.border }, line: { type: "none" },
@@ -487,8 +489,8 @@ async function build() {
         align: "center", valign: "middle", margin: 0,
       });
       s.addText(ev.note, {
-        x: cx - 0.95, y: trackY + 0.78, w: 1.90, h: 0.65,
-        fontFace: F.sans, fontSize: 9.5, color: C.textMid,
+        x: cx - 0.95, y: trackY + 0.78, w: 1.90, h: 0.95,
+        fontFace: F.sans, fontSize: 10, color: C.textMid,
         align: "center", valign: "top", margin: 0,
       });
     }
@@ -510,8 +512,11 @@ async function build() {
       fontFace: F.sans, valign: "middle", margin: 0,
     });
 
-    // Bottom band: domains badge
-    addCard(s, M_LEFT, 4.72, W - M_LEFT - M_RIGHT, 0.45, {
+    // Bottom band: domains badge — anchored just above the footer logo so
+    // there is no large empty stripe between timeline notes and the band.
+    // Logo sits at y=5.125; we end the band at 5.10 to leave a hairline gap.
+    const bandY = 4.70, bandH = 0.40;
+    addCard(s, M_LEFT, bandY, W - M_LEFT - M_RIGHT, bandH, {
       fill: C.surfaceSoft, borderColor: C.borderSoft, shadow: false,
     });
     s.addText([
@@ -520,7 +525,7 @@ async function build() {
       { text: "·   статистичні → контекстні → багатофункціональні   ·  ", options: { color: C.textMuted, fontSize: 10.5 } },
       { text: "12+ років еволюції", options: { color: C.gold, fontSize: 11, bold: true } },
     ], {
-      x: M_LEFT, y: 4.72, w: W - M_LEFT - M_RIGHT, h: 0.45,
+      x: M_LEFT, y: bandY, w: W - M_LEFT - M_RIGHT, h: bandH,
       fontFace: F.sans, valign: "middle", align: "center", margin: 0,
     });
 
@@ -547,7 +552,7 @@ async function build() {
       align: "left", valign: "top", margin: 0,
     });
     s.addText("Недостатньо просто застосувати сучасну embedding-модель — необхідно обґрунтовано визначити модель, що забезпечує оптимальний баланс між:", {
-      x: lx + 0.30, y: ly + 0.55, w: lw - 0.60, h: 1.30,
+      x: lx + 0.30, y: ly + 0.55, w: lw - 0.60, h: 0.95,
       fontFace: F.sans, fontSize: 11, color: C.textOnDark,
       align: "left", valign: "top", margin: 0, paraSpaceAfter: 4,
     });
@@ -558,9 +563,13 @@ async function build() {
       { c: "мовна підтримка",                    color: C.emerald },
       { c: "тип колекції документів",            color: C.rose },
     ];
-    let cy0 = ly + 1.85;
+    // Spread criteria evenly across the remaining panel height so the dark
+    // box doesn't have a large empty band at the bottom. Description block
+    // ends around ly+1.50; panel inner-bottom is ly+lh-0.20.
+    let cy0 = ly + 1.55;
+    const critStep = 0.50;
     for (let i = 0; i < criteria.length; i++) {
-      const cy = cy0 + i * 0.40;
+      const cy = cy0 + i * critStep;
       s.addShape("ellipse", {
         x: lx + 0.30, y: cy + 0.12, w: 0.10, h: 0.10,
         fill: { color: criteria[i].color }, line: { type: "none" },
@@ -1104,8 +1113,8 @@ async function build() {
       { title: "FAISS-індекс",  sub: "IndexFlatIP\nL2-нормалізація",icon: I.db,      color: C.violet },
       { title: "Top-K",         sub: "Cosine\nsimilarity",          icon: I.search,  color: C.emerald },
     ];
-    const flowY = CONTENT_TOP + 0.25;
-    const flowH = 1.85;
+    const flowY = CONTENT_TOP + 0.15;
+    const flowH = 2.10;
     const totalW = W - M_LEFT - M_RIGHT;
     const arrowW = 0.45;
     const nodeW = (totalW - 4 * arrowW) / 5;
@@ -1149,7 +1158,7 @@ async function build() {
     }
 
     // User input + Flask UI overlay
-    const uy = flowY + flowH + 0.40;
+    const uy = flowY + flowH + 0.30;
     const uw = 2.20;
     addCard(s, M_LEFT, uy, uw, 0.55, { fill: C.surfaceCool, borderColor: C.primary });
     s.addImage({ data: I.user, x: M_LEFT + 0.12, y: uy + 0.12, w: 0.30, h: 0.30 });
@@ -1167,9 +1176,10 @@ async function build() {
       align: "left", valign: "middle", margin: 0,
     });
 
-    // Components strip
+    // Components strip — sits just above the footer logo so the slide reads
+    // bottom-anchored instead of leaving a 0.4" white stripe.
     const cy = uy + 0.75;
-    addCard(s, M_LEFT, cy, W - M_LEFT - M_RIGHT, 0.45, { fill: C.surfaceSoft, borderColor: C.borderSoft, shadow: false });
+    addCard(s, M_LEFT, cy, W - M_LEFT - M_RIGHT, 0.50, { fill: C.surfaceSoft, borderColor: C.borderSoft, shadow: false });
     s.addText([
       { text: "Основні компоненти:  ", options: { color: C.textMuted, fontSize: 10 } },
       { text: "build_index.py", options: { color: C.primary, fontSize: 10, bold: true, fontFace: F.mono } },
@@ -1182,7 +1192,7 @@ async function build() {
       { text: "  ·  ", options: { color: C.textMuted, fontSize: 10 } },
       { text: "app.py", options: { color: C.primary, fontSize: 10, bold: true, fontFace: F.mono } },
     ], {
-      x: M_LEFT, y: cy, w: W - M_LEFT - M_RIGHT, h: 0.45,
+      x: M_LEFT, y: cy, w: W - M_LEFT - M_RIGHT, h: 0.50,
       fontFace: F.sans, valign: "middle", align: "center", margin: 0,
     });
 
