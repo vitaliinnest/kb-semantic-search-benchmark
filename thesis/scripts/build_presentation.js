@@ -118,12 +118,12 @@ function addPageNumber(slide, n, total, isDark = false) {
   });
 }
 
-function addFooterTag(slide, text, isDark = false) {
-  slide.addText(text, {
-    x: M_LEFT, y: H - 0.32, w: 7.5, h: 0.25,
-    fontFace: F.sans, fontSize: 9,
-    color: isDark ? C.textOnDarkMuted : C.textMuted,
-    align: "left", valign: "middle", margin: 0,
+// Department-of-Software-Engineering logo, anchored bottom-left on every
+// content slide. Aspect ratio of the source PNG is 83 × 56 (≈ 1.48:1) so we
+// scale to 0.55" × 0.37" for a subtle but legible mark.
+function addKafedraLogo(slide) {
+  slide.addImage({
+    path: LOGO_HEX, x: M_LEFT, y: H - 0.50, w: 0.55, h: 0.37,
   });
 }
 
@@ -211,7 +211,6 @@ async function build() {
   pres.title = "Дослідження моделей векторних ембеддінгів для семантичного пошуку";
 
   const TOTAL = 18;
-  const FOOTER_TAG = "Нестеренко В.В.   ·   ХНУРЕ, ІПЗм-24-1   ·   2026";
 
   // Pre-render all icons we use ----------------------------------------------
   const I = {
@@ -429,7 +428,7 @@ async function build() {
       });
     }
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 2, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,2, TOTAL);
   }
 
   // ==========================================================================
@@ -525,7 +524,7 @@ async function build() {
       fontFace: F.sans, valign: "middle", align: "center", margin: 0,
     });
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 3, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,3, TOTAL);
   }
 
   // ==========================================================================
@@ -611,7 +610,7 @@ async function build() {
       });
     }
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 4, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,4, TOTAL);
   }
 
   // ==========================================================================
@@ -746,7 +745,7 @@ async function build() {
       plotArea: { fill: { color: C.surfaceSoft } },
     });
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 5, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,5, TOTAL);
   }
 
   // ==========================================================================
@@ -854,7 +853,7 @@ async function build() {
       });
     }
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 6, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,6, TOTAL);
   }
 
   // ==========================================================================
@@ -950,7 +949,7 @@ async function build() {
       });
     }
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 7, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,7, TOTAL);
   }
 
   // ==========================================================================
@@ -1086,7 +1085,7 @@ async function build() {
       plotArea: { fill: { color: C.surfaceSoft } },
     });
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 8, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,8, TOTAL);
   }
 
   // ==========================================================================
@@ -1187,7 +1186,7 @@ async function build() {
       fontFace: F.sans, valign: "middle", align: "center", margin: 0,
     });
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 9, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,9, TOTAL);
   }
 
   // ==========================================================================
@@ -1279,7 +1278,7 @@ async function build() {
       }
     }
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 10, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,10, TOTAL);
   }
 
   // ==========================================================================
@@ -1404,7 +1403,7 @@ async function build() {
       align: "center", valign: "middle", margin: 0,
     });
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 11, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,11, TOTAL);
   }
 
   // ==========================================================================
@@ -1508,7 +1507,7 @@ async function build() {
       fontFace: F.sans, valign: "middle", align: "center", margin: 0,
     });
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 12, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,12, TOTAL);
   }
 
   // ==========================================================================
@@ -1637,7 +1636,7 @@ async function build() {
       align: "left", valign: "top", margin: 0,
     });
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 13, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,13, TOTAL);
   }
 
   // ==========================================================================
@@ -1713,7 +1712,7 @@ async function build() {
       });
     }
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 14, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,14, TOTAL);
   }
 
   // ==========================================================================
@@ -1813,7 +1812,7 @@ async function build() {
       plotArea: { fill: { color: C.surfaceSoft } },
     });
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 15, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,15, TOTAL);
   }
 
   // ==========================================================================
@@ -1934,7 +1933,7 @@ async function build() {
       });
     }
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 16, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,16, TOTAL);
   }
 
   // ==========================================================================
@@ -2043,7 +2042,7 @@ async function build() {
       fontFace: F.sans, valign: "middle", align: "center", margin: 0,
     });
 
-    addFooterTag(s, FOOTER_TAG); addPageNumber(s, 17, TOTAL);
+    addKafedraLogo(s); addPageNumber(s,17, TOTAL);
   }
 
   // ==========================================================================
@@ -2128,6 +2127,7 @@ async function build() {
       align: "center", valign: "middle", margin: 0,
     });
 
+    addKafedraLogo(s);
     addPageNumber(s, 18, TOTAL, true);
   }
 
