@@ -144,8 +144,21 @@ function addTitle(slide, text, opts = {}) {
 
 function addTitleAdv(slide, text, opts = {}) {
   // Variant: title with accent bullet on the left, dark or light background.
+  // Optional `opts.section` adds a small uppercase breadcrumb above the title
+  // identifying the corresponding template section ("РОЗДІЛ N · НАЗВА").
   const dotColor = opts.dotColor || C.gold;
   const color = opts.color || C.text;
+  const onDark = color !== C.text;
+
+  if (opts.section) {
+    slide.addText(opts.section, {
+      x: M_LEFT, y: 0.10, w: W - M_LEFT - M_RIGHT, h: 0.20,
+      fontFace: F.sans, fontSize: 8.5, bold: true, charSpacing: 3,
+      color: onDark ? C.textOnDarkMuted : C.textMuted,
+      align: "left", valign: "middle", margin: 0,
+    });
+  }
+
   slide.addShape("ellipse", {
     x: M_LEFT, y: TITLE_Y + 0.14, w: 0.22, h: 0.22,
     fill: { color: dotColor }, line: { type: "none" },
@@ -156,6 +169,22 @@ function addTitleAdv(slide, text, opts = {}) {
     color, align: "left", valign: "middle", margin: 0,
   });
 }
+
+// Section-name constants follow the official template structure
+// (Шаблон презентації квал роб маг.potm) — 11 content sections + title.
+const SEC = {
+  S1: "РОЗДІЛ 1 · ДОСЛІДЖЕННЯ",
+  S2: "РОЗДІЛ 2 · ОГЛЯД ЛІТЕРАТУРИ (АНАЛОГІВ)",
+  S3: "РОЗДІЛ 3 · ПОСТАНОВКА ЗАДАЧІ",
+  S4: "РОЗДІЛ 4 · МЕТОДОЛОГІЯ",
+  S5: "РОЗДІЛ 5 · АРХІТЕКТУРА СИСТЕМИ",
+  S6: "РОЗДІЛ 6 · ПРОГРАМНЕ ЗАБЕЗПЕЧЕННЯ",
+  S7: "РОЗДІЛ 7 · ЗМІСТ ЕКСПЕРИМЕНТУ",
+  S8: "РОЗДІЛ 8 · РЕЗУЛЬТАТИ ЕКСПЕРИМЕНТУ",
+  S9: "РОЗДІЛ 9 · АНАЛІЗ РЕЗУЛЬТАТІВ",
+  S10: "РОЗДІЛ 10 · ПУБЛІКАЦІЯ РЕЗУЛЬТАТІВ",
+  S11: "РОЗДІЛ 11 · ПІДСУМКИ",
+};
 
 // Round white card with subtle shadow + thin top accent bar (drawn as RECT inset).
 function addCard(slide, x, y, w, h, opts = {}) {
@@ -316,7 +345,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Актуальність, мета та задачі дослідження");
+    addTitleAdv(s, "Актуальність, мета та задачі дослідження", { section: SEC.S1 });
 
     // Goal card — full width gradient-like dark band
     addCard(s, M_LEFT, 1.05, W - M_LEFT - M_RIGHT, 0.85, {
@@ -409,7 +438,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Огляд літератури: еволюція embedding-моделей");
+    addTitleAdv(s, "Огляд літератури: еволюція embedding-моделей", { section: SEC.S2 });
 
     // Timeline track
     const trackY = 2.55;
@@ -505,7 +534,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Постановка задачі дослідження");
+    addTitleAdv(s, "Постановка задачі дослідження", { section: SEC.S3 });
 
     // Left: Problem panel (dark)
     const lx = M_LEFT, ly = CONTENT_TOP, lw = 3.65, lh = CONTENT_H - 0.10;
@@ -591,7 +620,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Сучасні моделі векторних ембеддінгів");
+    addTitleAdv(s, "Сучасні моделі векторних ембеддінгів", { section: SEC.S4 });
 
     const models = [
       { name: "BGE-M3",           lab: "BAAI",       arch: "Encoder",         params: 568, seq: 8192,  feat: "dense + sparse + multi-vector", train: "self-knowledge distillation", color: C.primary },
@@ -726,7 +755,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Методологія дослідження");
+    addTitleAdv(s, "Методологія дослідження", { section: SEC.S4 });
 
     // Section header — metrics
     s.addText("МЕТРИКИ ОЦІНЮВАННЯ RETRIEVAL-ЯКОСТІ", {
@@ -834,7 +863,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Метрики оцінювання retrieval-якості");
+    addTitleAdv(s, "Метрики оцінювання retrieval-якості", { section: SEC.S4 });
 
     const formulas = [
       {
@@ -930,7 +959,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Багатокритеріальний вибір моделі (МКВ)");
+    addTitleAdv(s, "Багатокритеріальний вибір моделі (МКВ)", { section: SEC.S4 });
 
     // 3 method cards (left 60%)
     const methods = [
@@ -1066,7 +1095,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Архітектура системи семантичного пошуку");
+    addTitleAdv(s, "Архітектура системи семантичного пошуку", { section: SEC.S5 });
 
     // Flow nodes
     const nodes = [
@@ -1167,7 +1196,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Програмне забезпечення та технології");
+    addTitleAdv(s, "Програмне забезпечення та технології", { section: SEC.S6 });
 
     const stacks = [
       {
@@ -1259,7 +1288,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Benchmark dataset: україномовні доменні колекції");
+    addTitleAdv(s, "Benchmark dataset: україномовні доменні колекції", { section: SEC.S7 });
 
     // Subtitle band
     s.addText([
@@ -1384,7 +1413,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Приклади benchmark-запитів");
+    addTitleAdv(s, "Приклади benchmark-запитів", { section: SEC.S7 });
 
     const cols = [
       {
@@ -1488,7 +1517,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Результати експерименту: nDCG@10");
+    addTitleAdv(s, "Результати експерименту: nDCG@10", { section: SEC.S8 });
 
     // Data (verified from results/benchmark_*.json)
     const data = {
@@ -1617,7 +1646,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Деталізовані метрики за доменами");
+    addTitleAdv(s, "Деталізовані метрики за доменами", { section: SEC.S8 });
 
     // 4-mini-chart grid: nDCG, MRR, Recall, P@10
     const labels = ["Технічний", "Юридичний", "Медичний"];
@@ -1693,7 +1722,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Багатокритеріальний вибір моделі: результати");
+    addTitleAdv(s, "Багатокритеріальний вибір моделі: результати", { section: SEC.S9 });
 
     // Left: Pareto-optimal callout + insights
     const lx = M_LEFT, lw = 4.30, ly = CONTENT_TOP, lh = CONTENT_H - 0.10;
@@ -1793,7 +1822,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Аналіз: якість пошуку vs швидкодія");
+    addTitleAdv(s, "Аналіз: якість пошуку vs швидкодія", { section: SEC.S9 });
 
     // Left: scatter chart
     const chX = M_LEFT, chY = CONTENT_TOP, chW = 5.80, chH = CONTENT_H - 0.10;
@@ -1914,7 +1943,7 @@ async function build() {
   {
     const s = pres.addSlide();
     s.background = { color: C.bgWhite };
-    addTitleAdv(s, "Апробація результатів дослідження");
+    addTitleAdv(s, "Апробація результатів дослідження", { section: SEC.S10 });
 
     const conferences = [
       {
@@ -2035,7 +2064,7 @@ async function build() {
     });
 
     addTitleAdv(s, "Підсумки та практичні рекомендації",
-      { color: C.textOnDark, dotColor: C.gold });
+      { color: C.textOnDark, dotColor: C.gold, section: SEC.S11 });
 
     // Goal achieved banner
     addCard(s, M_LEFT, CONTENT_TOP, W - M_LEFT - M_RIGHT, 0.55, {
