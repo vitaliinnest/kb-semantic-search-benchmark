@@ -16,10 +16,16 @@ PPTX = Path(__file__).parent.parent / "2026_М_ПІ_ІПЗм-24-1_Нестере
 
 
 def delete_slide(prs, index_zero_based: int) -> None:
-    """Remove slide at given 0-based index from the slide list."""
+    """Remove slide at given 0-based index — both the slide list entry
+    AND the relationship from the presentation part. Without dropping
+    the relationship, PowerPoint reports «PowerPoint found a problem
+    with content» on file open."""
     xml_slides = prs.slides._sldIdLst
     slides = list(xml_slides)
-    xml_slides.remove(slides[index_zero_based])
+    sldId = slides[index_zero_based]
+    rId = sldId.rId
+    xml_slides.remove(sldId)
+    prs.part.drop_rel(rId)
 
 
 def update_page_footer(slide, old_total: int, new_total: int, new_index: int) -> bool:
