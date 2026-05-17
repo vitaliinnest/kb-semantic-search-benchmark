@@ -86,6 +86,8 @@
 | `thesis/2026_*_рецензія_зовнішня.docx` | Зовнішня рецензія (Орєхов) |
 | `thesis/DEMO_VIDEO_SCRIPT.md` | Сценарій демо-відео |
 | `thesis/demo_screenshots/` | Скріни для демо |
+| `thesis/SLIDES_REF.md` | **Швидкий довідник по 17 слайдах** (defense-mode) |
+| `thesis/DEFENSE_CHEATSHEET.md` | **Компактна шпаргалка для Fast Mode на захисті** |
 | `results/benchmark/*/benchmark_results_*.json` | Сирі результати з cifrами |
 | `RESULTS.md` | Зведена таблиця |
 
