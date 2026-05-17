@@ -3,9 +3,11 @@ Replace the first line of each slide's speaker notes
     «⏱ ~XX сек  ·  слайд N/18»
 with a cumulative-time interval
     «⏱ M:SS – M:SS  ·  слайд N/18»
-based on actual word count (assuming 2.3 words/sec reading rate).
 
-Total fits within the 10-minute presentation budget.
+Per-slide duration is allocated proportionally to word count so the
+TOTAL hits exactly TARGET_TOTAL_SECONDS (10 minutes). This means the
+reader has built-in breathing room — denser slides get a slower
+implicit pace, lighter slides go faster.
 """
 import re
 import sys
@@ -13,7 +15,7 @@ from pathlib import Path
 from pptx import Presentation
 
 PPTX = Path(__file__).parent.parent / "2026_М_ПІ_ІПЗм-24-1_Нестеренко_В_В.pptx"
-WPS = 2.3  # words per second (academic reading rate)
+TARGET_TOTAL_SECONDS = 600  # 10 minutes budget
 
 
 def fmt(seconds: float) -> str:
@@ -26,16 +28,21 @@ def main() -> None:
     prs = Presentation(str(PPTX))
     n_slides = len(prs.slides)
 
-    # First pass: compute per-slide word counts (excluding the timing first line)
-    durations: list[float] = []
+    # First pass: collect word counts per slide
+    word_counts: list[int] = []
     note_texts: list[str] = []
     for slide in prs.slides:
         notes = slide.notes_slide.notes_text_frame.text if slide.has_notes_slide else ""
         note_texts.append(notes)
         body_lines = [ln for ln in notes.splitlines() if not ln.startswith("⏱")]
         body = "\n".join(body_lines).strip()
-        words = len(body.split())
-        durations.append(words / WPS)
+        word_counts.append(len(body.split()))
+
+    # Allocate TARGET_TOTAL_SECONDS proportionally to word count
+    total_words = sum(word_counts)
+    durations: list[float] = [
+        (w / total_words) * TARGET_TOTAL_SECONDS for w in word_counts
+    ]
 
     # Cumulative intervals
     cum = 0.0
@@ -45,7 +52,7 @@ def main() -> None:
         cum += d
         intervals.append((fmt(start), fmt(cum)))
 
-    print(f"Total: {fmt(cum)} (target: under 10:00)")
+    print(f"Total: {fmt(cum)} (target: {fmt(TARGET_TOTAL_SECONDS)} = {TARGET_TOTAL_SECONDS // 60} min)")
     print()
     for i, (start, end) in enumerate(intervals, 1):
         print(f"  слайд {i:2}/{n_slides}: {start} – {end}")
