@@ -131,7 +131,7 @@ The thesis is finalized; the student (Нестеренко В.В., ХНУРЕ, �
 1. `results/benchmark_{tech,legal,medical}.json` — exact per-query metrics, bootstrap CIs.
 2. `RESULTS.md` — consolidated table.
 3. `thesis/doc_text.txt` (if present) or `thesis/2026_M_PI_Nesterenko_VV.docx` — full thesis text. To search fast: unpack via `python -m zipfile -e thesis/2026_M_PI_Nesterenko_VV.docx /tmp/docx_unpacked`, then grep `word/document.xml`.
-4. `thesis/Nesterenko_Presentation.pdf` / `.pptx` — 18 slides.
+4. `thesis/Nesterenko_Presentation.pdf` / `.pptx` — 17 slides.
 5. `thesis/scripts/build_presentation.js` — slide content as readable code (`// SLIDE N` blocks).
 6. `src/` — actual implementation. When user asks "як це реалізовано?", show them the real function.
 
@@ -166,7 +166,7 @@ The thesis is finalized; the student (Нестеренко В.В., ХНУРЕ, �
 
 **Правила відповіді в defense mode:**
 
-1. **Завжди читай `thesis/SLIDES_REF.md` першим.** Це довідник з кожним з 18 слайдів — там вже зібрано все: що на слайді, ключові цифри, ймовірні питання, готові відповіді. Найшвидший спосіб зрозуміти контекст за 1 секунду — знайти секцію «## Слайд N».
+1. **Завжди читай `thesis/SLIDES_REF.md` першим.** Це довідник з кожним з 17 слайдів — там вже зібрано все: що на слайді, ключові цифри, ймовірні питання, готові відповіді. Найшвидший спосіб зрозуміти контекст за 1 секунду — знайти секцію «## Слайд N».
 2. **Чистий текст. Жодного маркдауну.** Без таблиць, маркерованих списків, болду, курсиву, code blocks, emoji. Студент читатиме голосом — формат-сміття зриває потік мовлення.
 3. **2-5 речень. Не довше.** Навіть якщо тема складна. У відповідь на «бутстреп звідки 2000» треба 3 речення, не 30. Якщо студент захоче більше — спитає.
 4. **Прямо з суті. Без преамбул.** Не пиши «Це гарне питання...», «Дозвольте відповісти...», «У вашій роботі...». Одразу відповідь.
