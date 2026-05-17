@@ -2,11 +2,8 @@
 Add short bridging phrases at the start of each slide's notes so the
 voice-over flows from one slide to the next instead of starting cold.
 
-Also handles two special edits:
-- Slide 17 (Підсумки): drop the «Дякую за увагу…» line — it now
-  belongs on the final slide.
-- Slide 18 (Апробація): prepend a transition + append the «Дякую за
-  увагу…» closing line.
+The closing «Дякую за увагу» line is intentionally kept out — it's a
+live-defense thing and the student prefers to say it ad-lib.
 
 Run after this: add_slide_time_intervals.py to refresh ⏱ markers.
 """
@@ -34,11 +31,8 @@ TRANSITIONS: dict[int, str] = {
     18: "Окремо — про апробацію результатів роботи. ",
 }
 
-# Slide 17: drop the closing «Дякую за увагу» — moves to slide 18
+# Slide 17 still has «Дякую за увагу» from prior edits — drop it if found
 SLIDE_17_REMOVE = "Дякую за увагу! Готовий відповісти на запитання."
-
-# Slide 18: closing line goes at the very end
-SLIDE_18_APPEND = "Дякую за увагу! Готовий відповісти на запитання."
 
 
 def first_body_para_idx(tf) -> int:
@@ -55,11 +49,6 @@ def prepend_to_para(para, text: str) -> None:
         para.runs[0].text = text + para.runs[0].text
     else:
         para.text = text + para.text
-
-
-def append_paragraph(tf, text: str) -> None:
-    p = tf.add_paragraph()
-    p.text = text
 
 
 def remove_paragraph_containing(tf, needle: str) -> bool:
@@ -89,22 +78,13 @@ def main() -> None:
         prepend_to_para(tf.paragraphs[idx], prefix)
         print(f"[OK  ] slide {slide_num}: + «{prefix.strip()}»")
 
-    # Slide 17: drop the thanks line
+    # Slide 17: drop the thanks line if it's still there from prior edits
     slide17 = prs.slides[16]
     tf17 = slide17.notes_slide.notes_text_frame
     if remove_paragraph_containing(tf17, SLIDE_17_REMOVE):
         print(f"[OK  ] slide 17: removed thanks line")
     else:
         print(f"[SKIP] slide 17: thanks line already gone")
-
-    # Slide 18: append thanks line as a new paragraph (skip if already there)
-    slide18 = prs.slides[17]
-    tf18 = slide18.notes_slide.notes_text_frame
-    if not any(SLIDE_18_APPEND in p.text for p in tf18.paragraphs):
-        append_paragraph(tf18, SLIDE_18_APPEND)
-        print(f"[OK  ] slide 18: appended thanks line")
-    else:
-        print(f"[SKIP] slide 18: thanks line already present")
 
     prs.save(str(PPTX))
     print(f"\nSaved: {PPTX}")
