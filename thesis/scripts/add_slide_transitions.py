@@ -14,6 +14,13 @@ from pptx import Presentation
 PPTX = Path(__file__).parent.parent / "2026_М_ПІ_ІПЗм-24-1_Нестеренко_В_В.pptx"
 
 # slide_num → prefix to insert at the start of the first body paragraph
+#
+# NOTE: keys reflect the CURRENT 17-slide numbering (after old slide 13
+# «nDCG results» was deleted on 2026-05-16). Old slides 14-18 shifted to
+# 13-17.
+# - Slide 16 (Підсумки) has no transition — was none originally.
+# - Slide 17 (Апробація) has no transition — student manually replaced
+#   the notes body with a single sentence; don't prepend anything.
 TRANSITIONS: dict[int, str] = {
     2:  "Розпочнемо з актуальності. ",
     3:  "Які підходи вже досліджено в літературі? ",
@@ -24,11 +31,9 @@ TRANSITIONS: dict[int, str] = {
     9:  "Як це реалізовано архітектурно? ",
     10: "Технологічний стек, на якому це побудовано. ",
     11: "На якому датасеті випробували методологію? ",
-    13: "Що дав запуск benchmark на 300 запитах? ",
-    14: "За окремими доменами картина така. ",
-    15: "Переходимо до інтегральної оцінки. ",
-    16: "Той самий аналіз — у вигляді графіка. ",
-    18: "Окремо — про апробацію результатів роботи. ",
+    13: "За окремими доменами картина така. ",
+    14: "Переходимо до інтегральної оцінки. ",
+    15: "Той самий аналіз — у вигляді графіка. ",
 }
 
 # Slide 17 still has «Дякую за увагу» from prior edits — drop it if found

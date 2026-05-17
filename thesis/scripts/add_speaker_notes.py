@@ -214,31 +214,22 @@ NOTES = {
         "Qwen3 домінується на tech, але кращий на legal. Nomic не рекомендується — "
         "повністю домінується, поступається BM25 за якістю."
     ),
+    # NOTE: old slide 13 («nDCG@10 results») was deleted on 2026-05-16
+    # (see delete_slide_13.py). The deck is now 17 slides. Old slides
+    # 14-18 shifted to 13-17. Slides 13-16 in this dict still hold their
+    # ORIGINAL pre-deletion text — those entries are historical and were
+    # subsequently modified by apply_predefense_pptx_fixes.py and
+    # add_slide_transitions.py to reflect the final wording. Re-running
+    # this script would overwrite those polished texts back to the
+    # pre-deletion versions — do not re-run unless you intend to reset.
     17: (
-        "~25 сек",
-        "Апробація: опубліковано дві наукові праці у співавторстві з науковим "
-        "керівником. Перша — стаття на 2-й конференції «Innovative Research "
-        "in Science and Economy» з benchmark-методологією. Друга — тези на "
-        "30-му форумі «Радіоелектроніка та молодь у XXI столітті» в ХНУРЕ "
-        "про підвищення якості retrieval. Загалом — два виступи на "
-        "міжнародних конференціях."
+        "~6 сек",
+        "Теоретичні і практичні результати апробовані на двох міжнародних "
+        "конференціях і опубліковані у двох збірниках тез."
     ),
-    18: (
-        "~60 сек",
-        "Підсумовуючи: у роботі обґрунтовано доцільність застосування сучасних "
-        "embedding-моделей для семантичного пошуку у корпоративних базах знань. "
-        "Сформульовано практичні рекомендації щодо вибору моделі.\n\n"
-        "BGE-M3 — основна модель для впровадження: найкраща якість і стабільність "
-        "у різних доменах.\n\n"
-        "E5-base — швидка альтернатива з прийнятною якістю та триразовою перевагою "
-        "за швидкодією.\n\n"
-        "Qwen3 — оптимальний вибір для юридичних колекцій, де він демонструє "
-        "найвищу якість.\n\n"
-        "BM25 — залишається конкурентним baseline у певних доменах і за дуже "
-        "жорстких вимог до швидкості.\n\n"
-        "Усі задачі, поставлені в роботі, виконано. Мета досягнута.\n\n"
-        "Дякую за увагу! Готовий відповісти на запитання."
-    ),
+    # Old key 18 (Підсумки text) removed — slide 18 no longer exists.
+    # Current slide 16 (Підсумки) text lives in apply_predefense_pptx_fixes.py
+    # NOTES_EDITS, which patched the original add_speaker_notes.py text.
 }
 
 
